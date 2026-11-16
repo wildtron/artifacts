@@ -1,7 +1,7 @@
 import { readdir, open, rm } from 'node:fs/promises';
 
 try {
-    await rm('./index.html'); 
+    await rm('./index.html', { force: true }); 
     
     let buffer = '<!doctype html><html>';
 
