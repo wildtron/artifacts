@@ -1,0 +1,2066 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML &amp; AI Engineering Curriculum (Single Track)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --ink:#1d1b18; --muted:#6b665d; --line:#e4dfd4;
+  --accent:#b4471f; --accent-soft:#f6e3d8; --track-a:#1f5f8b; --track-b:#2f7a4a;
+  --code-bg:#f0ece3; --row:#faf8f3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15140f; --surface:#1d1c17; --ink:#ece8df; --muted:#a39d91; --line:#34312a;
+    --accent:#e8875a; --accent-soft:#3a271c; --track-a:#6fb1df; --track-b:#7cc796;
+    --code-bg:#2a2821; --row:#211f1a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15140f; --surface:#1d1c17; --ink:#ece8df; --muted:#a39d91; --line:#34312a;
+  --accent:#e8875a; --accent-soft:#3a271c; --track-a:#6fb1df; --track-b:#7cc796;
+  --code-bg:#2a2821; --row:#211f1a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+code{font:0.88em "JetBrains Mono",monospace;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1240px;margin:0 auto}
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 18px 28px 24px;border-right:1px solid var(--line)}
+nav .brand{font:700 1.05rem Fraunces,serif;margin-bottom:4px}
+nav .overall{font-size:.8rem;color:var(--muted);margin-bottom:8px}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+nav ul{list-style:none;margin:0;padding:0}
+nav li a{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:.88rem;font-weight:600}
+nav li.sub a{font-weight:400;padding-left:18px;color:var(--muted)}
+nav li a:hover{background:var(--accent-soft)}
+.prog{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.prog.done{color:var(--track-b);font-weight:600}
+nav .tools{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+button{font:500 .8rem Inter,sans-serif;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+main{padding:40px 48px 80px;min-width:0}
+header.hero{margin-bottom:28px}
+header.hero h1{font:700 2.4rem/1.15 Fraunces,serif;margin:0 0 8px}
+header.hero p{color:var(--muted);margin:0}
+h2{font:700 1.7rem/1.25 Fraunces,serif;margin:48px 0 12px;padding-top:12px;border-top:2px solid var(--ink);scroll-margin-top:16px}
+h3{font:600 1.25rem/1.3 Fraunces,serif;margin:0 0 12px;scroll-margin-top:16px}
+#course-overview h3, h2 + p + h3{margin-top:28px}
+section.module, section.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 26px;margin:22px 0;border-left:5px solid var(--track-a)}
+section.module.kind-aie{border-left-color:var(--track-b)}section.module.kind-thesis{border-left-color:var(--accent)}
+section.block{border-left-color:var(--accent)}
+section.block h2{border-top:none;margin-top:0;padding-top:0}
+p strong:first-child{color:var(--ink)}
+.tbl{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:8px 12px;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--row);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td:first-child{white-space:nowrap}
+.module td:first-child{white-space:normal}
+ul.checklist{list-style:none;padding:0;margin:8px 0 16px}
+li.task label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;cursor:pointer}
+li.task label:hover{background:var(--row)}
+li.task input{margin-top:4px;width:17px;height:17px;accent-color:var(--track-b);flex:none}
+li.task input:checked + span{color:var(--muted);text-decoration:line-through}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:20px 16px}
+  main{padding:24px 16px 60px}
+  section.module, section.block{padding:18px 16px}
+  header.hero h1{font-size:1.8rem}
+}
+@media print{
+  nav{display:none}.layout{display:block}main{padding:0}
+  section.module, section.block{break-inside:auto;border-left-width:3px}
+  a{color:inherit}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Contents">
+  <div class="brand">ML &amp; AI Engineering</div>
+  <div class="overall"><span id="doneCount">0</span> of 67 checkpoints done</div>
+  <div class="bar"><span id="overallBar"></span></div>
+  <ul><li><a href="#program-overview">Program overview<span class="prog" data-for="program-overview"></span></a></li>
+<li><a href="#textbooks">Textbooks<span class="prog" data-for="textbooks"></span></a></li>
+<li><a href="#term-1-foundations-weeks-124">Term 1 — Foundations<span class="prog" data-for="term-1-foundations-weeks-124"></span></a></li>
+<li class="sub"><a href="#ml-500-python-for-data-weeks-12">ML 500 — Python for data<span class="prog" data-for="ml-500-python-for-data-weeks-12"></span></a></li>
+<li class="sub"><a href="#ml-501-math-for-ml-weeks-312">ML 501 — Math for ML<span class="prog" data-for="ml-501-math-for-ml-weeks-312"></span></a></li>
+<li class="sub"><a href="#ml-502-statistical-and-classical-ml-weeks-1324">ML 502 — Statistical and classical ML<span class="prog" data-for="ml-502-statistical-and-classical-ml-weeks-1324"></span></a></li>
+<li><a href="#term-2-building-with-llms-weeks-2540">Term 2 — Building with LLMs<span class="prog" data-for="term-2-building-with-llms-weeks-2540"></span></a></li>
+<li class="sub"><a href="#aie-601-llm-foundations-and-apis-weeks-2527">AIE 601 — LLM foundations and APIs<span class="prog" data-for="aie-601-llm-foundations-and-apis-weeks-2527"></span></a></li>
+<li class="sub"><a href="#aie-602-prompting-and-rag-weeks-2832">AIE 602 — Prompting and RAG<span class="prog" data-for="aie-602-prompting-and-rag-weeks-2832"></span></a></li>
+<li class="sub"><a href="#aie-603-agents-and-mcp-weeks-3336">AIE 603 — Agents and MCP<span class="prog" data-for="aie-603-agents-and-mcp-weeks-3336"></span></a></li>
+<li class="sub"><a href="#aie-604-evals-and-production-weeks-3740">AIE 604 — Evals and production<span class="prog" data-for="aie-604-evals-and-production-weeks-3740"></span></a></li>
+<li><a href="#term-3-deep-learning-weeks-4164">Term 3 — Deep learning<span class="prog" data-for="term-3-deep-learning-weeks-4164"></span></a></li>
+<li class="sub"><a href="#dl-701-neural-networks-and-deep-learning-weeks-4156">DL 701 — Neural networks and deep learning<span class="prog" data-for="dl-701-neural-networks-and-deep-learning-weeks-4156"></span></a></li>
+<li class="sub"><a href="#dl-702-generative-models-weeks-5764">DL 702 — Generative models<span class="prog" data-for="dl-702-generative-models-weeks-5764"></span></a></li>
+<li><a href="#term-4-llms-and-reasoning-weeks-6588">Term 4 — LLMs and reasoning<span class="prog" data-for="term-4-llms-and-reasoning-weeks-6588"></span></a></li>
+<li class="sub"><a href="#llm-801-llms-from-scratch-weeks-6576">LLM 801 — LLMs from scratch<span class="prog" data-for="llm-801-llms-from-scratch-weeks-6576"></span></a></li>
+<li class="sub"><a href="#llm-802-fine-tuning-alignment-and-reasoning-weeks-7788">LLM 802 — Fine-tuning, alignment and reasoning<span class="prog" data-for="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788"></span></a></li>
+<li><a href="#term-5-systems-and-thesis-weeks-89108">Term 5 — Systems and thesis<span class="prog" data-for="term-5-systems-and-thesis-weeks-89108"></span></a></li>
+<li class="sub"><a href="#sys-901-ml-systems-and-mlops-weeks-8996">SYS 901 — ML systems and MLOps<span class="prog" data-for="sys-901-ml-systems-and-mlops-weeks-8996"></span></a></li>
+<li class="sub"><a href="#thesis-999-capstone-thesis-and-defense-weeks-97108">THESIS 999 — Capstone thesis and defense<span class="prog" data-for="thesis-999-capstone-thesis-and-defense-weeks-97108"></span></a></li>
+<li><a href="#graduation-week-108">Graduation<span class="prog" data-for="graduation-week-108"></span></a></li>
+<li><a href="#sources">Sources<span class="prog" data-for="sources"></span></a></li></ul>
+  <div class="tools">
+    <button id="themeBtn" type="button">Toggle theme</button>
+    <button id="resetBtn" type="button">Reset progress</button>
+  </div>
+</nav>
+<main>
+<header class="hero">
+  <h1>ML &amp; AI Engineering Curriculum</h1>
+  <p>One track · 13 courses and a thesis · 108 weeks at 10–12 hours a week · Updated November 16, 2026</p>
+</header>
+<h2 id="program-overview">Program overview</h2>
+<p>This is one track: 13 courses over 108 weeks (about 25 months) at 10–12 hours a week, ending in a thesis. It merges the earlier two-track roadmap with the <a href="https://claude.ai/artifact/BhSc2hCW96oeFuo5B7rAex" target="_blank" rel="noopener">Self-Taught MS in ML, Deep Learning &amp; LLMs</a> plan. You get the master's-level depth (generative models, reasoning and RL, Stanford lectures, a thesis) and the practical engineering (weekly schedules, checkpoint tests, RAG, agents, evals, MLOps).</p>
+<p>The order is deliberate. After the foundations, Term 2 teaches you to build LLM products, so you're employable as an AI engineer about 9 months in. Terms 3–5 then take you to model-building depth.</p>
+<h3 id="schedule-at-a-glance">Schedule at a glance</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Weeks</th>
+<th>Course</th>
+<th>Main resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Term 1 — Foundations</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1–2</td>
+<td>ML 500 — Python for data</td>
+<td>McKinney</td>
+</tr>
+<tr>
+<td>3–12</td>
+<td>ML 501 — Math for ML</td>
+<td>MML; MIT 18.06; 3Blue1Brown</td>
+</tr>
+<tr>
+<td>13–24</td>
+<td>ML 502 — Statistical and classical ML</td>
+<td>ISLP; Géron; Stanford CS229</td>
+</tr>
+<tr>
+<td><strong>Term 2 — Building with LLMs</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>25–27</td>
+<td>AIE 601 — LLM foundations and APIs</td>
+<td>Huyen, <em>AI Engineering</em>; Claude and OpenAI docs</td>
+</tr>
+<tr>
+<td>28–32</td>
+<td>AIE 602 — Prompting and RAG</td>
+<td>Huyen; Berryman and Ziegler; Alammar and Grootendorst</td>
+</tr>
+<tr>
+<td>33–36</td>
+<td>AIE 603 — Agents and MCP</td>
+<td>Anthropic's agent guides; MCP docs</td>
+</tr>
+<tr>
+<td>37–40</td>
+<td>AIE 604 — Evals and production</td>
+<td>Huyen; Husain; OWASP</td>
+</tr>
+<tr>
+<td><strong>Term 3 — Deep learning</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>41–56</td>
+<td>DL 701 — Neural networks and deep learning</td>
+<td>Prince; Géron; d2l; Karpathy; CS231n</td>
+</tr>
+<tr>
+<td>57–64</td>
+<td>DL 702 — Generative models</td>
+<td>Bishop; Prince; Stanford CS236</td>
+</tr>
+<tr>
+<td><strong>Term 4 — LLMs and reasoning</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>65–76</td>
+<td>LLM 801 — LLMs from scratch</td>
+<td>Raschka; Stanford CS336</td>
+</tr>
+<tr>
+<td>77–88</td>
+<td>LLM 802 — Fine-tuning, alignment and reasoning</td>
+<td>Raschka's reasoning book; Sutton and Barto</td>
+</tr>
+<tr>
+<td><strong>Term 5 — Systems and thesis</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>89–96</td>
+<td>SYS 901 — ML systems and MLOps</td>
+<td>Huyen, <em>Designing ML Systems</em>; CS329S</td>
+</tr>
+<tr>
+<td>97–108</td>
+<td>THESIS 999 — Capstone thesis and defense</td>
+<td>Murphy as theory reference</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="how-each-course-works">How each course works</h3>
+<ol>
+<li><strong>Summary</strong> — what the course is for</li>
+<li><strong>Learning outcomes</strong> — what you can do when you finish</li>
+<li><strong>Focus on</strong> — where to spend extra effort, and what to skip</li>
+<li><strong>Resources</strong> — main text (read fully), lectures to watch alongside, and supporting material, all linked</li>
+<li><strong>Weekly schedule</strong> — topic, reading and practice for each week</li>
+<li><strong>Checkpoint test</strong> — every item must pass before you move on</li>
+</ol>
+<h3 id="weekly-study-rhythm">Weekly study rhythm</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>Time</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weekday × 3</td>
+<td>1.5–2 h each</td>
+<td>Read one chapter, take notes in your own words, do the exercises</td>
+</tr>
+<tr>
+<td>Weekend block</td>
+<td>4–5 h</td>
+<td>Watch the matching lecture, code the chapter, push to GitHub</td>
+</tr>
+<tr>
+<td>Sunday review</td>
+<td>30 min</td>
+<td>Explain the week's concept aloud or in a short post (Feynman test)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Grading yourself:</strong> a course passes only when (1) every checkpoint test item is done, (2) its projects are on GitHub with a README, (3) you can explain the core ideas without notes, and (4) you've written a short public post about one thing you learned. A course you can't pass this way gets repeated, not skipped. If time gets tight, compress Terms 4–5, but never skip ML 501's math.</p>
+<h2 id="textbooks">Textbooks</h2>
+<p>Eighteen books in reading order. Twelve are core (read fully) and six are supplementary (read the parts each course names). Seven are free online.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Book</th>
+<th>Author(s), year</th>
+<th>Role</th>
+<th>Course</th>
+<th>Free?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">Python for Data Analysis, 3rd ed.</a></td>
+<td>Wes McKinney, 2022</td>
+<td>Core</td>
+<td>ML 500</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="https://mml-book.github.io/" target="_blank" rel="noopener">Mathematics for Machine Learning</a></td>
+<td>Deisenroth, Faisal, Ong, 2020</td>
+<td>Core</td>
+<td>ML 501</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Practical Statistics for Data Scientists, 2nd ed.</a></td>
+<td>Bruce, Bruce, Gedeck, 2020</td>
+<td>Supplementary</td>
+<td>ML 501</td>
+<td>No</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="https://www.statlearning.com/" target="_blank" rel="noopener">An Introduction to Statistical Learning, Python ed. (ISLP)</a></td>
+<td>James, Witten, Hastie, Tibshirani, Taylor, 2023</td>
+<td>Core</td>
+<td>ML 502</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="https://www.oreilly.com/library/view/-/9798341607972" target="_blank" rel="noopener">Hands-On Machine Learning with Scikit-Learn and PyTorch</a></td>
+<td>Aurélien Géron, 2025</td>
+<td>Core</td>
+<td>ML 502, DL 701</td>
+<td>No</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a></td>
+<td>Chip Huyen, 2025</td>
+<td>Core</td>
+<td>AIE 601–604, LLM 802</td>
+<td>No</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="https://www.oreilly.com/library/view/prompt-engineering-for/9781098156145/" target="_blank" rel="noopener">Prompt Engineering for LLMs</a></td>
+<td>John Berryman, Albert Ziegler, 2024</td>
+<td>Supplementary</td>
+<td>AIE 602</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/" target="_blank" rel="noopener">Hands-On Large Language Models</a></td>
+<td>Jay Alammar, Maarten Grootendorst, 2024</td>
+<td>Core</td>
+<td>AIE 601–602, LLM 802</td>
+<td>No</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="https://udlbook.github.io/udlbook/" target="_blank" rel="noopener">Understanding Deep Learning</a></td>
+<td>Simon J.D. Prince, 2023</td>
+<td>Core</td>
+<td>DL 701–702</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="https://d2l.ai/" target="_blank" rel="noopener">Dive into Deep Learning</a></td>
+<td>Zhang, Lipton, Li, Smola, 2023</td>
+<td>Supplementary (labs)</td>
+<td>DL 701</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank" rel="noopener">Deep Learning: Foundations and Concepts</a></td>
+<td>Christopher &amp; Hugh Bishop, 2024</td>
+<td>Core</td>
+<td>DL 702</td>
+<td>No</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="https://www.manning.com/books/build-a-large-language-model-from-scratch" target="_blank" rel="noopener">Build a Large Language Model (From Scratch)</a></td>
+<td>Sebastian Raschka, 2024</td>
+<td>Core</td>
+<td>LLM 801</td>
+<td>No</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="https://www.oreilly.com/library/view/natural-language-processing-with-transformers/9781098136789/" target="_blank" rel="noopener">Natural Language Processing with Transformers, Revised ed.</a></td>
+<td>Tunstall, von Werra, Wolf, 2022</td>
+<td>Supplementary</td>
+<td>LLM 801–802</td>
+<td>No</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="https://www.manning.com/books/build-a-reasoning-model-from-scratch" target="_blank" rel="noopener">Build a Reasoning Model (From Scratch)</a></td>
+<td>Sebastian Raschka, 2026</td>
+<td>Core</td>
+<td>LLM 802</td>
+<td>No</td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="http://incompleteideas.net/book/the-book-2nd.html" target="_blank" rel="noopener">Reinforcement Learning: An Introduction, 2nd ed.</a></td>
+<td>Sutton &amp; Barto, 2018</td>
+<td>Core (selected chapters)</td>
+<td>LLM 802</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank" rel="noopener">Designing Machine Learning Systems</a></td>
+<td>Chip Huyen, 2022</td>
+<td>Core</td>
+<td>SYS 901</td>
+<td>No</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="https://www.packtpub.com/product/llm-engineers-handbook/9781836200079" target="_blank" rel="noopener">LLM Engineer's Handbook</a></td>
+<td>Paul Iusztin, Maxime Labonne, 2024</td>
+<td>Supplementary</td>
+<td>SYS 901</td>
+<td>No</td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Probabilistic Machine Learning: An Introduction</a></td>
+<td>Kevin P. Murphy, 2022</td>
+<td>Supplementary (master reference)</td>
+<td>All, especially THESIS 999</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table></div>
+<p>Get Géron's 2025 Scikit-Learn and PyTorch edition, not the older TensorFlow 3rd edition. Use Murphy whenever a topic in another book feels hand-wavy. Optional extras: <a href="https://www.oreilly.com/library/view/python-crash-course/9781098156664/" target="_blank" rel="noopener">Python Crash Course, 3rd ed.</a> if your Python is rusty, and Strang's <a href="https://math.mit.edu/~gs/linearalgebra/" target="_blank" rel="noopener">Introduction to Linear Algebra</a> for deeper linear algebra.</p>
+<h2 id="term-1-foundations-weeks-124">Term 1 — Foundations (Weeks 1–24)</h2>
+<p>Term goal: by week 24 you can derive gradient descent by hand and ship an end-to-end classical ML project.</p>
+<section class="module kind-ml" data-mod="ml-500-python-for-data-weeks-12"><h3 id="ml-500-python-for-data-weeks-12">ML 500 — Python for data (Weeks 1–2)</h3>
+<p><strong>Summary:</strong> You already know Python, so this short course covers only the scientific stack: NumPy, pandas and plotting. Every later course assumes you can manipulate data quickly.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Vectorize computations with NumPy arrays and broadcasting instead of loops</li>
+<li>Load, clean, reshape, group and join data with pandas</li>
+<li>Plot distributions and relationships with matplotlib</li>
+<li>Work comfortably in Jupyter, and manage environments with venv or uv</li>
+</ul>
+<p><strong>Focus on:</strong> vectorized thinking and pandas <code>groupby</code>/<code>merge</code>. Skip anything that re-teaches basic Python syntax.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://wesmckinney.com/book/" target="_blank" rel="noopener">Python for Data Analysis, 3rd ed.</a> — Wes McKinney</td>
+<td>Book (free online)</td>
+<td>Main text</td>
+</tr>
+<tr>
+<td><a href="https://numpy.org/doc/stable/user/" target="_blank" rel="noopener">NumPy user guide</a></td>
+<td>Docs</td>
+<td>Broadcasting and indexing reference</td>
+</tr>
+<tr>
+<td><a href="https://pandas.pydata.org/docs/user_guide/" target="_blank" rel="noopener">pandas user guide</a></td>
+<td>Docs</td>
+<td>Reference</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/learn/pandas" target="_blank" rel="noopener">Kaggle Learn: Pandas</a></td>
+<td>Short course</td>
+<td>Hands-on drills</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>NumPy arrays, indexing, broadcasting</td>
+<td>McKinney: NumPy basics chapter</td>
+<td>Rewrite 5 loop-based functions with NumPy</td>
+</tr>
+<tr>
+<td>2</td>
+<td>pandas cleaning, groupby, merge, plotting</td>
+<td>McKinney: pandas, data cleaning, aggregation and plotting chapters</td>
+<td>Kaggle Learn Pandas; explore one full dataset</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c1"><span>In under 2 hours with no tutorial open, load a public CSV (e.g. Kaggle Titanic), clean missing values, compute 5 grouped statistics and produce 3 plots</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c2"><span>Rewrite a nested-loop pairwise-distance function with NumPy broadcasting and measure at least a 50x speedup</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c3"><span>Explain in your own words what broadcasting is, and when pandas returns a view vs a copy</span></label></li>
+</ul>
+</section><section class="module kind-ml" data-mod="ml-501-math-for-ml-weeks-312"><h3 id="ml-501-math-for-ml-weeks-312">ML 501 — Math for ML (Weeks 3–12)</h3>
+<p><strong>Summary:</strong> Build working intuition for the math every ML method runs on: linear algebra, calculus, probability and optimization. The goal is to read the notation and use it in code, not to write proofs. This is what separates people who use models from people who understand them; your BSCS background lets you go faster where it's review.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Treat a matrix as a transformation, and explain rank, inverses, eigenvectors, SVD and PCA</li>
+<li>Take gradients and apply the chain rule through nested functions</li>
+<li>Explain gradient descent and basic constrained optimization</li>
+<li>Work with common distributions, expectation, variance and Bayes' theorem</li>
+<li>Explain maximum likelihood estimation, confidence intervals and hypothesis tests</li>
+</ul>
+<p><strong>Focus on:</strong> the geometric picture of matrices, the chain rule and optimization. Backpropagation (DL 701) is the chain rule applied many times. Skip formal proofs.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://mml-book.github.io/" target="_blank" rel="noopener">Mathematics for Machine Learning</a> — Deisenroth, Faisal, Ong</td>
+<td>Book (free PDF)</td>
+<td>Main text: Part I, ch. 2–7, plus ch. 8 and 10</td>
+</tr>
+<tr>
+<td><a href="https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/" target="_blank" rel="noopener">MIT 18.06 Linear Algebra</a> — Gilbert Strang</td>
+<td>Lectures</td>
+<td>Watch alongside the linear algebra weeks</td>
+</tr>
+<tr>
+<td><a href="https://www.3blue1brown.com/topics/linear-algebra" target="_blank" rel="noopener">Essence of Linear Algebra</a> — 3Blue1Brown</td>
+<td>Video series</td>
+<td>Warm-up before each linear algebra week</td>
+</tr>
+<tr>
+<td><a href="https://www.3blue1brown.com/topics/calculus" target="_blank" rel="noopener">Essence of Calculus</a> — 3Blue1Brown</td>
+<td>Video series</td>
+<td>Warm-up before the calculus weeks</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Practical Statistics for Data Scientists, 2nd ed.</a> — Bruce, Bruce, Gedeck</td>
+<td>Book</td>
+<td>Applied statistics</td>
+</tr>
+<tr>
+<td><a href="https://www.khanacademy.org/math/statistics-probability" target="_blank" rel="noopener">Khan Academy: Statistics and Probability</a></td>
+<td>Free course</td>
+<td>Fill gaps in probability basics</td>
+</tr>
+<tr>
+<td><a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Probabilistic Machine Learning: An Introduction</a> — Kevin Murphy</td>
+<td>Book (free PDF)</td>
+<td>Deep reference when a topic feels thin</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>Vectors, dot products, norms</td>
+<td>MML ch. 2–3; 3B1B ep. 1–4</td>
+<td>Dot product, norms and cosine similarity in NumPy</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Matrices, linear maps, inverses, rank</td>
+<td>MML ch. 2; 3B1B ep. 5–9; MIT 18.06 early lectures</td>
+<td>Visualize 2D transformations with matplotlib</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Eigenvalues, eigenvectors, SVD</td>
+<td>MML ch. 4; 3B1B ep. 13–14</td>
+<td>Compress an image with SVD</td>
+</tr>
+<tr>
+<td>6</td>
+<td>PCA</td>
+<td>MML ch. 10</td>
+<td>Implement PCA in pure NumPy (no sklearn)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Derivatives, partial derivatives, gradients</td>
+<td>MML ch. 5; Essence of Calculus</td>
+<td>Numerical vs analytic gradients</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Chain rule, Jacobians</td>
+<td>MML ch. 5</td>
+<td>Hand-derive gradients for a 2-layer function</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Optimization, gradient descent</td>
+<td>MML ch. 7</td>
+<td>Linear regression with gradient descent in pure NumPy</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Probability, distributions, Bayes' theorem</td>
+<td>MML ch. 6; Khan Academy</td>
+<td>5 Bayes problems; simulate distributions</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Expectation, variance, CLT, MLE, tests</td>
+<td>MML ch. 6 and 8; Practical Statistics ch. 2–3</td>
+<td>Monte Carlo CLT demo; bootstrap a confidence interval</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Project and checkpoint</td>
+<td>—</td>
+<td>Project and checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Project:</strong> NumPy-only logistic regression with hand-derived gradients, checked against scikit-learn.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c4"><span>Finish the project: your logistic regression matches scikit-learn's coefficients to 3 decimal places</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c5"><span>Implement PCA and linear regression in pure NumPy and match <code>np.linalg</code> results</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c6"><span>Derive by hand the gradient of a 2-layer function, then verify it numerically with finite differences</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c7"><span>Run a Monte Carlo simulation that demonstrates the central limit theorem</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c8"><span>Score at least 70% on the end-of-chapter exercises for MML chapters 2, 5, 6 and 7</span></label></li>
+</ul>
+<p>Chapter numbers refer to MML's current free PDF.</p>
+</section><section class="module kind-ml" data-mod="ml-502-statistical-and-classical-ml-weeks-1324"><h3 id="ml-502-statistical-and-classical-ml-weeks-1324">ML 502 — Statistical and classical ML (Weeks 13–24)</h3>
+<p><strong>Summary:</strong> Learn the standard ML workflow and the core algorithms that still dominate tabular data in industry. Most real-world ML mistakes happen in evaluation, so this course spends as much time on validation as on models.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Run an end-to-end ML project: framing, exploration, feature engineering, training, evaluation</li>
+<li>Explain and apply linear and logistic regression, k-NN, decision trees, random forests, gradient boosting and SVMs</li>
+<li>Use unsupervised methods: k-means clustering and PCA</li>
+<li>Choose the right metric (RMSE, precision, recall, F1, ROC-AUC) and validate with cross-validation</li>
+<li>Diagnose overfitting with the bias–variance tradeoff, and fix it with regularization</li>
+<li>Spot and prevent data leakage</li>
+</ul>
+<p><strong>Focus on:</strong> evaluation, leakage and gradient boosting (XGBoost or LightGBM), which wins most tabular problems. Use scikit-learn <code>Pipeline</code> for everything.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.statlearning.com/" target="_blank" rel="noopener">An Introduction to Statistical Learning, Python ed. (ISLP)</a> — James et al.</td>
+<td>Book (free PDF)</td>
+<td>Main text for theory: ch. 2–10 and 12</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/-/9798341607972" target="_blank" rel="noopener">Hands-On Machine Learning with Scikit-Learn and PyTorch</a> — Aurélien Géron</td>
+<td>Book</td>
+<td>Main text for practice: Part I (classical ML)</td>
+</tr>
+<tr>
+<td><a href="https://cs229.stanford.edu/" target="_blank" rel="noopener">Stanford CS229 Machine Learning</a> — Andrew Ng, Tengyu Ma</td>
+<td>Lectures</td>
+<td>Watch alongside; recordings are on YouTube</td>
+</tr>
+<tr>
+<td><a href="https://www.coursera.org/specializations/machine-learning-introduction" target="_blank" rel="noopener">Machine Learning Specialization</a> — Andrew Ng</td>
+<td>Course</td>
+<td>Gentler alternative if CS229 feels too mathematical</td>
+</tr>
+<tr>
+<td><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener">scikit-learn user guide</a></td>
+<td>Docs</td>
+<td>API and algorithm reference</td>
+</tr>
+<tr>
+<td><a href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">StatQuest</a> — Josh Starmer</td>
+<td>Video channel</td>
+<td>Short explanations of each algorithm</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/competitions" target="_blank" rel="noopener">Kaggle competitions</a></td>
+<td>Practice</td>
+<td>Real datasets and leaderboards</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13</td>
+<td>The ML landscape, end-to-end project</td>
+<td>Géron: first two chapters; ISLP ch. 2</td>
+<td>Follow Géron's housing project end to end</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Classification and metrics</td>
+<td>Géron: classification; ISLP ch. 4</td>
+<td>Confusion matrix, precision/recall curves</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Linear and logistic regression</td>
+<td>ISLP ch. 3–4; Géron: training models; CS229</td>
+<td>Implement both from scratch</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Resampling, regularization, bias–variance</td>
+<td>ISLP ch. 5–6</td>
+<td>Compare ridge, lasso and plain regression</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Non-linear models, decision trees</td>
+<td>ISLP ch. 7–8; Géron: decision trees</td>
+<td>Visualize a tree; tune depth</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Ensembles: random forests, gradient boosting</td>
+<td>ISLP ch. 8; Géron: ensembles</td>
+<td>XGBoost or LightGBM on a tabular dataset</td>
+</tr>
+<tr>
+<td>19</td>
+<td>SVMs and k-NN</td>
+<td>ISLP ch. 9; StatQuest</td>
+<td>Compare on the same dataset</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Neural network preview</td>
+<td>ISLP ch. 10</td>
+<td>Small MLP in scikit-learn</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Unsupervised: k-means, PCA</td>
+<td>ISLP ch. 12; Géron: unsupervised learning</td>
+<td>Customer segmentation</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Feature engineering, pipelines, leakage, tuning</td>
+<td>Géron; sklearn docs</td>
+<td>Rebuild a project as one Pipeline with cross-validated search</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Kaggle project</td>
+<td>—</td>
+<td>Kaggle tabular competition end to end</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Midterm and checkpoint</td>
+<td>—</td>
+<td>Midterm and checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Project:</strong> a Kaggle tabular competition end to end (exploration → features → XGBoost or LightGBM → write-up).</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c9"><span>Reach the top 25% of the Kaggle competition with a clean scikit-learn Pipeline, and publish the write-up</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c10"><span>Implement linear and logistic regression from scratch and match scikit-learn's results within 1%</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c11"><span>Given a fraud dataset with 0.5% positives, pick a metric and justify it in writing, including why accuracy fails</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c12"><span>Deliberately leak target information into a feature, observe the inflated score, then fix it and explain the gap</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c13"><span>Midterm: on a blank page, explain bias–variance, why L1 gives sparsity, and how boosting differs from bagging</span></label></li>
+</ul>
+</section><h2 id="term-2-building-with-llms-weeks-2540">Term 2 — Building with LLMs (Weeks 25–40)</h2>
+<p>Term goal: by week 40 you have shipped an LLM product with RAG, tools and an eval suite, and you're employable as an AI engineer. The main text for the whole term is <a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> by Chip Huyen, with its <a href="https://github.com/chiphuyen/aie-book" target="_blank" rel="noopener">companion repo</a>. Build in Go where you can, and use Python only where the tooling demands it.</p>
+<section class="module kind-aie" data-mod="aie-601-llm-foundations-and-apis-weeks-2527"><h3 id="aie-601-llm-foundations-and-apis-weeks-2527">AIE 601 — LLM foundations and APIs (Weeks 25–27)</h3>
+<p><strong>Summary:</strong> Get a working mental model of how LLMs behave, then learn to call them well from code: structured output, tool calling, streaming, and managing cost and latency.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain tokens, context windows, temperature, embeddings and why models hallucinate</li>
+<li>Call the Claude and OpenAI APIs from Go and Python, with streaming</li>
+<li>Get reliable structured JSON output and use tool (function) calling</li>
+<li>Use prompt caching and batching, and estimate the cost and latency of a feature</li>
+</ul>
+<p><strong>Focus on:</strong> tool calling and structured output, which every later course builds on. Use the raw SDKs rather than frameworks, so you see what's happening.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Chip Huyen</td>
+<td>Book</td>
+<td>Main text, ch. 1–2</td>
+</tr>
+<tr>
+<td><a href="https://docs.claude.com" target="_blank" rel="noopener">Claude API docs</a></td>
+<td>Docs</td>
+<td>Messages API, tool use, streaming, prompt caching</td>
+</tr>
+<tr>
+<td><a href="https://platform.openai.com/docs" target="_blank" rel="noopener">OpenAI API docs</a></td>
+<td>Docs</td>
+<td>Second provider, for comparison</td>
+</tr>
+<tr>
+<td><a href="https://github.com/anthropics/courses" target="_blank" rel="noopener">Anthropic courses</a></td>
+<td>Free notebooks</td>
+<td>API fundamentals and tool use tutorials</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/" target="_blank" rel="noopener">Hands-On Large Language Models</a> — Alammar, Grootendorst</td>
+<td>Book</td>
+<td>Ch. 1–3 for intuition on tokens and embeddings</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25</td>
+<td>How LLMs work, from a user's view</td>
+<td>Huyen ch. 1–2; Hands-On LLMs ch. 1–3</td>
+<td>Count tokens and cost for 10 sample prompts</td>
+</tr>
+<tr>
+<td>26</td>
+<td>APIs: messages, streaming, structured output</td>
+<td>Claude and OpenAI docs</td>
+<td>A Go CLI that streams answers and returns JSON</td>
+</tr>
+<tr>
+<td>27</td>
+<td>Tool calling, caching, cost</td>
+<td>Claude docs: tool use, prompt caching</td>
+<td>A Go bot that calls 2 of your own functions as tools</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c14"><span>Build a Go service that extracts structured data (e.g. receipts or invoices) into a typed struct with at least 95% valid JSON across 50 test inputs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c15"><span>Show the cost and latency difference with and without prompt caching on a long system prompt</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c16"><span>Explain in writing why the same prompt can give different answers, and two ways to make output more consistent</span></label></li>
+</ul>
+</section><section class="module kind-aie" data-mod="aie-602-prompting-and-rag-weeks-2832"><h3 id="aie-602-prompting-and-rag-weeks-2832">AIE 602 — Prompting and RAG (Weeks 28–32)</h3>
+<p><strong>Summary:</strong> Learn to control model behavior with prompts and context, then ground answers in your own data with retrieval-augmented generation (RAG), the most common pattern in production LLM apps.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Write clear system prompts, use few-shot examples, and structure prompts with XML or JSON sections</li>
+<li>Decide what goes into the context window and in what order (context engineering)</li>
+<li>Chunk documents, generate embeddings and store them in a vector database</li>
+<li>Build hybrid search (keyword plus vector) and add a reranker</li>
+<li>Measure retrieval quality separately from answer quality</li>
+</ul>
+<p><strong>Focus on:</strong> retrieval quality. Most bad RAG answers come from bad retrieval, not bad prompts. Use databases you already run: pgvector in Postgres, or Valkey's vector search.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Huyen</td>
+<td>Book</td>
+<td>Main text, ch. 5–6</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/prompt-engineering-for/9781098156145/" target="_blank" rel="noopener">Prompt Engineering for LLMs</a> — Berryman, Ziegler</td>
+<td>Book</td>
+<td>Prompt and context design in depth</td>
+</tr>
+<tr>
+<td><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Claude prompt engineering guide</a></td>
+<td>Docs</td>
+<td>Practical techniques</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/" target="_blank" rel="noopener">Hands-On Large Language Models</a> — Alammar, Grootendorst</td>
+<td>Book</td>
+<td>Ch. 6 (prompting) and ch. 8 (semantic search and RAG)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/HandsOnLLM/Hands-On-Large-Language-Models" target="_blank" rel="noopener">Hands-On LLMs code repo</a></td>
+<td>Code</td>
+<td>Runnable RAG examples</td>
+</tr>
+<tr>
+<td><a href="https://github.com/pgvector/pgvector" target="_blank" rel="noopener">pgvector</a></td>
+<td>Tool</td>
+<td>Vector search in Postgres</td>
+</tr>
+<tr>
+<td><a href="https://valkey.io/" target="_blank" rel="noopener">Valkey</a></td>
+<td>Tool</td>
+<td>Check its docs for vector search support</td>
+</tr>
+<tr>
+<td><a href="https://qdrant.tech/" target="_blank" rel="noopener">Qdrant</a></td>
+<td>Tool</td>
+<td>Dedicated vector database, has a Go client</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>28</td>
+<td>Prompt design</td>
+<td>Huyen ch. 5; Claude prompt guide; Berryman ch. 1–4</td>
+<td>Rewrite one prompt 5 ways and compare outputs</td>
+</tr>
+<tr>
+<td>29</td>
+<td>Context engineering</td>
+<td>Berryman: context and prompt assembly chapters</td>
+<td>Build a prompt assembler that fits a token budget</td>
+</tr>
+<tr>
+<td>30</td>
+<td>Embeddings and vector search</td>
+<td>Hands-On LLMs ch. 8; pgvector docs</td>
+<td>Index your own notes with embeddings</td>
+</tr>
+<tr>
+<td>31</td>
+<td>RAG pipeline: chunking, hybrid search, reranking</td>
+<td>Huyen ch. 6</td>
+<td>A RAG Q&amp;A over 100+ documents</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Evaluating retrieval; checkpoint</td>
+<td>Huyen ch. 6</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c17"><span>Build a RAG system in Go over at least 100 of your own documents (e.g. your law school notes)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c18"><span>Write a test set of 30 questions with known source passages, and report retrieval recall@5</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c19"><span>Show measurable improvement from one change (chunk size, hybrid search or a reranker)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c20"><span>Make the system answer "I don't know" when the answer isn't in the documents, and verify it on 10 trick questions</span></label></li>
+</ul>
+</section><section class="module kind-aie" data-mod="aie-603-agents-and-mcp-weeks-3336"><h3 id="aie-603-agents-and-mcp-weeks-3336">AIE 603 — Agents and MCP (Weeks 33–36)</h3>
+<p><strong>Summary:</strong> Build systems where the model decides which tools to call and in what order. Learn the standard workflow patterns first, and when a full agent is actually needed.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Tell workflows (fixed steps) from agents (model-chosen steps), and pick the simpler one when it works</li>
+<li>Implement prompt chaining, routing, parallelization and orchestrator–worker patterns</li>
+<li>Write an agent loop from scratch: call the model, run tools, feed results back, stop safely</li>
+<li>Design tools an LLM can use well: clear names, descriptions, inputs and error messages</li>
+<li>Build and connect an MCP server, so your tools work across AI apps</li>
+</ul>
+<p><strong>Focus on:</strong> writing the agent loop yourself before touching any framework, and tool design. Go is a first-class MCP language, so build your servers in Go.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a> — Anthropic</td>
+<td>Article</td>
+<td>Main reading: workflow and agent patterns</td>
+</tr>
+<tr>
+<td><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener">Writing effective tools for agents</a> — Anthropic</td>
+<td>Article</td>
+<td>Tool design</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Huyen</td>
+<td>Book</td>
+<td>Agents section of ch. 6</td>
+</tr>
+<tr>
+<td><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol docs</a></td>
+<td>Docs</td>
+<td>Spec, concepts and tutorials</td>
+</tr>
+<tr>
+<td><a href="https://github.com/modelcontextprotocol/go-sdk" target="_blank" rel="noopener">MCP Go SDK</a></td>
+<td>Code</td>
+<td>Official Go SDK for MCP servers and clients</td>
+</tr>
+<tr>
+<td><a href="https://docs.claude.com" target="_blank" rel="noopener">Claude API docs</a></td>
+<td>Docs</td>
+<td>Tool-use loop details</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>33</td>
+<td>Workflows vs agents, the five patterns</td>
+<td>Building effective agents</td>
+<td>Implement prompt chaining and routing in Go</td>
+</tr>
+<tr>
+<td>34</td>
+<td>The agent loop</td>
+<td>Huyen ch. 6 (agents); Claude tool-use docs</td>
+<td>Agent loop from scratch with 3 tools and a step limit</td>
+</tr>
+<tr>
+<td>35</td>
+<td>Tool design and MCP</td>
+<td>Writing tools for agents; MCP docs</td>
+<td>MCP server in Go exposing 3 tools</td>
+</tr>
+<tr>
+<td>36</td>
+<td>Safety; checkpoint</td>
+<td>MCP docs: security</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c21"><span>Build an agent from scratch (no framework) that completes a 5-step task with real tools, e.g. search your RAG index, fetch a page, write a summary file</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c22"><span>Ship an MCP server in Go and use it from Claude or another MCP client</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c23"><span>Add guardrails: a step limit, a cost limit, and human confirmation before any destructive tool</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c24"><span>Rebuild one agent as a fixed workflow and explain which version you would ship, and why</span></label></li>
+</ul>
+</section><section class="module kind-aie" data-mod="aie-604-evals-and-production-weeks-3740"><h3 id="aie-604-evals-and-production-weeks-3740">AIE 604 — Evals and production (Weeks 37–40)</h3>
+<p><strong>Summary:</strong> Learn to measure whether an LLM feature actually works, and to run it safely and cheaply in production. Systematic evals separate professional AI engineers from hobbyists.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Build an eval set from real examples, and score outputs with code checks, human labels and LLM-as-judge</li>
+<li>Run evals as regression tests in CI whenever a prompt or model changes</li>
+<li>Add tracing and observability to every model call</li>
+<li>Defend against prompt injection and data leakage, and add guardrails</li>
+<li>Handle rate limits, retries, fallbacks between models, and caching</li>
+<li>Run open models locally and compare them with hosted APIs on cost and quality</li>
+</ul>
+<p><strong>Focus on:</strong> evals. Start every feature by writing 20–50 test cases, before you write the prompt.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Huyen</td>
+<td>Book</td>
+<td>Main text: evaluation (ch. 3–4), inference optimization and architecture (ch. 9–10)</td>
+</tr>
+<tr>
+<td><a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener">Your AI Product Needs Evals</a> — Hamel Husain</td>
+<td>Article</td>
+<td>Practical eval workflow</td>
+</tr>
+<tr>
+<td><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications</a></td>
+<td>Reference</td>
+<td>Security risks, including prompt injection</td>
+</tr>
+<tr>
+<td><a href="https://langfuse.com/" target="_blank" rel="noopener">Langfuse</a></td>
+<td>Tool</td>
+<td>Open-source tracing and evals; self-host in Docker</td>
+</tr>
+<tr>
+<td><a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a></td>
+<td>Tool</td>
+<td>Run open models locally</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>37</td>
+<td>Evaluation methods, LLM-as-judge</td>
+<td>Huyen ch. 3–4; Husain's evals post</td>
+<td>Eval set and scorer for your AIE 602 RAG system</td>
+</tr>
+<tr>
+<td>38</td>
+<td>Tracing, observability, evals in CI</td>
+<td>Langfuse docs</td>
+<td>Self-host Langfuse; trace every call; run evals in CI</td>
+</tr>
+<tr>
+<td>39</td>
+<td>Security and guardrails</td>
+<td>OWASP LLM Top 10</td>
+<td>Red-team your own app with 20 injection attempts</td>
+</tr>
+<tr>
+<td>40</td>
+<td>Cost, latency, open models; term project</td>
+<td>Huyen ch. 9–10; Ollama</td>
+<td>Compare a local model with an API; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Term project:</strong> combine AIE 602–604 into one agentic app with a Go backend, a vector store, and an eval suite that runs on every commit.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c25"><span>The term project's eval suite has at least 50 cases, runs in CI, and blocks a merge when scores drop</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c26"><span>Validate your LLM-as-judge: it agrees with your own labels on at least 80% of 30 cases</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c27"><span>Show a trace for a full request: retrieval, model calls, tool calls, latency and cost</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c28"><span>Block at least 18 of your 20 prompt-injection attempts, and document the 2 hardest</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c29"><span>Write a one-page cost estimate for running the app for 1,000 daily users</span></label></li>
+</ul>
+<p>Chapter numbers for <em>AI Engineering</em> are from the first edition; check your copy's table of contents.</p>
+</section><h2 id="term-3-deep-learning-weeks-4164">Term 3 — Deep learning (Weeks 41–64)</h2>
+<p>Term goal: by week 64 you can implement a transformer from a blank file, train it on a GPU, and train a small generative model.</p>
+<section class="module kind-dl" data-mod="dl-701-neural-networks-and-deep-learning-weeks-4156"><h3 id="dl-701-neural-networks-and-deep-learning-weeks-4156">DL 701 — Neural networks and deep learning (Weeks 41–56)</h3>
+<p><strong>Summary:</strong> Understand how neural networks learn, and train them confidently in PyTorch. You'll build the core machinery from scratch once, so frameworks stop being magic, then use PyTorch properly.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain activations, loss functions and backpropagation, and implement autograd from scratch</li>
+<li>Write a full PyTorch training loop: tensors, autograd, <code>Dataset</code>/<code>DataLoader</code>, GPU use, checkpointing</li>
+<li>Choose and tune optimizers (SGD, momentum, Adam) and learning-rate schedules</li>
+<li>Apply initialization, normalization, dropout, weight decay and data augmentation</li>
+<li>Build CNNs and residual networks, and use transfer learning</li>
+<li>Explain RNNs, attention and the transformer, and implement self-attention</li>
+<li>Debug training: loss curves, overfitting a single batch, exploding or vanishing gradients</li>
+</ul>
+<p><strong>Focus on:</strong> writing the training loop by hand and debugging it. Karpathy's series is the highest-value resource in this curriculum; do every exercise.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://udlbook.github.io/udlbook/" target="_blank" rel="noopener">Understanding Deep Learning</a> — Simon Prince</td>
+<td>Book (free PDF)</td>
+<td>Main text for theory: ch. 1–12</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/-/9798341607972" target="_blank" rel="noopener">Hands-On Machine Learning with Scikit-Learn and PyTorch</a> — Géron</td>
+<td>Book</td>
+<td>Main text for practice: Part II (PyTorch chapters)</td>
+</tr>
+<tr>
+<td><a href="https://d2l.ai/" target="_blank" rel="noopener">Dive into Deep Learning</a> — Zhang et al.</td>
+<td>Book (free online)</td>
+<td>Coding lab manual</td>
+</tr>
+<tr>
+<td><a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Neural Networks: Zero to Hero</a> — Andrej Karpathy</td>
+<td>Lectures</td>
+<td>Main lecture series: micrograd → makemore → GPT</td>
+</tr>
+<tr>
+<td><a href="https://cs231n.stanford.edu/" target="_blank" rel="noopener">Stanford CS231n</a></td>
+<td>Lectures</td>
+<td>CNNs and computer vision</td>
+</tr>
+<tr>
+<td><a href="https://course.fast.ai/" target="_blank" rel="noopener">Practical Deep Learning for Coders</a> — fast.ai</td>
+<td>Course</td>
+<td>Top-down transfer learning</td>
+</tr>
+<tr>
+<td><a href="https://pytorch.org/tutorials/" target="_blank" rel="noopener">PyTorch tutorials</a></td>
+<td>Docs</td>
+<td>API reference and recipes</td>
+</tr>
+<tr>
+<td><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">The Illustrated Transformer</a> — Jay Alammar</td>
+<td>Article</td>
+<td>Visual intro to transformers</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Attention Is All You Need</a> — Vaswani et al.</td>
+<td>Paper</td>
+<td>The original transformer paper</td>
+</tr>
+<tr>
+<td><a href="https://github.com/karpathy/micrograd" target="_blank" rel="noopener">micrograd</a> — Karpathy</td>
+<td>Code</td>
+<td>Tiny autograd engine to study</td>
+</tr>
+<tr>
+<td><a href="http://karpathy.github.io/2019/04/25/recipe/" target="_blank" rel="noopener">A Recipe for Training Neural Networks</a> — Karpathy</td>
+<td>Article</td>
+<td>Debugging training runs</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>41–42</td>
+<td>Backpropagation from scratch</td>
+<td>Karpathy: micrograd; UDL ch. 1–7</td>
+<td>Build micrograd yourself; train an MLP with it</td>
+</tr>
+<tr>
+<td>43</td>
+<td>PyTorch fundamentals</td>
+<td>PyTorch tutorials; Géron: PyTorch intro</td>
+<td>Rewrite your ML 502 logistic regression in PyTorch</td>
+</tr>
+<tr>
+<td>44–45</td>
+<td>MLPs, language modeling basics</td>
+<td>Karpathy: makemore parts 1–2</td>
+<td>Character-level name generator</td>
+</tr>
+<tr>
+<td>46</td>
+<td>Initialization, batch norm</td>
+<td>Karpathy: makemore part 3; UDL ch. 11</td>
+<td>Plot activation statistics per layer</td>
+</tr>
+<tr>
+<td>47</td>
+<td>Optimizers and learning-rate schedules</td>
+<td>Géron: training deep nets; UDL ch. 6</td>
+<td>Compare SGD, momentum and Adam</td>
+</tr>
+<tr>
+<td>48</td>
+<td>Regularization</td>
+<td>UDL ch. 9</td>
+<td>Reduce overfitting on a small dataset</td>
+</tr>
+<tr>
+<td>49–50</td>
+<td>CNNs and residual networks</td>
+<td>CS231n; UDL ch. 10–11; Géron: computer vision</td>
+<td>CIFAR-10 classifier</td>
+</tr>
+<tr>
+<td>51</td>
+<td>Transfer learning and deployment</td>
+<td>fast.ai lessons 1–2</td>
+<td>Fine-tune a pretrained ResNet; serve it in Docker</td>
+</tr>
+<tr>
+<td>52</td>
+<td>RNNs and attention</td>
+<td>d2l RNN and attention chapters; Illustrated Transformer</td>
+<td>Implement scaled dot-product attention</td>
+</tr>
+<tr>
+<td>53–54</td>
+<td>Transformers</td>
+<td>UDL ch. 12; Karpathy: Let's build GPT; the original paper</td>
+<td>Build a small GPT following the lecture</td>
+</tr>
+<tr>
+<td>55</td>
+<td>Debugging training</td>
+<td>Karpathy's recipe post</td>
+<td>Debugging drill (see test)</td>
+</tr>
+<tr>
+<td>56</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Projects:</strong> (1) build micrograd yourself and train an MLP with it; (2) an image classifier using transfer learning, deployed as a FastAPI or Go service in Docker.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c30"><span>Rebuild micrograd without looking at the source, and verify your gradients against PyTorch on 3 functions</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c31"><span>Train a CNN on CIFAR-10 to at least 85% test accuracy, then fine-tune a pretrained model and compare</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c32"><span>Deploy the classifier as a Dockerized API and call it from a Go client</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c33"><span>Implement multi-head self-attention from scratch and match <code>nn.MultiheadAttention</code> on the same inputs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c34"><span>Debugging drill: have someone (or Claude) insert 3 bugs into a working training script; find them all</span></label></li>
+</ul>
+</section><section class="module kind-dl" data-mod="dl-702-generative-models-weeks-5764"><h3 id="dl-702-generative-models-weeks-5764">DL 702 — Generative models (Weeks 57–64)</h3>
+<p><strong>Summary:</strong> Go beyond classifiers to models that generate data: VAEs, GANs, normalizing flows and diffusion. This course also covers self-supervised learning and scaling laws, the ideas behind modern foundation models.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain self-supervised and contrastive learning, and how embeddings are learned</li>
+<li>Derive the evidence lower bound (ELBO) and train a VAE</li>
+<li>Explain GANs, normalizing flows and diffusion, and their trade-offs</li>
+<li>Train a small diffusion model from scratch</li>
+<li>Explain scaling laws and what they predict about model size, data and compute</li>
+<li>Read a classic paper and reproduce one of its results at small scale</li>
+</ul>
+<p><strong>Focus on:</strong> diffusion and the ELBO. They're the mathematically hardest ideas here, and they recur in modern models. Treat GANs and flows as lighter survey topics.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank" rel="noopener">Deep Learning: Foundations and Concepts</a> — Christopher &amp; Hugh Bishop</td>
+<td>Book</td>
+<td>Main text: transformers, VAEs, GANs, normalizing flows, diffusion chapters</td>
+</tr>
+<tr>
+<td><a href="https://udlbook.github.io/udlbook/" target="_blank" rel="noopener">Understanding Deep Learning</a> — Simon Prince</td>
+<td>Book (free PDF)</td>
+<td>Ch. 12–18</td>
+</tr>
+<tr>
+<td><a href="https://deepgenerativemodels.github.io/" target="_blank" rel="noopener">Stanford CS236 Deep Generative Models</a></td>
+<td>Lectures</td>
+<td>Main lecture series</td>
+</tr>
+<tr>
+<td><a href="http://introtodeeplearning.com/" target="_blank" rel="noopener">MIT 6.S191 Introduction to Deep Learning</a></td>
+<td>Lectures</td>
+<td>Yearly-refreshed overview</td>
+</tr>
+<tr>
+<td><a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/" target="_blank" rel="noopener">What are Diffusion Models?</a> — Lilian Weng</td>
+<td>Article</td>
+<td>Clear walkthrough of the diffusion math</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2006.11239" target="_blank" rel="noopener">DDPM paper</a> — Ho, Jain, Abbeel</td>
+<td>Paper</td>
+<td>The paper behind modern diffusion</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Scaling Laws for Neural Language Models</a> — Kaplan et al.</td>
+<td>Paper</td>
+<td>Scaling laws</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">ResNet paper</a> — He et al.</td>
+<td>Paper</td>
+<td>Midterm replication option</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>57</td>
+<td>Self-supervised learning, embeddings</td>
+<td>UDL ch. 14; Bishop: representation learning</td>
+<td>Contrastive embeddings on a small image dataset</td>
+</tr>
+<tr>
+<td>58</td>
+<td>VAEs and the ELBO</td>
+<td>UDL ch. 17; Bishop: VAEs; CS236</td>
+<td>Train a VAE on MNIST</td>
+</tr>
+<tr>
+<td>59</td>
+<td>GANs</td>
+<td>UDL ch. 15; Bishop: GANs</td>
+<td>Train a small GAN; observe mode collapse</td>
+</tr>
+<tr>
+<td>60</td>
+<td>Normalizing flows</td>
+<td>UDL ch. 16; Bishop: flows</td>
+<td>Read and summarize; no project needed</td>
+</tr>
+<tr>
+<td>61–62</td>
+<td>Diffusion models</td>
+<td>UDL ch. 18; DDPM paper; Weng's post; Bishop: diffusion</td>
+<td>Train a small diffusion model from scratch</td>
+</tr>
+<tr>
+<td>63</td>
+<td>Transformer internals, scaling laws</td>
+<td>Bishop: transformers; Kaplan et al.</td>
+<td>Plot loss vs model size for 4 tiny models</td>
+</tr>
+<tr>
+<td>64</td>
+<td>Midterm and checkpoint</td>
+<td>—</td>
+<td>Paper replication; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Project:</strong> train a small diffusion model (e.g. on MNIST or a sprite dataset) from scratch in PyTorch.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c35"><span>Your diffusion model generates recognizable samples; include a grid of outputs in the README</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c36"><span>Derive the ELBO on paper, without notes</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c37"><span>Write a one-page comparison of VAEs, GANs and diffusion: sample quality, training stability and speed</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c38"><span>Midterm: reproduce one figure from a classic paper (e.g. ResNet or <em>Attention Is All You Need</em>) at small scale</span></label></li>
+</ul>
+<p>UDL chapter numbers refer to the free online edition.</p>
+</section><h2 id="term-4-llms-and-reasoning-weeks-6588">Term 4 — LLMs and reasoning (Weeks 65–88)</h2>
+<p>Term goal: by week 88 you have pretrained a small GPT, fine-tuned an open model, and improved a model's reasoning with reinforcement learning.</p>
+<section class="module kind-llm" data-mod="llm-801-llms-from-scratch-weeks-6576"><h3 id="llm-801-llms-from-scratch-weeks-6576">LLM 801 — LLMs from scratch (Weeks 65–76)</h3>
+<p><strong>Summary:</strong> Learn how large language models are built and pretrained by building one yourself, from tokenizer to training loop to fine-tuning. Type every line of code; don't copy it.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain and implement tokenization (BPE), embeddings and positional encoding</li>
+<li>Implement causal multi-head attention and a full decoder-only GPT</li>
+<li>Pretrain with next-token prediction, and load pretrained GPT-2 weights</li>
+<li>Explain sampling (temperature, top-k, top-p) and the KV cache</li>
+<li>Fine-tune for classification and instruction following</li>
+<li>Make training efficient on one GPU: mixed precision, gradient accumulation, checkpointing</li>
+</ul>
+<p><strong>Focus on:</strong> Raschka's book end to end, then the \~100M-parameter pretraining project. Rent a cloud GPU for the project weeks rather than buying hardware.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.manning.com/books/build-a-large-language-model-from-scratch" target="_blank" rel="noopener">Build a Large Language Model (From Scratch)</a> — Sebastian Raschka</td>
+<td>Book</td>
+<td>Main text: every chapter and appendix</td>
+</tr>
+<tr>
+<td><a href="https://github.com/rasbt/LLMs-from-scratch" target="_blank" rel="noopener">LLMs-from-scratch code repo</a></td>
+<td>Code</td>
+<td>The book's official notebooks and bonus material</td>
+</tr>
+<tr>
+<td><a href="https://stanford-cs336.github.io/spring2025/" target="_blank" rel="noopener">Stanford CS336 Language Modeling from Scratch</a></td>
+<td>Lectures</td>
+<td>Main lecture series</td>
+</tr>
+<tr>
+<td><a href="https://karpathy.ai/zero-to-hero.html" target="_blank" rel="noopener">Neural Networks: Zero to Hero</a> — Karpathy</td>
+<td>Lectures</td>
+<td><em>Let's build the GPT tokenizer</em> and <em>Let's reproduce GPT-2</em></td>
+</tr>
+<tr>
+<td><a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener">nanoGPT</a> — Karpathy</td>
+<td>Code</td>
+<td>Minimal GPT training code</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/natural-language-processing-with-transformers/9781098136789/" target="_blank" rel="noopener">Natural Language Processing with Transformers, Revised ed.</a> — Tunstall, von Werra, Wolf</td>
+<td>Book</td>
+<td>Hugging Face library and training at scale</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/learn" target="_blank" rel="noopener">Hugging Face Learn</a></td>
+<td>Free courses</td>
+<td>Transformers library tutorials</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>65</td>
+<td>LLM overview, tokenization</td>
+<td>Raschka ch. 1–2; Karpathy tokenizer lecture; CS336 lecture 1</td>
+<td>Train a BPE tokenizer on your own text</td>
+</tr>
+<tr>
+<td>66</td>
+<td>Attention, coded step by step</td>
+<td>Raschka ch. 3</td>
+<td>Causal multi-head attention</td>
+</tr>
+<tr>
+<td>67</td>
+<td>GPT architecture</td>
+<td>Raschka ch. 4</td>
+<td>Full GPT model class</td>
+</tr>
+<tr>
+<td>68–69</td>
+<td>Pretraining, sampling, loading weights</td>
+<td>Raschka ch. 5; CS336 training lectures</td>
+<td>Pretrain on a small corpus; load GPT-2 weights</td>
+</tr>
+<tr>
+<td>70</td>
+<td>Fine-tuning for classification</td>
+<td>Raschka ch. 6</td>
+<td>Spam or sentiment classifier</td>
+</tr>
+<tr>
+<td>71</td>
+<td>Instruction fine-tuning</td>
+<td>Raschka ch. 7</td>
+<td>Instruction-tune your model</td>
+</tr>
+<tr>
+<td>72</td>
+<td>Efficient training on GPUs</td>
+<td>Raschka appendix D; CS336 systems lectures</td>
+<td>Add mixed precision and gradient accumulation</td>
+</tr>
+<tr>
+<td>73–75</td>
+<td>Pretraining project</td>
+<td>nanoGPT; CS336</td>
+<td>Pretrain the \~100M GPT (see project)</td>
+</tr>
+<tr>
+<td>76</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Project:</strong> pretrain a \~100M-parameter GPT on a domain corpus (e.g. Philippine law texts or Go source code), and write up the loss curves and sample outputs.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c39"><span>Finish the project: the model generates coherent domain text, and the write-up includes loss curves</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c40"><span>Train a BPE tokenizer and explain why the same sentence uses more tokens in Filipino than in English</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c41"><span>Explain without notes: the KV cache, causal masking, and why we scale attention scores</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c42"><span>Score 80% or more on the free <em>Test Yourself</em> PDF for Raschka's book (linked from its Manning page)</span></label></li>
+</ul>
+</section><section class="module kind-llm" data-mod="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788"><h3 id="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788">LLM 802 — Fine-tuning, alignment and reasoning (Weeks 77–88)</h3>
+<p><strong>Summary:</strong> Adapt real open models to your tasks and improve how they reason. The course starts with just enough reinforcement learning theory to understand RLHF and GRPO, then moves to parameter-efficient fine-tuning, preference tuning and reasoning methods.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain MDPs, value functions, temporal-difference learning and policy gradients</li>
+<li>Fine-tune open models with LoRA and QLoRA on a single GPU, and build instruction datasets</li>
+<li>Apply preference tuning (DPO) and explain RLHF</li>
+<li>Use inference-time scaling (sampling, self-consistency, verification) to improve reasoning</li>
+<li>Apply RL with verifiable rewards (GRPO) and distillation to a small model</li>
+<li>Evaluate a model fairly before and after every change</li>
+</ul>
+<p><strong>Focus on:</strong> the two projects. The RL weeks are there so GRPO and RLHF make sense; don't go deeper into classic RL than the listed chapters.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.manning.com/books/build-a-reasoning-model-from-scratch" target="_blank" rel="noopener">Build a Reasoning Model (From Scratch)</a> — Sebastian Raschka</td>
+<td>Book</td>
+<td>Main text for reasoning; sequel to his LLM book</td>
+</tr>
+<tr>
+<td><a href="https://sebastianraschka.com/reasoning-from-scratch/" target="_blank" rel="noopener">Build a Reasoning Model companion hub</a></td>
+<td>Code and notes</td>
+<td>The book's code and extras</td>
+</tr>
+<tr>
+<td><a href="http://incompleteideas.net/book/the-book-2nd.html" target="_blank" rel="noopener">Reinforcement Learning: An Introduction, 2nd ed.</a> — Sutton &amp; Barto</td>
+<td>Book (free PDF)</td>
+<td>Ch. 1–6 and 13 (policy gradients)</td>
+</tr>
+<tr>
+<td><a href="https://www.davidsilver.uk/teaching/" target="_blank" rel="noopener">David Silver's RL course</a> — UCL/DeepMind</td>
+<td>Lectures</td>
+<td>Watch alongside Sutton &amp; Barto</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/" target="_blank" rel="noopener">Hands-On Large Language Models</a> — Alammar, Grootendorst</td>
+<td>Book</td>
+<td>Fine-tuning chapters</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Huyen</td>
+<td>Book</td>
+<td>Ch. 7 (fine-tuning) and ch. 8 (dataset engineering)</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/learn" target="_blank" rel="noopener">Hugging Face Learn</a></td>
+<td>Free courses</td>
+<td>LLM course: PEFT and TRL tutorials</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener">LoRA paper</a> — Hu et al.</td>
+<td>Paper</td>
+<td>Low-rank adaptation</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">DPO paper</a> — Rafailov et al.</td>
+<td>Paper</td>
+<td>Preference tuning without RL</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2402.03300" target="_blank" rel="noopener">DeepSeekMath paper</a> — Shao et al.</td>
+<td>Paper</td>
+<td>Introduces GRPO</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-R1 paper</a></td>
+<td>Paper</td>
+<td>Reasoning through RL, and distillation</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>77</td>
+<td>RL basics: bandits, MDPs, value functions</td>
+<td>Sutton &amp; Barto ch. 1–3; Silver lectures 1–3</td>
+<td>Multi-armed bandit simulation</td>
+</tr>
+<tr>
+<td>78</td>
+<td>Dynamic programming, Monte Carlo, TD learning</td>
+<td>Sutton &amp; Barto ch. 4–6; Silver lectures 4–5</td>
+<td>Q-learning on a grid world</td>
+</tr>
+<tr>
+<td>79</td>
+<td>Policy gradients</td>
+<td>Sutton &amp; Barto ch. 13; Silver lecture 7</td>
+<td>REINFORCE on CartPole</td>
+</tr>
+<tr>
+<td>80</td>
+<td>LoRA and QLoRA</td>
+<td>LoRA paper; Huyen ch. 7; HF PEFT docs</td>
+<td>LoRA-fine-tune a small open model</td>
+</tr>
+<tr>
+<td>81</td>
+<td>Dataset engineering</td>
+<td>Huyen ch. 8</td>
+<td>Build a custom instruction dataset</td>
+</tr>
+<tr>
+<td>82</td>
+<td>Project 1</td>
+<td>Hands-On LLMs fine-tuning chapters</td>
+<td>QLoRA fine-tune a Qwen- or Llama-class model</td>
+</tr>
+<tr>
+<td>83</td>
+<td>Preference tuning: RLHF and DPO</td>
+<td>DPO paper; HF TRL docs</td>
+<td>Run DPO on a small preference dataset</td>
+</tr>
+<tr>
+<td>84</td>
+<td>Evaluation and inference-time scaling</td>
+<td>Raschka reasoning book: early chapters</td>
+<td>Self-consistency on a math benchmark</td>
+</tr>
+<tr>
+<td>85–86</td>
+<td>RL with verifiable rewards, distillation</td>
+<td>Raschka reasoning book: later chapters; DeepSeekMath; DeepSeek-R1</td>
+<td>GRPO on a small model</td>
+</tr>
+<tr>
+<td>87</td>
+<td>Project 2</td>
+<td>—</td>
+<td>Finish and write up the reasoning gain</td>
+</tr>
+<tr>
+<td>88</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Projects:</strong> (1) QLoRA fine-tune an open model on a custom instruction dataset, evaluated before and after; (2) apply the reasoning book's methods to raise a small model's math accuracy, and report the benchmark gain.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c43"><span>Project 1 shows a measurable gain on a held-out set, with the eval code in the repo</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c44"><span>Project 2 reports a benchmark gain with numbers, and compares inference-time scaling against RL training</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c45"><span>REINFORCE solves CartPole, and you can explain the policy gradient theorem without notes</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c46"><span>Explain without notes: why LoRA saves memory, what DPO optimizes, and how GRPO differs from PPO</span></label></li>
+</ul>
+</section><h2 id="term-5-systems-and-thesis-weeks-89108">Term 5 — Systems and thesis (Weeks 89–108)</h2>
+<p>Term goal: by week 108 you have a production-grade AI system running and a written thesis defending its design. Start scoping the thesis in week 89, alongside SYS 901.</p>
+<section class="module kind-sys" data-mod="sys-901-ml-systems-and-mlops-weeks-8996"><h3 id="sys-901-ml-systems-and-mlops-weeks-8996">SYS 901 — ML systems and MLOps (Weeks 89–96)</h3>
+<p><strong>Summary:</strong> Take models from notebook to reliable service. Your backend, Go and Docker experience is an advantage here, since many ML engineers struggle with exactly this part.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Design an ML system around business goals, with reliability, scalability and maintainability in mind</li>
+<li>Build reproducible training: data versioning, feature pipelines, experiment tracking, a model registry</li>
+<li>Avoid training–serving skew, and serve models as batch jobs or online APIs, including LLMs with vLLM</li>
+<li>Monitor for data drift and model degradation, and trigger retraining</li>
+<li>Set up CI/CD for ML code, data and models</li>
+<li>Answer an ML system design interview question in 45 minutes</li>
+</ul>
+<p><strong>Focus on:</strong> reproducibility and monitoring, which are new to you. Move faster through serving and containers.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank" rel="noopener">Designing Machine Learning Systems</a> — Chip Huyen</td>
+<td>Book</td>
+<td>Main text: all chapters</td>
+</tr>
+<tr>
+<td><a href="https://stanford-cs329s.github.io/" target="_blank" rel="noopener">Stanford CS329S ML Systems Design</a></td>
+<td>Lecture notes</td>
+<td>The course the book is based on</td>
+</tr>
+<tr>
+<td><a href="https://fullstackdeeplearning.com/" target="_blank" rel="noopener">Full Stack Deep Learning</a></td>
+<td>Lectures</td>
+<td>Practical ML engineering</td>
+</tr>
+<tr>
+<td><a href="https://www.packtpub.com/product/llm-engineers-handbook/9781836200079" target="_blank" rel="noopener">LLM Engineer's Handbook</a> — Iusztin, Labonne</td>
+<td>Book</td>
+<td>An LLM pipeline from data to deployment; <a href="https://github.com/PacktPublishing/LLM-Engineers-Handbook" target="_blank" rel="noopener">code repo</a></td>
+</tr>
+<tr>
+<td><a href="https://madewithml.com/" target="_blank" rel="noopener">Made With ML</a> — Goku Mohandas</td>
+<td>Free course</td>
+<td>MLOps end to end, with code</td>
+</tr>
+<tr>
+<td><a href="https://mlflow.org/" target="_blank" rel="noopener">MLflow</a></td>
+<td>Tool</td>
+<td>Experiment tracking and model registry</td>
+</tr>
+<tr>
+<td><a href="https://www.evidentlyai.com/" target="_blank" rel="noopener">Evidently</a></td>
+<td>Tool</td>
+<td>Drift detection and monitoring</td>
+</tr>
+<tr>
+<td><a href="https://docs.vllm.ai/" target="_blank" rel="noopener">vLLM</a></td>
+<td>Tool</td>
+<td>High-throughput LLM serving</td>
+</tr>
+<tr>
+<td><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/" target="_blank" rel="noopener">NVIDIA Container Toolkit</a></td>
+<td>Tool</td>
+<td>GPUs inside Docker</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>89</td>
+<td>ML systems design, framing</td>
+<td>Huyen ch. 1–2; CS329S notes</td>
+<td>Design doc for one of your projects; start the thesis proposal</td>
+</tr>
+<tr>
+<td>90</td>
+<td>Data engineering, training data</td>
+<td>Huyen ch. 3–4</td>
+<td>Version a dataset; build a data pipeline</td>
+</tr>
+<tr>
+<td>91</td>
+<td>Feature engineering, offline evaluation</td>
+<td>Huyen ch. 5–6</td>
+<td>Add MLflow tracking to an earlier project</td>
+</tr>
+<tr>
+<td>92</td>
+<td>Deployment and prediction services</td>
+<td>Huyen ch. 7; vLLM docs</td>
+<td>Serve your LLM 802 model with vLLM in Docker; thesis proposal due</td>
+</tr>
+<tr>
+<td>93</td>
+<td>Distribution shift and monitoring</td>
+<td>Huyen ch. 8; Evidently docs</td>
+<td>Simulate drift and detect it</td>
+</tr>
+<tr>
+<td>94</td>
+<td>Continual learning, infrastructure</td>
+<td>Huyen ch. 9–10; Full Stack Deep Learning</td>
+<td>Automated retraining job</td>
+</tr>
+<tr>
+<td>95</td>
+<td>Human side of ML; LLM pipelines</td>
+<td>Huyen ch. 11; LLM Engineer's Handbook (skim)</td>
+<td>CI/CD and a model registry for one project</td>
+</tr>
+<tr>
+<td>96</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Project:</strong> take your DL 701 classifier or LLM 802 model and give it CI/CD, a model registry, monitoring and a drift alert, all in Docker Compose.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c47"><span>The project runs end to end with one <code>docker compose up</code>, with a dashboard showing live metrics</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c48"><span>Load-test the serving API (e.g. with <a href="https://k6.io/" target="_blank" rel="noopener">k6</a> or a Go client) and report p95 latency</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c49"><span>Reproduce any training run exactly from a git commit and an MLflow run ID</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c50"><span>Detect simulated drift with Evidently and trigger retraining automatically</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c51"><span>Whiteboard "design a recommendation system" in 45 minutes using Huyen's framework, and record yourself</span></label></li>
+</ul>
+</section><section class="module kind-thesis" data-mod="thesis-999-capstone-thesis-and-defense-weeks-97108"><h3 id="thesis-999-capstone-thesis-and-defense-weeks-97108">THESIS 999 — Capstone thesis and defense (Weeks 97–108)</h3>
+<p><strong>Summary:</strong> Combine everything into one substantial project, written up like a research paper and defended out loud. This is the centerpiece of your portfolio.</p>
+<p><strong>Pick one thesis type:</strong></p>
+<ol>
+<li><strong>Domain model:</strong> a fine-tuned model for a domain you know (e.g. classifying or summarizing Philippine legal texts), with a public eval</li>
+<li><strong>Production system:</strong> a RAG or agent system with real users</li>
+<li><strong>Research replication:</strong> a small-scale replication of a 2025–26 paper</li>
+</ol>
+<p><strong>Every thesis must include:</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c52"><span>A model you trained or fine-tuned yourself, with before/after scores on a held-out set</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c53"><span>Reproducible training with experiment tracking</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c54"><span>A Dockerized serving layer behind a Go API, with monitoring and p95 latency reported</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c55"><span>An LLM feature (RAG or agent) exposed through an MCP server</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c56"><span>An eval suite that runs in CI, with tracing</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c57"><span>A theory section grounded in <a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Murphy's Probabilistic Machine Learning</a> and the papers you build on</span></label></li>
+</ul>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Milestone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>89–92</td>
+<td>Scope and write a 2-page proposal: problem, method, data, evaluation plan (during SYS 901)</td>
+</tr>
+<tr>
+<td>97–100</td>
+<td>Build the system and the baseline</td>
+</tr>
+<tr>
+<td>101–104</td>
+<td>Experiments, evals and ablations</td>
+</tr>
+<tr>
+<td>105–106</td>
+<td>Write the 10–15 page paper-format write-up</td>
+</tr>
+<tr>
+<td>107</td>
+<td>Record the 20-minute defense talk</td>
+</tr>
+<tr>
+<td>108</td>
+<td>Graduation review</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Deliverables</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c58"><span>Public GitHub repo with a README covering architecture, results and trade-offs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c59"><span>10–15 page write-up in paper format: problem, method, experiments, results, limitations</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c60"><span>Recorded 20-minute defense talk, with answers to 5 hard questions you wrote in advance</span></label></li>
+</ul>
+</section><section class="block" data-mod="graduation-week-108"><h2 id="graduation-week-108">Graduation (Week 108)</h2>
+<p>You graduate, and are ready for senior ML or AI engineering roles, when every item below is done.</p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c61"><span>All 13 courses passed, with every checkpoint test complete</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c62"><span>The 12 core books finished</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c63"><span>10+ public projects on GitHub, including one deployed system with real users</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c64"><span>Thesis written and defense recorded</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c65"><span>One merged open-source contribution to an ML library (e.g. Hugging Face, PyTorch, vLLM)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c66"><span>Timed session: implement logistic regression, an attention layer and an agent loop from memory in 60 minutes total</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c67"><span>Answer one ML system design question and one LLM app design question, 45 minutes each</span></label></li>
+</ul>
+<p><strong>Staying relevant after graduation:</strong> read 2 papers a week (<a href="https://arxiv.org/list/cs.LG/recent" target="_blank" rel="noopener">arXiv</a> and <a href="https://huggingface.co/papers" target="_blank" rel="noopener">Hugging Face daily papers</a>), follow <a href="https://magazine.sebastianraschka.com/" target="_blank" rel="noopener">Sebastian Raschka</a> and <a href="https://karpathy.ai/" target="_blank" rel="noopener">Andrej Karpathy</a>, and review this reading list once a year, since LLM books age fast.</p>
+</section><h2 id="sources">Sources</h2>
+<p>Book and course pages used to confirm titles, authors, editions and links:</p>
+<ul>
+<li><a href="https://www.oreilly.com/library/view/-/9798341607972" target="_blank" rel="noopener">Hands-On Machine Learning with Scikit-Learn and PyTorch — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/-/9781633437166" target="_blank" rel="noopener">Build a Large Language Model (From Scratch) — O'Reilly listing</a></li>
+<li><a href="https://www.manning.com/books/build-a-reasoning-model-from-scratch" target="_blank" rel="noopener">Build a Reasoning Model (From Scratch) — Manning</a></li>
+<li><a href="https://www.oreilly.com/library/view/hands-on-large-language/9781098150952/" target="_blank" rel="noopener">Hands-On Large Language Models — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/natural-language-processing-with-transformers/9781098136789/" target="_blank" rel="noopener">Natural Language Processing with Transformers, Revised ed. — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank" rel="noopener">Designing Machine Learning Systems — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/prompt-engineering-for/9781098156145/" target="_blank" rel="noopener">Prompt Engineering for LLMs — O'Reilly</a></li>
+<li><a href="https://www.oreilly.com/library/view/llm-engineers-handbook/9781836200079" target="_blank" rel="noopener">LLM Engineer's Handbook — O'Reilly listing</a></li>
+<li><a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Practical Statistics for Data Scientists, 2nd ed. — O'Reilly</a></li>
+<li><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank" rel="noopener">Deep Learning: Foundations and Concepts — Springer</a></li>
+<li><a href="https://stanford-cs336.github.io/spring2025/" target="_blank" rel="noopener">Stanford CS336 — course site</a></li>
+<li><a href="https://deepgenerativemodels.github.io/" target="_blank" rel="noopener">Stanford CS236 — course site</a></li>
+<li><a href="https://stanford-cs329s.github.io/" target="_blank" rel="noopener">Stanford CS329S — course site</a></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic</a></li>
+<li><a href="https://github.com/modelcontextprotocol/go-sdk" target="_blank" rel="noopener">MCP Go SDK — GitHub</a></li>
+</ul>
+<p>Other links (free books, docs, papers) point to their official home pages. A 3rd edition of <em>Practical Statistics for Data Scientists</em> has been listed by a retailer for 2026; prefer it if it's out. This doc replaces both the earlier two-track roadmap and the separate <a href="https://claude.ai/artifact/BhSc2hCW96oeFuo5B7rAex" target="_blank" rel="noopener">Self-Taught MS</a> plan.</p>
+</main>
+</div>
+<script>
+(function(){
+  var KEY='mlai-single-track-progress';
+  var state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){state={};}
+  var boxes=[].slice.call(document.querySelectorAll('input[data-id]'));
+  boxes.forEach(function(b){ b.checked=!!state[b.dataset.id];
+    b.addEventListener('change',function(){ state[b.dataset.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} update(); });
+  });
+  function count(scope){ var bs=scope.querySelectorAll('input[data-id]'), d=0;
+    bs.forEach(function(b){ if(b.checked) d++; }); return [d,bs.length]; }
+  function update(){
+    var all=count(document);
+    document.getElementById('doneCount').textContent=all[0];
+    document.getElementById('overallBar').style.width=(all[1]?100*all[0]/all[1]:0)+'%';
+    document.querySelectorAll('.prog').forEach(function(p){
+      var id=p.dataset.for, sec=document.querySelector('[data-mod="'+id+'"]');
+      if(!sec){ var h=document.getElementById(id); if(h && h.tagName==='H2'){
+          // track heading: count modules until next h2
+          var tot=0,dn=0,el=h.nextElementSibling;
+          while(el && el.tagName!=='H2' && !el.classList.contains('block')){ var c=count(el); dn+=c[0]; tot+=c[1]; el=el.nextElementSibling; }
+          p.textContent=tot?dn+'/'+tot:''; p.classList.toggle('done',tot&&dn===tot); }
+        return; }
+      var c=count(sec); p.textContent=c[1]?c[0]+'/'+c[1]:''; p.classList.toggle('done',c[1]&&c[0]===c[1]);
+    });
+  }
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    if(!confirm('Clear all ticked checkpoints?')) return;
+    state={}; try{localStorage.removeItem(KEY);}catch(e){}
+    boxes.forEach(function(b){b.checked=false;}); update(); });
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var r=document.documentElement, cur=r.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark'); });
+  update();
+})();
+</script>
+</body>
+</html>

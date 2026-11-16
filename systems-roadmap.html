@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Systems Programming Roadmap: Stash + Daily Tools</title>
+<style>
+  :root{
+    --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6a63; --card:#ffffff; --line:#e4e2da;
+    --accent:#c4501b; --accent-soft:#fbe9df; --ok:#2f7d4f; --chip:#efede5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#161614; --fg:#ecebe5; --muted:#a09f96; --card:#1f1f1c; --line:#33322d;
+      --accent:#ee7a45; --accent-soft:#33241b; --ok:#5cc489; --chip:#2a2a26; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:2rem;margin:0 0 6px;letter-spacing:-.02em}
+  h2{font-size:1.35rem;margin:44px 0 12px;letter-spacing:-.01em}
+  h3{font-size:1rem;margin:18px 0 6px}
+  p{margin:8px 0}
+  .sub{color:var(--muted);max-width:70ch}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em}
+  code{background:var(--chip);padding:1px 5px;border-radius:4px}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;margin:20px 0 0}
+  .progress{height:10px;background:var(--chip);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+  .barrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:.9rem;color:var(--muted)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:99px;padding:3px 11px;font-size:.82rem;cursor:pointer}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.link{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.88rem;padding:0;text-decoration:underline}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--chip);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .arch{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+  .arch pre{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.35}
+  .phase{margin-top:36px}
+  .phase>h2{display:flex;align-items:baseline;gap:10px}
+  .phase .tag{font-size:.75rem;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 9px;border-radius:99px}
+  details.proj{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
+  details.proj>summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+  details.proj>summary::-webkit-details-marker{display:none}
+  .ptitle{font-weight:650;font-size:1.05rem}
+  .pmeta{color:var(--muted);font-size:.85rem;grid-column:1/2}
+  .pstat{font-size:.82rem;color:var(--muted);grid-row:1/3;grid-column:2/3;text-align:right;white-space:nowrap}
+  .langs{display:inline-flex;gap:5px;margin-left:6px;vertical-align:middle}
+  .lang{font-size:.72rem;font-weight:600;background:var(--chip);border-radius:5px;padding:1px 7px;color:var(--fg)}
+  .body{padding:2px 18px 18px;border-top:1px solid var(--line)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+  @media (max-width:720px){.cols{grid-template-columns:1fr}}
+  ul.plain{margin:6px 0;padding-left:20px}
+  ul.plain li{margin:3px 0}
+  .ms{margin-top:14px}
+  .ms h4{margin:0 0 4px;font-size:.92rem}
+  label.chk{display:flex;gap:9px;align-items:flex-start;padding:3px 0;cursor:pointer}
+  label.chk input{margin-top:5px;accent-color:var(--ok)}
+  label.chk.done span{color:var(--muted);text-decoration:line-through}
+  .done-box{margin-top:14px;padding:10px 12px;background:var(--accent-soft);border-radius:8px;font-size:.92rem}
+  .hidden{display:none!important}
+  footer{margin-top:50px;color:var(--muted);font-size:.85rem}
+  @media print{.bar{position:static}details.proj{break-inside:avoid}.chips,button{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Systems Programming Roadmap</h1>
+  <p class="sub">One flagship project (<b>stash</b>, a personal notes / bookmarks / "where did I put it" store with fast search) that every language plugs into, plus small daily-use tools. Each project below has a scope, what you learn, milestone checklists, and a clear "done when". Tick boxes as you go; progress is saved in your browser.</p>
+
+  <div class="bar">
+    <div class="progress" aria-label="Overall progress"><i id="overallBar"></i></div>
+    <div class="barrow">
+      <span id="overallText">0 / 0 deliverables</span>
+      <span class="chips" id="chips"></span>
+      <button class="link" id="expand">Expand all</button>
+      <button class="link" id="collapse">Collapse all</button>
+      <button class="link" id="reset">Reset progress</button>
+    </div>
+  </div>
+
+  <h2>The shape of the system</h2>
+  <div class="arch"><pre>
+ Browser (TS / HTML / CSS)  ──  Extension: clip page ──┐
+   │  offline search: WASM (C++ or Rust)               │ HTTP / RESP
+   ▼                                                   ▼
+ ┌───────────────────────  stash daemon (Rust)  ───────────────────────┐
+ │  network layer  →  RESP parser  →  command router                    │
+ │  storage: append-only log + snapshots     index: inverted index      │
+ └───────────────────────────────────────────────────────────────────────┘
+   ▲            ▲                 ▲                       ▲
+ Zig CLI     PHP import        Python export/backup     Perl cleanup/migration
+ (stash add/find)  endpoint     + flashcards             scripts
+
+ Standalone daily tools:  C dupe-finder · C++ terminal UI · Rust uptime monitor · Zig timer
+ Integrity tool:          C stash-fsck (reads the daemon's log directly and verifies it)
+ Sync + gateway:          Go agent (laptop <-> home PC replication, TLS and token auth in front of the daemon)
+  </pre></div>
+
+  <h2>Suggested pacing</h2>
+  <p class="sub">Estimates assume about 6 to 8 focused hours a week alongside work and law school. One "weekend" is roughly one 4 to 6 hour block. They are guesses, so adjust as you learn how fast you move.</p>
+  <table>
+    <thead><tr><th>Phase</th><th>What</th><th>Languages</th><th>Estimate</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>Foundations: Redis clone, small CLI warm-ups</td><td>C++, C</td><td>5 to 7 weekends</td></tr>
+      <tr><td>1</td><td>Stash core daemon and log verifier</td><td>Rust, C</td><td>7 to 11 weekends</td></tr>
+      <tr><td>2</td><td>Clients and front end</td><td>Zig, TS/HTML/CSS, WASM</td><td>6 to 8 weekends</td></tr>
+      <tr><td>3</td><td>Glue and scripting, plus sync</td><td>Go, PHP, Python, Perl</td><td>7 to 9 weekends</td></tr>
+      <tr><td>4</td><td>Standalone daily tools</td><td>C++, Rust, Zig</td><td>5 to 7 weekends</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How the C and C++ projects differ</h2>
+  <p class="sub">The two languages get different kinds of work, so nothing repeats. C projects are small, file-and-bytes tools where you do everything by hand. C++ projects are long-running, interactive programs where abstraction and RAII are the point.</p>
+  <table>
+    <thead><tr><th></th><th>C</th><th>C++</th></tr></thead>
+    <tbody>
+      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier)</td><td>Redis clone, terminal UI for stash</td></tr>
+      <tr><td><b>Kind of program</b></td><td>Run-once command-line tools that read files and exit</td><td>Long-running, event-driven programs that talk to a socket</td></tr>
+      <tr><td><b>What it trains</b></td><td>Raw bytes, syscalls, manual memory, defensive parsing, fuzzing</td><td>RAII, move semantics, classes and templates, variants, event loops</td></tr>
+      <tr><td><b>Tooling focus</b></td><td>Valgrind, ASan, libFuzzer or AFL++, Makefile</td><td>CMake, clang-tidy, sanitizers, unit-test framework</td></tr>
+    </tbody>
+  </table>
+
+  <div id="phases"></div>
+
+  <footer>Tip: keep one git repo per project, write the README first (scope and "done when"), and commit at every ticked box. Reference books: Beej's Guide, The Linux Programming Interface, Crafting Interpreters, Database Internals, the Tokio tutorial.</footer>
+</div>
+
+<script>
+const PHASES = [
+  {id:"p0", name:"Phase 0: Foundations", tag:"warm-up"},
+  {id:"p1", name:"Phase 1: Stash core", tag:"flagship"},
+  {id:"p2", name:"Phase 2: Clients and front end", tag:"flagship"},
+  {id:"p3", name:"Phase 3: Glue and scripting", tag:"flagship"},
+  {id:"p4", name:"Phase 4: Standalone daily tools", tag:"daily use"}
+];
+
+const PROJECTS = [
+/* ---------------- PHASE 0 ---------------- */
+{ id:"redis-clone", phase:"p0", title:"Redis clone", langs:["C++"], time:"3 to 5 weekends",
+  summary:"A TCP server that speaks the real Redis protocol (RESP), so the real redis-cli works against it. This is your first end-to-end network program and the base the stash core builds on. It uses a single-threaded epoll event loop, which is how real Redis works. epoll is Linux-only, so build and run it inside WSL2 or a Docker container.",
+  learn:["TCP sockets: listen, accept, read, write","Framing a stream protocol (messages split across reads)","Non-blocking I/O and an epoll event loop (one thread, many clients)","RAII for file descriptors and buffers, and C++ move semantics","Why a single-threaded event loop needs no locks, and what it costs","Expiry (lazy vs active) and append-only persistence"],
+  scope:["Commands: PING, ECHO, SET (with PX/EX), GET, DEL, EXISTS, INCR, LPUSH/RPUSH/LRANGE","Many clients at once","Keys that expire","Survives a restart via an append-only log"],
+  deliverables:[
+    {h:"M1: Listen and reply", items:["Server binds to port 6379 and accepts connections","Replies +PONG to PING; redis-cli PING works","Keeps the connection open for repeated commands"]},
+    {h:"M2: Real protocol", items:["RESP parser for arrays and bulk strings, with unit tests","Parser handles a message split across two reads","Serializer for simple strings, errors, integers, bulk strings, null","ECHO and unknown-command error reply"]},
+    {h:"M3: Data and concurrency", items:["In-memory map with SET/GET/DEL/EXISTS","Single-threaded epoll loop serves 50 concurrent clients; no thread per client","Run clean under AddressSanitizer and UBSan","SET ... PX expiry; expired keys never returned","Lists: LPUSH, RPUSH, LRANGE"]},
+    {h:"M4: Persistence and polish", items:["Append-only log written on every write command","Log replayed on startup; kill -9 test loses nothing acknowledged","redis-benchmark runs against it; record ops/sec in the README","README: architecture notes and what you would change"]}
+  ],
+  stretch:["Pub/Sub","Transactions (MULTI/EXEC)","Log compaction (rewrite)","Compare your numbers with real Valkey"],
+  done:"redis-cli and redis-benchmark both work against your server, data survives a restart, and you can explain every layer from socket to disk." },
+
+{ id:"c-warm", phase:"p0", title:"Duplicate file finder", langs:["C"], time:"1 to 2 weekends",
+  summary:"A command-line tool that scans folders and lists duplicate files (for example in your Downloads). It refreshes your C by exercising exactly the parts that matter: pointers, memory ownership, syscalls.",
+  learn:["Directory walking with opendir/readdir or nftw","File metadata with stat","Hashing and hash tables","mmap vs read","Manual memory management and Valgrind/ASan"],
+  scope:["Walk one or more directories recursively","Group by size first, then hash only candidates","Print groups of duplicates and wasted space","Optional --delete-interactive (never delete without asking)"],
+  deliverables:[
+    {h:"M1: Walk", items:["Recursively list regular files with size, skipping symlink loops","Clean error messages (permission denied, missing path)","Makefile or CMake build with -Wall -Wextra"]},
+    {h:"M2: Compare", items:["Group files by size","Hash candidates (implement or vendor a simple hash such as FNV, then SHA-256 via a library)","Confirm matches with a byte-by-byte compare"]},
+    {h:"M3: Quality", items:["Runs clean under Valgrind or AddressSanitizer on a tree of 10,000+ files","Hand-written hash table with resize","Report: duplicate groups and total reclaimable bytes","Man-page style --help"]}
+  ],
+  stretch:["Multi-threaded hashing","Partial-hash first (first 4 KB) to skip big files faster","JSON output for scripts"],
+  done:"Runs on your real Downloads folder with zero leaks reported and a result you trust enough to act on." },
+
+/* ---------------- PHASE 1 ---------------- */
+{ id:"stash-core", phase:"p1", title:"Stash core daemon", langs:["Rust"], time:"6 to 9 weekends",
+  summary:"The heart of the system: a daemon that stores your notes, bookmarks and inventory items, and searches them fast. It speaks RESP (so redis-cli works) plus a few custom commands, and keeps data in an append-only log with snapshots.",
+  learn:["Rust ownership, borrowing, lifetimes in real code","Async I/O with tokio, or threads with channels","Binary file formats and crash safety","Inverted index and ranking (TF-IDF or BM25)","Error handling with Result, custom error types","Testing at unit, integration and property level"],
+  scope:["Items: id, kind (note, bookmark, item-location), title, body, tags, timestamps","Commands: STASH.ADD, STASH.GET, STASH.DEL, STASH.FIND, STASH.TAG, STASH.LIST","Full-text search with ranked results","Durable on disk; recovers after a crash","Config file and graceful shutdown"],
+  deliverables:[
+    {h:"M1: Skeleton server", items:["Cargo workspace with crates: stash-server, stash-proto, stash-index, stash-store","TCP listener with tokio; PING/ECHO work with redis-cli","RESP codec in stash-proto with tests, including fuzz-ish tests of malformed input","Structured logging with tracing"]},
+    {h:"M2: Storage engine", items:["Append-only log with length-prefixed, checksummed records","Startup replay that stops cleanly at a torn last record","In-memory primary map rebuilt from the log","Snapshot plus log truncation (compaction)","Crash test: kill the process mid-write 100 times; no corruption, no acknowledged loss"]},
+    {h:"M3: Search index", items:["Tokenizer: lowercase, split on non-alphanumerics, stop words","Inverted index: term to postings (doc id, term frequency)","Ranking with BM25 and unit tests on a tiny hand-checked corpus","Index updated on add/delete; rebuilt from the log on startup","Prefix search (typing 'doc' finds 'docker')"]},
+    {h:"M4: Commands and API", items:["All STASH.* commands implemented and documented","Plain HTTP JSON endpoint (/search?q=) for the browser UI, with CORS and an API token","Input limits (max item size, max connections) and clear errors"]},
+    {h:"M5: Hardening", items:["Integration test suite running real redis-cli commands","Benchmark: 100k items, report search latency p50/p95","Memory profile; fix the top allocation hotspot","README with architecture diagram and file-format spec","Dockerfile and a systemd or compose file to run it daily"]}
+  ],
+  stretch:["Typo-tolerant search (edit distance)","Replication to a second instance","Encrypted-at-rest log","Rewrite the index crate in C++ and compare"],
+  done:"You can add 10,000 items, kill the daemon at random, restart, and search them in under 10 ms, with tests and a written file-format spec." },
+
+{ id:"stash-fsck", phase:"p1", title:"stash-fsck: log verifier and dump tool", langs:["C"], time:"1 to 2 weekends",
+  summary:"A small C program that reads the stash daemon's log and snapshot files directly, verifies every checksum, reports torn or corrupt records, and dumps the contents. Writing it from your file-format spec (not from the Rust code) proves the spec is complete, and it gives you a real reason to practise careful byte-level parsing in C.",
+  learn:["Reading binary formats safely: bounds checks, endianness, alignment, struct packing pitfalls","Implementing CRC32 yourself","mmap versus read for sequential scans","C error-handling patterns (errno, return codes, cleanup with goto)","Fuzzing a parser with libFuzzer or AFL++","Defensive programming against hostile or damaged input"],
+  scope:["stash-fsck verify <data-dir>: check header, record lengths, checksums and ordering","stash-fsck dump <file>: print records as text or JSON lines","stash-fsck stats: record counts, sizes, dead space","Clear exit codes: 0 clean, 1 warnings (torn last record), 2 corruption"],
+  deliverables:[
+    {h:"M1: Verify", items:["Parse the log header and walk records with strict bounds checks","CRC32 implemented from scratch and tested against known vectors","Reports record count and the byte offset of the first bad record"]},
+    {h:"M2: Dump and stats", items:["dump mode in text and JSON lines","stats mode: live vs dead records and reclaimable space","A torn final record is a warning; damage in the middle is an error"]},
+    {h:"M3: Hardening", items:["Clean under AddressSanitizer and UBSan","Fuzzed for at least one hour with no crashes or hangs","Test script flips random bytes in a real log; fsck detects every case","Exit codes and usage documented in the README"]}
+  ],
+  stretch:["--repair that truncates to the last good record after making a .bak copy","Benchmark mmap versus buffered read on a large log","Run it automatically from the Python backup tool before each backup"],
+  done:"It agrees with the Rust daemon on a 100,000-record log, catches every injected corruption, and survives an hour of fuzzing." },
+
+/* ---------------- PHASE 2 ---------------- */
+{ id:"zig-cli", phase:"p2", title:"stash CLI client", langs:["Zig"], time:"2 weekends",
+  summary:"A small, fast command-line client: stash add, stash find, stash get. It talks RESP to the daemon. Because it is small and has one job, it is a good first real Zig program.",
+  learn:["Zig build system (build.zig)","Explicit allocators and defer/errdefer","Error unions and optionals","comptime basics","std.net and std.io"],
+  scope:["stash add 'text' --tag docker","stash find docker compose","stash get <id>, stash rm <id>","Reads server address and token from a config file or environment","Pipes: echo foo | stash add -"],
+  deliverables:[
+    {h:"M1: Connect and send", items:["Builds with zig build; single static binary","Hand-written RESP encoder for commands; reads and decodes replies","stash ping works against the daemon"]},
+    {h:"M2: Commands", items:["add, find, get, rm, tags implemented","Argument parsing (hand-written or small lib) with --help for every command","Readable output; --json flag for scripts","Non-zero exit codes and stderr messages on failure"]},
+    {h:"M3: Quality", items:["No leaks using the testing allocator","Tests for encoder/decoder with zig test","Cross-compile to Windows and Linux from one machine","Shell completion script for PowerShell and bash"]}
+  ],
+  stretch:["Interactive fuzzy picker","Async connect with timeout","Offline queue when the daemon is down"],
+  done:"You use stash add from your terminal several times a day, and the binary is under 1 MB with no leaks." },
+
+{ id:"web-ui", phase:"p2", title:"Web UI and browser extension", langs:["TypeScript","HTML","CSS"], time:"3 to 4 weekends",
+  summary:"A fast, keyboard-first search page plus a browser extension that clips the current page (title, URL, selected text) into stash. This is where you deepen TS/HTML/CSS with no framework magic hiding things.",
+  learn:["Strict TypeScript and typed API clients","Accessible, responsive layout with modern CSS (grid, container queries, custom properties)","Browser extension (Manifest V3): content script, service worker, permissions","PWA: service worker, caching, install prompt","Keyboard UX and debouncing"],
+  scope:["Search-as-you-type with highlighted matches","Add, edit, tag, delete items","Dark and light themes","Extension: toolbar button and context menu 'Save to stash'","Works offline for already-cached items"],
+  deliverables:[
+    {h:"M1: Static UI", items:["Semantic HTML shell, mobile-friendly, passes basic Lighthouse accessibility checks","CSS design tokens (colors, spacing) and dark mode","Typed fetch client for the daemon's HTTP API (no 'any')"]},
+    {h:"M2: Features", items:["Debounced live search with highlighted terms","Item editor with tag chips","Keyboard shortcuts: / to search, j/k to move, Enter to open, e to edit","Empty, loading and error states for every view"]},
+    {h:"M3: Extension", items:["Manifest V3 extension loads unpacked in Chrome","Clip title, URL and selection; tag from a popup","Token stored in extension storage, not in code"]},
+    {h:"M4: PWA", items:["Installable, with a service worker caching the app shell","Offline read of recent items","Basic end-to-end test (Playwright) for add and search"]}
+  ],
+  stretch:["Drag a file to attach it","Share target on mobile","Bundle with esbuild or Vite and compare size with the no-build version"],
+  done:"You prefer using the UI over any other notes app for a full week, and the clipper works on the sites you visit most." },
+
+{ id:"wasm-search", phase:"p2", title:"Offline search in WebAssembly", langs:["C++","Rust","WASM"], time:"2 to 3 weekends",
+  summary:"Compile the tokenizer and search index to WebAssembly so the browser can search your cached items instantly, with no server call. Do it once in Rust (easy toolchain) or C++ (Emscripten), then compare.",
+  learn:["Memory model of WASM (linear memory) and the JS/WASM boundary","wasm-bindgen / wasm-pack, or Emscripten and embind","Designing a small, copy-cheap API across the boundary","Profiling in the browser","Size optimization (wasm-opt, panic=abort, no std where possible)"],
+  scope:["Library with: build_index(items), search(query, limit), add(item), remove(id)","Same ranking as the server's BM25 (shared test vectors)","Runs in a Web Worker so the UI never blocks"],
+  deliverables:[
+    {h:"M1: Shared core", items:["Extract tokenizer and BM25 into a library with no I/O","Shared test file of (corpus, query, expected ranking) used by both server and WASM tests"]},
+    {h:"M2: Build for web", items:["Compiles to .wasm and loads from TypeScript","Strings and arrays cross the boundary without per-character calls","Runs in a Web Worker with a typed message protocol"]},
+    {h:"M3: Measure", items:["Benchmark 50k items: index build time and search latency","Final .wasm size recorded; reduced at least 30% from the first build","Short write-up: Rust vs C++ build, size, speed, developer experience"]}
+  ],
+  stretch:["SIMD for tokenizing","Persist the index to IndexedDB","Use the same crate natively in the CLI"],
+  done:"Search in the browser matches the server's results on the shared test file and answers in a few milliseconds with the network off." },
+
+/* ---------------- PHASE 3 ---------------- */
+{ id:"php-import", phase:"p3", title:"Import and share endpoint", langs:["PHP"], time:"1 to 2 weekends",
+  summary:"A small framework-free PHP 8 app that imports bookmarks (browser HTML export), accepts a webhook or email-forwarded link, and exposes a read-only public page for items you choose to share. It keeps your PHP sharp on security and fundamentals without Laravel doing the work.",
+  learn:["Modern PHP 8: types, enums, readonly, match","PDO with prepared statements","Sessions, CSRF, password hashing, output escaping","Routing and a tiny front controller","Composer and PHPUnit"],
+  scope:["Upload a browser bookmarks.html and import into stash","Webhook endpoint with a shared secret","Public share page with an unguessable token, expiry optional","Admin login for managing shares"],
+  deliverables:[
+    {h:"M1: Base", items:["Front controller with a tiny router and templates","Strict types on; static analysis (PHPStan level 6+) passing","Config from environment"]},
+    {h:"M2: Features", items:["Bookmark HTML parser (DOMDocument) with tests","Import sends items to the daemon over its API","Webhook with HMAC signature check","Share page: random token, optional expiry, revoke button"]},
+    {h:"M3: Security pass", items:["All SQL prepared; all output escaped","CSRF tokens on forms; secure session cookie flags","Rate limit on login and webhook","Checklist against the OWASP Top 10 written in the README"]}
+  ],
+  stretch:["Containerize with php-fpm and nginx","Import from Pocket, Raindrop or Pinboard exports"],
+  done:"You imported your real browser bookmarks and shared one link publicly with confidence about its security." },
+
+{ id:"py-tools", phase:"p3", title:"Export, backup and flashcards", langs:["Python"], time:"2 weekends",
+  summary:"Python scripts around the stash: nightly backup, export to Markdown, usage analysis, and a spaced-repetition flashcard generator that turns tagged notes (for example law reviewer notes) into daily review cards.",
+  learn:["Packaging a CLI (pyproject, entry points, typer or argparse)","Testing with pytest and fixtures","Working with SQLite and the file system","The SM-2 spaced repetition algorithm","Scheduling with cron or systemd timers"],
+  scope:["stash-backup: dump all items to a dated, compressed file and verify it","stash-export: Markdown files, one per item, with front matter","stash-cards: pick notes tagged 'review', produce due cards each day","Simple stats: items per week, top tags, stale items"],
+  deliverables:[
+    {h:"M1: Backup", items:["Backup command with checksum verification and restore test","Retention: keep 7 daily, 4 weekly, 12 monthly","Scheduled run and a failure alert"]},
+    {h:"M2: Export", items:["Markdown export that round-trips (import it back, same data)","Tag and link preservation","pytest suite with at least 80% coverage on the core"]},
+    {h:"M3: Flashcards", items:["Cloze or Q/A card format parsed from notes","SM-2 scheduling stored per card","Daily 'due today' list in the terminal","Review session loop with keyboard input"]}
+  ],
+  stretch:["Generate card candidates with an LLM and review them before saving","Export to Anki format","Web view of the daily queue in the stash UI"],
+  done:"Backups run unattended and have been restore-tested; you review due cards daily for two weeks." },
+
+{ id:"perl-text", phase:"p3", title:"Text cleanup and migration scripts", langs:["Perl"], time:"1 weekend",
+  summary:"Perl is still unmatched for quick, powerful text munging. Use it to migrate your old notes into stash and to build a bulk file renamer, learning regexes, one-liners and file processing properly.",
+  learn:["Regular expressions in depth (named captures, lookarounds, /x, /g, /e)","Perl one-liners (-n, -p, -i, -l, -a)","Hashes, references, context (scalar vs list)","File::Find, Getopt::Long, Path::Tiny","Writing tests with Test::More"],
+  scope:["Import old notes from messy text/Markdown files, extracting titles, dates and tags","Bulk renamer with dry-run (e.g. normalize screenshot names)","Log and CSV munging helpers you actually use"],
+  deliverables:[
+    {h:"M1: One-liners", items:["Ten useful one-liners documented in a cheat-sheet file (rename, dedupe lines, column extract, in-place edit)","Each one tested on sample input"]},
+    {h:"M2: Importer", items:["Script that walks a folder of old notes and emits stash import commands","Dry-run mode and a summary report","Handles odd encodings and missing metadata without crashing","Test::More tests for the parsing functions"]},
+    {h:"M3: Renamer", items:["Pattern-based rename with preview, undo log and collision detection","Documented with perldoc/POD"]}
+  ],
+  stretch:["Port the importer to Python and compare readability","Package as a CPAN-style distribution"],
+  done:"Your old notes are in stash, and you reach for Perl first when a text task would take more than three lines elsewhere." },
+
+{ id:"stash-sync", phase:"p3", title:"stash-sync: multi-device sync agent and secure gateway", langs:["Go"], time:"3 weekends",
+  summary:"A Go service that runs next to each stash daemon (for example on your laptop and your home PC). It replicates items between the machines over an encrypted, authenticated connection, and also works as a gateway that exposes the daemon safely (TLS, token auth, rate limits) so the web UI and browser extension work away from home. This is Go's home ground: many concurrent connections, timeouts, retries and a single easy-to-deploy binary. It differs from the Rust daemon (storage and search) and the Rust uptime monitor (health checks): it is about keeping separate copies consistent.",
+  learn:["Goroutines, channels, context cancellation and timeouts","net/http server and client, httputil.ReverseProxy","TLS and mutual TLS with crypto/tls","Replication design: change feeds, cursors, tombstones for deletes, hybrid logical clocks, last-writer-wins and its limits","Idempotent operations, retries with exponential backoff and jitter","Table-driven tests, go test -race, httptest, and testing network failure","log/slog, embed, and cross-compiling to Windows and Linux"],
+  scope:["Each node has an ID and a cursor per peer","Pull and push of changed items between peers","Conflict policy documented and tested (concurrent edit, edit vs delete)","Gateway: TLS, token auth, rate limiting and body-size limits in front of the daemon's HTTP API","Status page showing peers, last sync time and lag"],
+  deliverables:[
+    {h:"M1: Design and change feed", items:["One-page sync design: node IDs, hybrid logical clock, tombstones, conflict policy, and what you are choosing not to solve","Add a changes-since-cursor command to the Rust daemon (small change; update its docs and tests)","Go client for the daemon (RESP or HTTP) with timeouts and typed errors"]},
+    {h:"M2: Sync engine", items:["Per-peer pull and push loops as goroutines, stopped cleanly through context","Applying a change twice has no effect (idempotent)","Cursor saved to disk; survives restarts","Backoff with jitter on failure","Table-driven tests for conflicts: both edit, edit vs delete, delete vs delete","go test -race passes"]},
+    {h:"M3: Secure transport and gateway", items:["Script that creates a private CA and issues node certificates","Mutual TLS between sync nodes; unknown certificates rejected","Gateway reverse proxy with token auth, per-client rate limit and request-size cap","Graceful shutdown that finishes in-flight requests"]},
+    {h:"M4: Operations and proof", items:["Config file, structured logs with slog, /metrics and a small status page","Single static binary cross-compiled for Windows and Linux; Dockerfile","End-to-end test with two nodes, a simulated network partition and heavy concurrent edits that ends with identical data on both","Short write-up: where last-writer-wins loses data and how you would fix it"]}
+  ],
+  stretch:["Replace mTLS with WireGuard or Tailscale and compare the setup","End-to-end encrypt item bodies so the gateway host cannot read them","Merge note text with a CRDT instead of last-writer-wins","Resumable sync for large attachments"],
+  done:"Edit the same stash on the laptop and the PC while both are offline, reconnect them, and both converge with no lost edits; killing the agent mid-sync causes no duplicates and no loss." },
+
+/* ---------------- PHASE 4 ---------------- */
+{ id:"stash-tui", phase:"p4", title:"Terminal UI for stash", langs:["C++"], time:"3 weekends",
+  summary:"A full-screen terminal app for browsing stash: a search box, a results list and a preview pane, driven by the keyboard. It talks to the daemon over RESP, reusing your Redis clone's client code. This is the C++ showcase: classes, RAII, variants and an event loop, rather than raw bytes.",
+  learn:["Modern C++ design: std::variant and std::visit for events, std::optional, ranges, std::expected (C++23)","RAII guard that restores the terminal on exit, crash or signal","One event loop that waits on both the keyboard and the daemon socket","Unicode width and UTF-8 handling","Diff-based redraw so the screen does not flicker","Unit testing (doctest or Catch2), CMake, clang-tidy"],
+  scope:["Search-as-you-type with ranked results","Preview pane and tag filter","Keys: / search, j/k move, Enter open, e edit in $EDITOR, d delete with confirm","Handles terminal resize","Builds in WSL2 or Docker (it uses Unix terminal APIs)"],
+  deliverables:[
+    {h:"M1: Terminal layer", items:["Raw-mode RAII guard that always restores the terminal","Key parser for arrows, Ctrl combinations and escape sequences","Alternate screen, cursor control and resize signal handling"]},
+    {h:"M2: UI components", items:["Input box, list view and preview pane as separate classes","Layout recomputed on resize","Event type as a std::variant, with one handler per event"]},
+    {h:"M3: Data and loop", items:["RESP client class with timeouts and clear errors","Debounced search; one loop waits on stdin and the socket","Daemon down: shows a status line and keeps retrying"]},
+    {h:"M4: Quality", items:["Diff-based rendering with no visible flicker","Unit tests for key parsing, layout and the RESP client","Clean under clang-tidy, AddressSanitizer and UBSan","Profile a redraw with 10,000 results and note the fix"]}
+  ],
+  stretch:["Rebuild the same UI with FTXUI and compare code size","Mouse support","Windows console backend behind the same terminal interface"],
+  done:"You open it instead of the web UI for quick lookups, and quitting by any route (q, Ctrl+C, a crash) always leaves your terminal usable." },
+
+{ id:"uptime-monitor", phase:"p4", title:"Personal uptime and home monitor", langs:["Rust"], time:"2 to 3 weekends",
+  summary:"A small Rust daemon that checks the things you care about (your sites, Valkey/MySQL, Wi-Fi/router reachability, backup freshness) and alerts your phone when something fails. You use it daily and it is a second, smaller Rust project that exercises async tasks, timeouts and the networking crates, and is a good way to get comfortable before or after the stash core.",
+  learn:["Async tasks with tokio: select!, timeouts, cancellation","HTTP checks with reqwest, TCP checks with tokio::net, TLS certificate expiry","Config with serde and graceful shutdown","Testing with mock servers and tokio's paused clock","Metrics (Prometheus format) and simple alert rules"],
+  scope:["Checks: HTTP status and latency, TCP port open, TLS expiry, ping, file age (backup freshness)","Alert after N consecutive failures, and a recovery message","Notifications via a push service or Telegram bot","Tiny status page"],
+  deliverables:[
+    {h:"M1: Checker engine", items:["YAML or TOML config of checks with intervals","Each check runs as its own tokio task with a timeout","Results kept in memory with the last 24 h of history"]},
+    {h:"M2: Alerting", items:["Failure threshold and de-duplication (no alert spam)","Push notification on fail and on recovery","Test the logic with a fake clock"]},
+    {h:"M3: Ops", items:["/status JSON and a minimal HTML status page","/metrics endpoint in Prometheus text format","Graceful shutdown; Dockerfile; runs as a service on a small always-on machine"]}
+  ],
+  stretch:["Store history in stash or SQLite","Wake-on-LAN and power-cycle hooks","Detect Wi-Fi dead zones with periodic probes from a laptop"],
+  done:"It has run unattended for two weeks, caught at least one real problem, and sent no false alarms." },
+
+{ id:"zig-timer", phase:"p4", title:"Focus timer and time log", langs:["Zig"], time:"1 weekend",
+  summary:"A tiny terminal timer (pomodoro-style) that logs work sessions to a plain file and prints weekly totals. Small enough to finish, useful enough to run every day, and a second chance to practice Zig after the stash CLI.",
+  learn:["Zig std: time, fs, io, process","Terminal handling and signals (Ctrl+C cleanly)","File formats you design yourself (a one-line-per-session log)","Writing tests and a build script from scratch"],
+  scope:["timer start 50 'task name'","Live countdown in the terminal; bell at the end","Append-only log of sessions","timer report --week prints hours per task"],
+  deliverables:[
+    {h:"M1: Timer", items:["Countdown with accurate time (no drift) and clean Ctrl+C handling","Terminal bell or desktop notification at the end"]},
+    {h:"M2: Log and report", items:["Session log file with a documented format","Weekly and monthly report grouped by task","Unit tests for parsing and aggregation"]}
+  ],
+  stretch:["Pause and resume","Sync sessions to stash","Compare minutes tracked vs your target weekly hours"],
+  done:"You track every work block for two weeks and the report matches reality."}
+];
+
+/* ---------- rendering ---------- */
+const KEY = "systems-roadmap-v4";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ state = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const allLangs = [...new Set(PROJECTS.flatMap(p => p.langs))].sort();
+let activeLang = null;
+
+function projectItems(p){
+  const out = [];
+  p.deliverables.forEach((m, mi) => m.items.forEach((_, ii) => out.push(p.id+"."+mi+"."+ii)));
+  return out;
+}
+
+function render(){
+  const host = document.getElementById("phases");
+  host.innerHTML = "";
+  PHASES.forEach(ph => {
+    const projs = PROJECTS.filter(p => p.phase === ph.id);
+    const sec = document.createElement("section");
+    sec.className = "phase"; sec.dataset.phase = ph.id;
+    sec.innerHTML = `<h2>${esc(ph.name)} <span class="tag">${esc(ph.tag)}</span></h2>`;
+    projs.forEach(p => {
+      const d = document.createElement("details");
+      d.className = "proj"; d.dataset.id = p.id; d.dataset.langs = p.langs.join(",");
+      const langs = p.langs.map(l => `<span class="lang">${esc(l)}</span>`).join("");
+      let html = `<summary>
+        <div class="ptitle">${esc(p.title)}<span class="langs">${langs}</span></div>
+        <div class="pmeta">${esc(p.time)}</div>
+        <div class="pstat" id="stat-${p.id}"></div>
+      </summary><div class="body">
+        <p>${esc(p.summary)}</p>
+        <div class="cols">
+          <div><h3>What you will learn</h3><ul class="plain">${p.learn.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+          <div><h3>Scope</h3><ul class="plain">${p.scope.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        </div>
+        <h3>Deliverables</h3>`;
+      p.deliverables.forEach((m, mi) => {
+        html += `<div class="ms"><h4>${esc(m.h)}</h4>` + m.items.map((it, ii) => {
+          const id = p.id+"."+mi+"."+ii;
+          return `<label class="chk ${state[id]?'done':''}"><input type="checkbox" data-id="${id}" ${state[id]?'checked':''}><span>${esc(it)}</span></label>`;
+        }).join("") + `</div>`;
+      });
+      html += `<h3>Stretch goals</h3><ul class="plain">${p.stretch.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+        <div class="done-box"><b>Done when:</b> ${esc(p.done)}</div></div>`;
+      d.innerHTML = html;
+      sec.appendChild(d);
+    });
+    host.appendChild(sec);
+  });
+  host.addEventListener("change", e => {
+    const cb = e.target.closest("input[type=checkbox]");
+    if(!cb) return;
+    state[cb.dataset.id] = cb.checked;
+    cb.closest("label").classList.toggle("done", cb.checked);
+    save(); updateStats();
+  });
+  updateStats(); applyFilter();
+}
+
+function updateStats(){
+  let total = 0, done = 0;
+  PROJECTS.forEach(p => {
+    const ids = projectItems(p);
+    const n = ids.filter(i => state[i]).length;
+    total += ids.length; done += n;
+    const el = document.getElementById("stat-"+p.id);
+    if(el) el.textContent = n + " / " + ids.length;
+  });
+  document.getElementById("overallBar").style.width = (total ? 100*done/total : 0) + "%";
+  document.getElementById("overallText").textContent = done + " / " + total + " deliverables";
+}
+
+function applyFilter(){
+  document.querySelectorAll("details.proj").forEach(d => {
+    const show = !activeLang || d.dataset.langs.split(",").includes(activeLang);
+    d.classList.toggle("hidden", !show);
+  });
+  document.querySelectorAll("section.phase").forEach(s => {
+    s.classList.toggle("hidden", !s.querySelector("details.proj:not(.hidden)"));
+  });
+  document.querySelectorAll("#chips .chip").forEach(c => c.classList.toggle("on", c.dataset.l === (activeLang||"")));
+}
+
+const chips = document.getElementById("chips");
+[["", "All"], ...allLangs.map(l => [l, l])].forEach(([v, label]) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.dataset.l = v; b.textContent = label;
+  b.onclick = () => { activeLang = v || null; applyFilter(); };
+  chips.appendChild(b);
+});
+document.getElementById("expand").onclick = () => document.querySelectorAll("details.proj").forEach(d => d.open = true);
+document.getElementById("collapse").onclick = () => document.querySelectorAll("details.proj").forEach(d => d.open = false);
+document.getElementById("reset").onclick = () => {
+  if(confirm("Clear all ticked deliverables?")){ state = {}; save(); render(); }
+};
+render();
+</script>
+</body>
+</html>

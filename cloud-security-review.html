@@ -1,0 +1,1048 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cloud Security Review: Concepts, IAM, Compliance, IaC</title><style>
+:root{--bg:#fbfaf8;--fg:#1f2328;--muted:#5b6370;--line:#e3e0da;--accent:#2563eb;--code:#f3f1ec;--side:#f4f2ee}
+@media (prefers-color-scheme:dark){:root{--bg:#16181c;--fg:#e6e6e6;--muted:#9aa3ad;--line:#2d3138;--accent:#7aa7ff;--code:#22252b;--side:#1c1f24}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);border-right:1px solid var(--line);padding:24px 20px}
+nav h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+nav ul{list-style:none;margin:0;padding:0}nav li{margin:2px 0}
+nav a{display:block;padding:6px 10px;border-radius:6px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a:hover{background:var(--line)}
+.btn{display:inline-block;margin-top:18px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;font:inherit;font-size:13px}
+main{max-width:920px;padding:40px 48px 80px}
+h1{font-size:32px;line-height:1.2;margin:0 0 4px}h1+p{color:var(--muted);margin-top:0}
+h2{font-size:24px;margin:56px 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+h3{font-size:19px;margin:32px 0 8px}h4{font-size:16px;margin:24px 0 6px;color:var(--accent)}
+a{color:var(--accent)}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--side);font-weight:600}
+code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--line)}pre code{padding:0;background:none}
+.diagram{margin:20px 0;padding:12px;border:1px solid var(--line);border-radius:10px}
+.diagram svg{width:100%;height:auto;color:var(--fg)}figcaption{font-size:13px;color:var(--muted);text-align:center}
+li.task{list-style:none;margin-left:-22px}li.task input{margin-right:8px}
+@media (max-width:860px){.layout{grid-template-columns:1fr}nav{position:static;height:auto}main{padding:24px 18px}}
+@media print{nav{display:none}.layout{display:block}main{max-width:none;padding:0}h2{break-before:page}pre,table,figure{break-inside:avoid}a{color:inherit}}
+</style></head><body><div class="layout">
+<nav><h2>Contents</h2><div class="toc">
+<ul>
+<li><a href="#how-to-use-this-reviewer">How to use this reviewer</a></li>
+<li><a href="#whats-new-in-20252026-as-of-november-2026">What's new in 2025–2026 (as of November 2026)</a></li>
+<li><a href="#1-cloud-security-concepts">1. Cloud security concepts</a></li>
+<li><a href="#2-identity-and-access-management-iam">2. Identity and access management (IAM)</a></li>
+<li><a href="#3-compliance-frameworks">3. Compliance frameworks</a></li>
+<li><a href="#4-infrastructure-as-code-iac">4. Infrastructure as code (IaC)</a></li>
+<li><a href="#5-putting-it-together-self-check-and-labs">5. Putting it together, self-check and labs</a></li>
+</ul>
+</div>
+<button class="btn" id="printBtn" hidden onclick="window.print()">Print / Save as PDF</button><script>try{if(window.self===window.top)document.getElementById("printBtn").hidden=false}catch(e){}</script></nav>
+<main><h1 id="cloud-security-review-concepts-iam-compliance-iac">Cloud Security Review: Concepts, IAM, Compliance, IaC</h1>
+<p><em>Updated November 16, 2026</em></p>
+<h2 id="how-to-use-this-reviewer">How to use this reviewer</h2>
+<p>Each of the four topics opens with a <strong>coarse view</strong> (the ideas you must be able to explain in two minutes) and then a <strong>deep dive</strong> (the mechanics, edge cases and examples an interviewer or exam will probe). The last section ties the four together and ends with self-check questions and hands-on labs.</p>
+<p>The four topics form one stack: <strong>concepts</strong> say what to protect and why, <strong>IAM</strong> controls who can touch it, <strong>compliance</strong> proves you did it, and <strong>IaC</strong> makes all of it repeatable and reviewable.</p>
+<p>Examples lean on AWS, with Azure and GCP equivalents named. Framework versions are stated as of mid-2026 and written without a fresh lookup, so confirm dates on the official pages listed at the end before relying on them.</p>
+<h2 id="whats-new-in-20252026-as-of-november-2026">What's new in 2025–2026 (as of November 2026)</h2>
+<p>Five shifts matter most: AI agents became a new identity class to govern, post-quantum TLS went on by default at the big providers, AWS merged its detection tools into one Security Hub, FedRAMP moved to the 20x model, and Terraform/OpenTofu gained discovery and safety features. Each item links to its source.</p>
+<h3 id="cloud-security-concepts-what-changed">Cloud security concepts: what changed</h3>
+<ul>
+<li><strong>Unified cloud detection.</strong> At re:Invent 2025 AWS made the new Security Hub generally available; it correlates GuardDuty, Inspector, Security Hub CSPM and Macie findings into near-real-time risk analytics (<a href="https://aws.amazon.com/blogs/security/aws-launches-ai-enhanced-security-innovations-at-reinvent-2025" target="_blank" rel="noopener">AWS Security Blog</a>). The old posture service is now called <strong>Security Hub CSPM</strong>. AWS also expanded GuardDuty Extended Threat Detection and previewed an AI <strong>AWS Security Agent</strong> (<a href="https://siliconangle.com/2025/12/02/aws-rolls-security-agent-strengthens-guardduty-security-hub-reinvent/" target="_blank" rel="noopener">SiliconANGLE</a>). Learn: threat vs exposure findings, multi-stage attack-sequence detection.</li>
+<li><strong>Post-quantum cryptography is in production.</strong> NIST finalized ML-KEM (FIPS 203), ML-DSA (FIPS 204) and SLH-DSA (FIPS 205) in August 2024. By April 2026 AWS had hybrid ML-KEM TLS on by default for KMS, ACM, Secrets Manager, Payment Cryptography and S3, and is removing the older Kyber support (<a href="https://builder.aws.com/content/3DejKUc7QSvuXlC13C1rbtoMZNY/ml-kem-on-aws-post-quantum-cryptography-has-left-the-lab-and-entered-production-sdks" target="_blank" rel="noopener">AWS Builder Center</a>). Google Cloud KMS made ML-KEM, ML-DSA and SLH-DSA keys GA and targets full PQC migration by 2029 (<a href="https://cloud.google.com/blog/products/identity-security/pqc-in-plaintext-google-clouds-post-quantum-cryptography-roadmap" target="_blank" rel="noopener">Google Cloud</a>). Learn: harvest-now-decrypt-later, hybrid key exchange (X25519MLKEM768), crypto inventory and crypto agility.</li>
+<li><strong>AI agents are an attack surface.</strong> The OWASP Top 10 for Agentic Applications 2026 treats agents as operational actors with delegated authority and infrastructure access (<a href="https://cloudsecurityalliance.org/articles/governing-non-human-identities-in-agentic-systems" target="_blank" rel="noopener">CSA</a>). Learn: prompt injection leading to tool misuse, excessive agency, data exfiltration through tools, poisoned models and plugins.</li>
+<li><strong>MCP (Model Context Protocol) security.</strong> Remote MCP servers are OAuth 2.1 resource servers. The 2026-07-28 spec requires the <code>resource</code> parameter (RFC 8707), HTTPS everywhere and PKCE, and clients must refuse servers whose authorization server lacks PKCE (<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/security-considerations.md" target="_blank" rel="noopener">MCP spec</a>). <strong>Token passthrough</strong> (forwarding a client's token to a downstream API) is forbidden (<a href="https://modelcontextprotocol.io/docs/2025-03-26/tutorials/security/security_best_practices" target="_blank" rel="noopener">MCP best practices</a>). Real-world example: an SSRF in Azure MCP Server (CVE-2026-26118) let an attacker leak its managed-identity token (<a href="https://guptadeepak.com/the-mcp-security-implementation-playbook-enterprise-authorization-patterns-that-actually-work/" target="_blank" rel="noopener">Gupta</a>). Learn: tool poisoning, audience validation, least-privilege tool scopes.</li>
+<li><strong>CI/CD supply chain.</strong> 2025's compromised GitHub Action (tj-actions/changed-files) and self-spreading npm malware (Shai-Hulud) showed that pipelines holding cloud credentials are prime targets. Pin Actions to full commit SHAs and keep CI on short-lived OIDC credentials.</li>
+</ul>
+<h3 id="iam-what-changed">IAM: what changed</h3>
+<ul>
+<li><strong>Non-human identities (NHIs) now dominate.</strong> Industry studies put NHIs at roughly 82 per human user (<a href="https://www.wavestone.com/en/insight/the-expanding-scope-of-non-human-identities-in-the-age-of-ai/" target="_blank" rel="noopener">Wavestone</a>). The CSA's July 2026 "Defining Non-Human Identity" report calls for separate governance: discovery, classification, an owner for every NHI, and short-lived tokens, workload identity federation and auto-renewed certificates instead of static secrets (<a href="https://virtualizationreview.com/articles/2026/07/23/amid-rise-of-ai-agents-advice-for-dealing-with-non-human-identities.aspx" target="_blank" rel="noopener">Virtualization Review</a>).</li>
+<li><strong>Dedicated identities for AI agents.</strong> Microsoft <strong>Entra Agent ID</strong> gives agents their own identities under Conditional Access, with specialized OAuth flows (<a href="https://learn.microsoft.com/en-us/entra/agent-id/whats-new-agent-id" target="_blank" rel="noopener">Microsoft Learn</a>); every agent identity must have at least one human <strong>sponsor</strong> (<a href="https://entradiff.merill.net/2026-06-05.html" target="_blank" rel="noopener">Entra docs changes</a>). Third-party agents (e.g. on AWS Bedrock) can join through workload identity federation (<a href="https://docs.azure.cn/en-us/entra/agent-id/what-is-microsoft-entra-agent-id" target="_blank" rel="noopener">Microsoft docs</a>). AWS offers <strong>Bedrock AgentCore Identity</strong> for agent access to AWS and third-party tools (<a href="https://dev.to/sreeni5018/ai-agent-identity-at-scalemicrosoft-entra-agent-id-vs-aws-agentcore-identity-1945" target="_blank" rel="noopener">DEV</a>). Learn: agent-on-behalf-of-user delegation, zero standing privilege, kill switches, per-action audit.</li>
+<li><strong>AWS IAM updates worth knowing:</strong></li>
+<li><strong>IAM Policy Autopilot</strong>: open-source static-code analysis (launched re:Invent 2025) that generates IAM policies from your code (<a href="https://aws.amazon.com/ru/about-aws/whats-new/2026/02/aws-iam-policy-autopilot-kiro-power/" target="_blank" rel="noopener">AWS</a>); it became Terraform-aware in May 2026 (<a href="https://aws.amazon.com/vi/about-aws/whats-new/2026/05/iam-policy-autopilot/" target="_blank" rel="noopener">AWS</a>).</li>
+<li>Access-denied errors now name the ARN of the IAM or Organizations policy that denied you, within the same account and org (Jan 2026) (<a href="https://aws.amazon.com/de/about-aws/whats-new/2026/01/additional-policy-details-access-denied-error/" target="_blank" rel="noopener">AWS</a>).</li>
+<li>Passkeys are supported as MFA for IAM and root users (<a href="https://www.securityweek.com/aws-announces-authentication-and-malware-protection-enhancements/amp/" target="_blank" rel="noopener">SecurityWeek</a>); combine with centralized root access management to remove root credentials from member accounts.</li>
+<li>IAM Identity Center can now manage AWS application access without managing account access (Aug 2026) (<a href="https://aws.amazon.com/about-aws/whats-new/2026/08/aws-identity-center-accounts-optional/" target="_blank" rel="noopener">AWS</a>).</li>
+<li>Quotas doubled for customer managed policies and instance profiles, to 10,000 per account (May 2026) (<a href="https://aws.amazon.com/ko/about-aws/whats-new/2026/05/aws-iam-increased-quotas/" target="_blank" rel="noopener">AWS</a>).</li>
+</ul>
+<h3 id="compliance-what-changed">Compliance: what changed</h3>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Change</th>
+<th>Date</th>
+<th>What it means for you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.fedramp.gov/2026-11-02-memo-to-milestone/" target="_blank" rel="noopener">FedRAMP</a></td>
+<td>Consolidated Rules for 2026 (CR26) make FedRAMP 20x the standard path; first 20x Class C certification granted</td>
+<td>Jun 25 and Oct 29, 2026</td>
+<td>Classes replace impact levels (Class C replaces Moderate); Rev5 status expected to end by end of 2028 (<a href="https://www.crowell.com/en/insights/client-alerts/time-for-a-change-fedramp-fundamentally-revamps-program-with-consolidated-rules-for-2026" target="_blank" rel="noopener">Crowell</a>)</td>
+</tr>
+<tr>
+<td><a href="https://www.jonesday.com/de/insights/2026/07/eu-cyber-resilience-act-24hour-reporting-duties-start-september-11-2026" target="_blank" rel="noopener">EU Cyber Resilience Act</a></td>
+<td>Article 14 reporting of actively exploited vulnerabilities and severe incidents starts</td>
+<td>Sep 11, 2026</td>
+<td>24-hour early warnings via ENISA's Single Reporting Platform; full application Dec 11, 2027; fines up to €15M or 2.5% of turnover</td>
+</tr>
+<tr>
+<td><a href="https://cloudsecurityalliance.org/artifacts/cloud-controls-matrix-v4-1" target="_blank" rel="noopener">CSA CCM v4.1</a></td>
+<td>New CCM and CAIQ version</td>
+<td>Jan 27, 2026</td>
+<td>207 controls in 17 domains; <a href="https://cloudsecurityalliance.org/articles/ai-controls-matrix-v1-1-strengthening-the-foundation-for-trustworthy-ai" target="_blank" rel="noopener">AI Controls Matrix v1.1</a> (247 control objectives) is a superset for AI systems</td>
+</tr>
+<tr>
+<td><a href="https://www.pcisecuritystandards.org/rfc_instructions_pci-dss-v4-0-1-june2026/" target="_blank" rel="noopener">PCI DSS</a></td>
+<td>Request for comments on v4.0.1 opens work on the next version</td>
+<td>Jun 3 – Jul 20, 2026</td>
+<td>v4.0.1 remains the only version you are assessed against; no release date for its successor</td>
+</tr>
+<tr>
+<td><a href="https://www.dwt.com/blogs/privacy--security-law-blog/2026/07/hhs-updates-hipaa-rulemaking-timeframes" target="_blank" rel="noopener">HIPAA Security Rule</a></td>
+<td>Final rule for the Jan 2025 proposal delayed</td>
+<td>Now targeted Jul 2027</td>
+<td>The current rule stays in force; the proposal (mandatory MFA, encryption, asset inventory) is still a useful roadmap</td>
+</tr>
+<tr>
+<td><a href="https://csrc.nist.gov/Projects/risk-management" target="_blank" rel="noopener">NIST SP 800-53</a></td>
+<td>Release 5.2.0 adds software update and patch-integrity controls (SA-15(13), SA-24, SI-02(07))</td>
+<td>Aug 27, 2025</td>
+<td>Baselines unchanged; NIST is also building 800-53 control overlays for AI systems (<a href="https://csrc.nist.gov/Projects/cosis" target="_blank" rel="noopener">COSIS</a>)</td>
+</tr>
+<tr>
+<td><a href="https://www.cisecurity.org/insights/blog/cis-benchmarks-november-2026-update" target="_blank" rel="noopener">CIS Benchmarks</a></td>
+<td>AWS Foundations Benchmark v7.1.0 released</td>
+<td>Nov 2026</td>
+<td>CIS Controls v8.1 is still the current Controls version</td>
+</tr>
+</tbody>
+</table>
+<h3 id="infrastructure-as-code-what-changed">Infrastructure as code: what changed</h3>
+<ul>
+<li><strong>Terraform 1.14</strong> (Nov 2025) added <strong>list resources</strong> and <code>terraform query</code> to discover existing infrastructure and generate config for bulk import, plus an <strong>actions</strong> block for provider-defined operations outside create/read/update/delete, such as invoking a Lambda (<a href="https://versionlog.com/terraform/1.14/" target="_blank" rel="noopener">versionlog</a>). The current line is <strong>Terraform 1.16</strong>, released Aug 26, 2026 (<a href="https://newreleases.io/project/github/hashicorp/terraform/release/v1.16.0" target="_blank" rel="noopener">NewReleases</a>).</li>
+<li><strong>OpenTofu</strong> joined the CNCF in April 2025 and keeps adding features Terraform's CLI lacks, notably built-in state encryption (<a href="https://scalr.com/learning-center/what-is-opentofu" target="_blank" rel="noopener">Scalr</a>). 1.11 (Dec 2025) brought ephemeral values (<a href="https://dev.to/mechcloud_academy/opentofu-vs-terraform-in-2026-is-the-fork-finally-worth-it-3nd1" target="_blank" rel="noopener">DEV</a>), 1.12 (May 2026) brought dynamic <code>prevent_destroy</code> (<a href="https://infoq.com/news/2026/05/opentofu-release-terraform" target="_blank" rel="noopener">InfoQ</a>), and 1.13 shipped Sep 30, 2026 (<a href="https://devtoolhub.com/opentofu-1-13-whats-new/" target="_blank" rel="noopener">DevToolHub</a>).</li>
+<li><strong>Policy from code</strong>: IAM Policy Autopilot's Terraform awareness means least-privilege policies can be generated alongside the IaC that needs them; still review every generated policy.</li>
+<li><strong>AI-written IaC</strong>: assistants and agent skills now write and import Terraform. Treat AI output like any pull request: same scanners, same plan review, same separation of duties.</li>
+</ul>
+<h3 id="priority-study-list-for-2026">Priority study list for 2026</h3>
+<ol>
+<li>Agent and non-human identity: Entra Agent ID or AgentCore Identity, workload identity federation, zero standing privilege.</li>
+<li>MCP and agentic AI threats: OAuth 2.1 for MCP, token audience validation, OWASP Agentic Top 10.</li>
+<li>The new AWS Security Hub and GuardDuty Extended Threat Detection.</li>
+<li>Post-quantum readiness: ML-KEM hybrid TLS, crypto inventory.</li>
+<li>FedRAMP 20x and the shift to machine-readable, continuously validated evidence.</li>
+<li>EU Cyber Resilience Act reporting if you ship software into the EU.</li>
+<li>Terraform 1.14+ query/import and actions, or OpenTofu 1.12+ with state encryption.</li>
+<li>CI/CD supply-chain hardening: SHA-pinned Actions, OIDC only, signed artifacts.</li>
+</ol>
+<h2 id="1-cloud-security-concepts">1. Cloud security concepts</h2>
+<h3 id="coarse-view">Coarse view</h3>
+<p>Cloud security is ordinary security (confidentiality, integrity, availability) applied to infrastructure you rent and drive through an API. Three facts change everything:</p>
+<ul>
+<li><strong>The control plane is the new perimeter.</strong> Anyone holding valid API credentials can create, read or delete infrastructure from anywhere. Identity, not the network edge, is the main boundary.</li>
+<li><strong>Responsibility is shared.</strong> The provider secures the cloud itself; you secure what you put in it and how you configure it.</li>
+<li><strong>Misconfiguration is the top cause of breaches.</strong> Public buckets, open security groups and over-privileged roles cause far more incidents than provider-side flaws.</li>
+</ul>
+<p>Core principles to be able to define and apply:</p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Meaning</th>
+<th>Cloud example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Least privilege</td>
+<td>Grant only the access a task needs, for only as long as it needs it</td>
+<td>Role scoped to one S3 prefix, not <code>s3:*</code></td>
+</tr>
+<tr>
+<td>Defense in depth</td>
+<td>Layer independent controls so one failure is not a breach</td>
+<td>SCP + IAM policy + bucket policy + encryption + logging</td>
+</tr>
+<tr>
+<td>Zero trust</td>
+<td>Never trust by network location; verify identity, device and context on every request</td>
+<td>No flat VPN access; per-request auth via identity-aware proxy</td>
+</tr>
+<tr>
+<td>Assume breach</td>
+<td>Design so a compromise is detected and contained</td>
+<td>Separate accounts per workload, alerting on unusual API calls</td>
+</tr>
+<tr>
+<td>Blast radius</td>
+<td>Limit how much one failure or stolen credential can reach</td>
+<td>One account or project per environment and workload</td>
+</tr>
+<tr>
+<td>Secure by default</td>
+<td>The safe setting is the default and deviations need approval</td>
+<td>S3 Block Public Access on at the org level</td>
+</tr>
+<tr>
+<td>Immutability</td>
+<td>Replace rather than patch running resources</td>
+<td>Rebuild AMIs or container images, redeploy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deep-dive">Deep dive</h3>
+<h4 id="shared-responsibility-by-service-model">Shared responsibility by service model</h4>
+<p>The more managed the service, the more the provider owns. Your data, identities and access configuration stay yours in every model.</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>IaaS (EC2, VMs)</th>
+<th>PaaS (RDS, App Service, Cloud Run)</th>
+<th>SaaS (M365, Salesforce)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data, classification, access policies</td>
+<td>Customer</td>
+<td>Customer</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>Identities and accounts</td>
+<td>Customer</td>
+<td>Customer</td>
+<td>Customer</td>
+</tr>
+<tr>
+<td>Application code</td>
+<td>Customer</td>
+<td>Customer</td>
+<td>Provider</td>
+</tr>
+<tr>
+<td>Runtime, middleware</td>
+<td>Customer</td>
+<td>Provider</td>
+<td>Provider</td>
+</tr>
+<tr>
+<td>Guest OS, patching</td>
+<td>Customer</td>
+<td>Provider</td>
+<td>Provider</td>
+</tr>
+<tr>
+<td>Network config (security groups, firewall rules)</td>
+<td>Customer</td>
+<td>Shared</td>
+<td>Provider</td>
+</tr>
+<tr>
+<td>Hypervisor, hardware, physical data centers</td>
+<td>Provider</td>
+<td>Provider</td>
+<td>Provider</td>
+</tr>
+</tbody>
+</table>
+<p>Exam trap: encryption of data at rest is usually a customer <em>configuration</em> choice even when the provider supplies the mechanism.</p>
+<p>Deployment models: public, private, hybrid, multi-cloud, community. Service models per NIST SP 800-145: IaaS, PaaS, SaaS. Essential characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service.</p>
+<h4 id="organization-structure-and-guardrails">Organization structure and guardrails</h4>
+<p>The account, subscription or project is the strongest isolation boundary you control. Build a <strong>landing zone</strong>: a pre-secured multi-account layout created by code.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>AWS</th>
+<th>Azure</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top container</td>
+<td>Organization</td>
+<td>Tenant + root management group</td>
+<td>Organization</td>
+</tr>
+<tr>
+<td>Grouping</td>
+<td>Organizational Units (OUs)</td>
+<td>Management groups</td>
+<td>Folders</td>
+</tr>
+<tr>
+<td>Isolation unit</td>
+<td>Account</td>
+<td>Subscription (+ resource groups)</td>
+<td>Project</td>
+</tr>
+<tr>
+<td>Preventive guardrail</td>
+<td>Service Control Policies, Resource Control Policies</td>
+<td>Azure Policy (deny effect)</td>
+<td>Organization Policy constraints</td>
+</tr>
+<tr>
+<td>Landing zone tooling</td>
+<td>Control Tower</td>
+<td>Azure Landing Zones (CAF)</td>
+<td>Cloud Foundation / Fabric FAST</td>
+</tr>
+</tbody>
+</table>
+<p>Typical account layout: management (billing, org only, nothing else), security tooling, log archive (immutable), shared networking, and separate workload accounts per environment (dev, staging, prod).</p>
+<h4 id="network-security">Network security</h4>
+<ul>
+<li><strong>VPC/VNet design</strong>: public subnets hold only load balancers and NAT; app and data tiers sit in private subnets with no public IPs.</li>
+<li><strong>Security groups</strong> (AWS) are stateful and allow-only, attached to network interfaces. <strong>NACLs</strong> are stateless, subnet-level, ordered allow and deny rules. Azure uses NSGs; GCP uses VPC firewall rules and hierarchical firewall policies.</li>
+<li><strong>Never</strong> allow <code>0.0.0.0/0</code> on SSH (22) or RDP (3389). Use AWS SSM Session Manager, Azure Bastion or GCP IAP TCP forwarding instead of bastion hosts with open ports.</li>
+<li><strong>Private access to services</strong>: VPC endpoints / PrivateLink, Azure Private Endpoints, GCP Private Service Connect keep traffic to storage and APIs off the internet.</li>
+<li><strong>Edge</strong>: WAF for layer-7 attacks (SQLi, XSS, bots), DDoS protection (AWS Shield, Azure DDoS Protection, Cloud Armor), CDN.</li>
+<li><strong>Egress control</strong> is often forgotten: restrict outbound traffic so stolen data and malware callbacks are blocked (egress firewall, DNS firewall).</li>
+<li><strong>Microsegmentation</strong>: in Kubernetes, NetworkPolicies default-deny pod-to-pod traffic.</li>
+</ul>
+<h4 id="data-protection-and-encryption">Data protection and encryption</h4>
+<ul>
+<li><strong>At rest</strong>: provider KMS (AWS KMS, Azure Key Vault, Cloud KMS). Know <strong>envelope encryption</strong>: a data encryption key (DEK) encrypts the data; a key encryption key (KEK) held in KMS encrypts the DEK. The KEK never leaves the KMS/HSM.</li>
+<li><strong>Key ownership options</strong>: provider-managed keys, customer-managed keys (CMK, you control policy and rotation), BYOK (you import key material), HYOK / external key store (key stays in your HSM). More control means more operational burden.</li>
+<li><strong>Key policy is access control</strong>: in AWS, a KMS key policy must allow use; denying <code>kms:Decrypt</code> makes the encrypted data unreadable even to admins with S3 access.</li>
+<li><strong>In transit</strong>: TLS 1.2+ everywhere, enforce with <code>aws:SecureTransport</code> conditions; mTLS for service-to-service.</li>
+<li><strong>Storage exposure</strong>: turn on S3 Block Public Access at org level; disable shared-key and anonymous access on Azure storage; use uniform bucket-level access on GCS.</li>
+<li><strong>Backups</strong>: immutable copies (S3 Object Lock, Azure immutable blobs, backup vault lock) in a separate account defend against ransomware and a compromised admin.</li>
+<li><strong>Data classification</strong> decides controls: public, internal, confidential, restricted. Tokenization and masking reduce how much sensitive data systems hold.</li>
+</ul>
+<h4 id="secrets-management">Secrets management</h4>
+<p>Secrets live in a secrets manager (AWS Secrets Manager, Azure Key Vault, GCP Secret Manager, HashiCorp Vault), are fetched at runtime by a workload identity, and rotate automatically. Never in source code, container images, plain environment files or Terraform state. Prefer no secret at all: IAM database auth, workload identity federation, short-lived tokens.</p>
+<h4 id="logging-monitoring-and-detection">Logging, monitoring and detection</h4>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>AWS</th>
+<th>Azure</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Control-plane audit log</td>
+<td>CloudTrail (management events; data events cost extra)</td>
+<td>Activity Log + Entra sign-in/audit logs</td>
+<td>Cloud Audit Logs (Admin Activity always on; Data Access opt-in)</td>
+</tr>
+<tr>
+<td>Network flow</td>
+<td>VPC Flow Logs</td>
+<td>NSG / VNet flow logs</td>
+<td>VPC Flow Logs</td>
+</tr>
+<tr>
+<td>Threat detection</td>
+<td>GuardDuty</td>
+<td>Defender for Cloud</td>
+<td>Security Command Center</td>
+</tr>
+<tr>
+<td>Findings hub / posture</td>
+<td>Security Hub (unified, GA Dec 2025), Security Hub CSPM, Config</td>
+<td>Defender for Cloud, Azure Policy</td>
+<td>Security Command Center</td>
+</tr>
+<tr>
+<td>SIEM</td>
+<td>Security Lake + any SIEM</td>
+<td>Microsoft Sentinel</td>
+<td>Google SecOps</td>
+</tr>
+</tbody>
+</table>
+<p>Centralize logs into the log-archive account, make them immutable, and alert on high-signal events: root login, CloudTrail stopped, IAM policy changes, security group opened to the world, access key created for a user, unusual region activity.</p>
+<h4 id="tool-categories-acronyms-you-will-see">Tool categories (acronyms you will see)</h4>
+<ul>
+<li><strong>CSPM</strong> (posture management): finds misconfigurations against benchmarks like CIS.</li>
+<li><strong>CWPP</strong> (workload protection): vulnerabilities and runtime threats on VMs, containers, serverless.</li>
+<li><strong>CIEM</strong> (entitlement management): finds excessive and unused permissions.</li>
+<li><strong>DSPM</strong> (data posture): finds where sensitive data lives and who can reach it.</li>
+<li><strong>CNAPP</strong>: a platform combining the above plus IaC scanning.</li>
+</ul>
+<h4 id="workload-security">Workload security</h4>
+<ul>
+<li><strong>VMs</strong>: hardened golden images, patching via SSM/Update Manager, <strong>IMDSv2 required</strong> (session-token metadata service; blocks the SSRF-to-credentials attack used in the 2019 Capital One breach).</li>
+<li><strong>Containers</strong>: minimal base images, image scanning in CI and registry, signed images, non-root user, read-only root filesystem, no privileged pods, resource limits.</li>
+<li><strong>Kubernetes</strong>: RBAC with no <code>cluster-admin</code> for apps, Pod Security Standards (restricted), admission control (Kyverno, OPA Gatekeeper), NetworkPolicies, private API endpoint, secrets encrypted with KMS.</li>
+<li><strong>Serverless</strong>: one role per function, scoped triggers, dependency scanning; the attack surface shifts to code and permissions.</li>
+</ul>
+<h4 id="common-cloud-attack-paths">Common cloud attack paths</h4>
+<ol>
+<li>Leaked access key (public GitHub repo, CI logs) used to enumerate and pivot.</li>
+<li>SSRF in a web app reaches the instance metadata service and steals role credentials.</li>
+<li>Over-privileged role allows privilege escalation (for example <code>iam:PassRole</code> plus <code>lambda:CreateFunction</code>).</li>
+<li>Public storage bucket or snapshot exposes data.</li>
+<li>Compromised account used for cryptomining in unused regions.</li>
+<li>Supply chain: malicious package, base image or Terraform module.</li>
+</ol>
+<h4 id="incident-response-in-the-cloud">Incident response in the cloud</h4>
+<p>Follow NIST SP 800-61 (Rev. 3 aligns IR with CSF 2.0). Cloud-specific moves: isolate an instance by swapping in a quarantine security group, snapshot disks and memory for forensics before terminating, revoke active role sessions (AWS <code>aws:TokenIssueTime</code> deny), disable and rotate keys, and query CloudTrail for everything the stolen principal did. Pre-build IR roles and runbooks; you cannot request access during an incident.</p>
+<h4 id="resilience">Resilience</h4>
+<p>Availability is part of security. Know RTO (how long you can be down) and RPO (how much data you can lose). Spread across availability zones by default and across regions when the RTO demands it. Test restores, not just backups.</p>
+<h2 id="2-identity-and-access-management-iam">2. Identity and access management (IAM)</h2>
+<h3 id="coarse-view_1">Coarse view</h3>
+<p>IAM answers two questions on every request: <strong>who are you</strong> (authentication, AuthN) and <strong>what may you do</strong> (authorization, AuthZ). In the cloud, every API call is an IAM decision, so IAM is the real perimeter.</p>
+<ul>
+<li><strong>Principals</strong> are humans (employees, admins) and workloads (VMs, functions, pods, CI pipelines). Workload identities now outnumber humans many times over.</li>
+<li><strong>Credentials should be short-lived.</strong> Humans sign in through SSO with MFA and get temporary sessions; workloads use roles or federated tokens. Long-lived access keys and service-account keys are the most common leaked secret.</li>
+<li><strong>Least privilege is a process, not a setting.</strong> Start narrow, use access analysis to trim unused permissions, review access regularly.</li>
+<li><strong>Identity lifecycle (joiner–mover–leaver)</strong>: provision on hire, adjust on role change, revoke on exit. Movers who keep old access cause privilege creep.</li>
+</ul>
+<h3 id="deep-dive_1">Deep dive</h3>
+<h4 id="authentication">Authentication</h4>
+<ul>
+<li><strong>MFA strength</strong>: SMS &lt; TOTP app &lt; push with number matching &lt; <strong>phishing-resistant</strong> FIDO2/WebAuthn (security keys, passkeys). Require phishing-resistant MFA for admins.</li>
+<li><strong>SAML 2.0</strong>: XML assertions from an identity provider (IdP) to a service provider (SP); common for enterprise SSO into cloud consoles.</li>
+<li><strong>OAuth 2.0</strong> is <em>delegated authorization</em> (an access token lets an app act on your behalf). <strong>OpenID Connect (OIDC)</strong> adds <em>authentication</em> on top with a signed ID token (JWT). Use Authorization Code + PKCE for apps; avoid the implicit flow.</li>
+<li><strong>SCIM</strong> automates user and group provisioning from the IdP to apps, which makes leaver revocation reliable.</li>
+<li><strong>Conditional / context-aware access</strong>: decisions consider device health, location, risk score (Entra Conditional Access, Google Context-Aware Access, Okta policies).</li>
+</ul>
+<h4 id="access-control-models">Access control models</h4>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Decision based on</th>
+<th>Strength</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DAC</td>
+<td>Owner grants access</td>
+<td>Flexible</td>
+<td>Inconsistent, hard to audit</td>
+</tr>
+<tr>
+<td>MAC</td>
+<td>Labels and clearances set by policy</td>
+<td>Strong, central</td>
+<td>Rigid</td>
+</tr>
+<tr>
+<td>RBAC</td>
+<td>Roles grouping permissions</td>
+<td>Easy to audit</td>
+<td>Role explosion</td>
+</tr>
+<tr>
+<td>ABAC</td>
+<td>Attributes (tags) of principal, resource, environment</td>
+<td>Scales with few policies</td>
+<td>Harder to reason about; tag hygiene critical</td>
+</tr>
+<tr>
+<td>ReBAC</td>
+<td>Relationships (user is editor of doc in folder)</td>
+<td>Fits app-level sharing (Google Zanzibar, OpenFGA)</td>
+<td>Needs a dedicated authZ service</td>
+</tr>
+</tbody>
+</table>
+<p>Cloud IAM is RBAC at its core with ABAC conditions layered on (AWS tags in conditions, Azure ABAC conditions, GCP IAM Conditions).</p>
+<h4 id="aws-iam-in-depth">AWS IAM in depth</h4>
+<p><strong>Principals</strong>: root user (lock away, MFA, no access keys), IAM users (avoid for humans), <strong>IAM roles</strong> (assumed via STS for temporary credentials), federated identities via <strong>IAM Identity Center</strong> (formerly AWS SSO).</p>
+<p><strong>Policy types</strong>, from broadest guardrail to narrowest:</p>
+<table>
+<thead>
+<tr>
+<th>Policy type</th>
+<th>Attached to</th>
+<th>Grants?</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service Control Policy (SCP)</td>
+<td>Org, OU, account</td>
+<td>No, only limits</td>
+<td>Max permissions for principals in member accounts</td>
+</tr>
+<tr>
+<td>Resource Control Policy (RCP)</td>
+<td>Org, OU, account</td>
+<td>No, only limits</td>
+<td>Max permissions on resources, e.g. block access from outside the org</td>
+</tr>
+<tr>
+<td>Permissions boundary</td>
+<td>User or role</td>
+<td>No, only limits</td>
+<td>Lets developers create roles without escalating</td>
+</tr>
+<tr>
+<td>Identity-based policy</td>
+<td>User, group, role</td>
+<td>Yes</td>
+<td>What this principal may do</td>
+</tr>
+<tr>
+<td>Resource-based policy</td>
+<td>S3 bucket, KMS key, SQS, Lambda…</td>
+<td>Yes</td>
+<td>Who may use this resource; enables cross-account</td>
+</tr>
+<tr>
+<td>Session policy</td>
+<td>Passed at AssumeRole</td>
+<td>No, only limits</td>
+<td>Narrows one session</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evaluation rules to memorize</strong> (the flow diagram below shows the order):</p>
+<ol>
+<li>Everything starts as an <strong>implicit deny</strong>.</li>
+<li>An <strong>explicit deny</strong> anywhere wins, always.</li>
+<li>SCPs, RCPs, permissions boundaries and session policies must all allow (they are filters, not grants).</li>
+<li><strong>Same account</strong>: an allow in the identity policy <em>or</em> the resource policy is enough.</li>
+<li><strong>Cross-account</strong>: the identity policy in the caller's account <em>and</em> the resource policy (or role trust policy) in the target account must both allow.</li>
+</ol>
+<figure class="diagram"><svg viewBox="0 0 760 656" role="img" aria-label="AWS request evaluation flow" font-family="inherit" font-size="13">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker></defs>
+<text x="24" y="32" font-size="15" font-weight="600" fill="currentColor">Explicit deny always wins; every other layer must allow</text>
+<g fill="none" stroke="#6b7280" stroke-width="1.25" marker-end="url(#a)">
+<path d="M280 102V128"/><path d="M280 172V198"/><path d="M280 242V268"/><path d="M280 312V338"/><path d="M280 382V408"/><path d="M280 452V478"/><path d="M280 522V548"/>
+<path d="M440 150H560"/><path d="M440 220H560"/><path d="M440 360H560"/><path d="M440 430H560"/><path d="M440 500H560"/><path d="M120 290H40V570H120"/></g>
+<g fill="none" stroke="#6b7280" stroke-width="1.25"><rect x="120" y="58" width="320" height="44" rx="8"/><rect x="120" y="128" width="320" height="44" rx="8"/><rect x="120" y="198" width="320" height="44" rx="8"/><rect x="120" y="268" width="320" height="44" rx="8"/><rect x="120" y="338" width="320" height="44" rx="8"/><rect x="120" y="408" width="320" height="44" rx="8"/><rect x="120" y="478" width="320" height="44" rx="8"/></g>
+<g fill="currentColor" text-anchor="middle">
+<text x="280" y="84">Request starts as implicit deny</text><text x="280" y="154">Explicit Deny in any applicable policy?</text>
+<text x="280" y="224">RCPs and SCPs allow? (if in an org)</text><text x="280" y="294">Resource-based policy allows?</text>
+<text x="280" y="364">Identity-based policy allows?</text><text x="280" y="434">Permissions boundary allows? (if set)</text>
+<text x="280" y="504">Session policy allows? (if passed)</text></g>
+<rect x="120" y="548" width="320" height="44" rx="8" fill="#16a34a" fill-opacity=".12" stroke="#16a34a" stroke-width="2"/>
+<text x="280" y="574" text-anchor="middle" font-weight="600" fill="currentColor">Final decision: Allow</text>
+<rect x="560" y="128" width="160" height="394" rx="8" fill="#dc2626" fill-opacity=".12" stroke="#dc2626" stroke-width="2"/>
+<text x="640" y="329" text-anchor="middle" font-weight="600" fill="currentColor">Final decision: Deny</text>
+<g font-size="11.5" fill="#6b7280"><g text-anchor="middle"><text x="500" y="142">yes</text><text x="500" y="212">no</text><text x="500" y="352">no</text><text x="500" y="422">no</text><text x="500" y="492">no</text><text x="80" y="282">yes</text></g>
+<text x="290" y="189">no</text><text x="290" y="259">yes</text><text x="290" y="329">no</text><text x="290" y="399">yes</text><text x="290" y="469">yes</text><text x="290" y="539">yes</text>
+<text x="24" y="620">Same account: an allow from the resource-based policy is enough (left path).</text>
+<text x="24" y="638">Cross-account: the identity policy and the resource policy or role trust must both allow.</text></g>
+</svg><figcaption>AWS request evaluation · 6 checks, 1 shortcut</figcaption></figure>
+<p>Read it top down: any explicit deny ends the request, the org guardrails must allow, and a same-account resource-policy allow can skip the identity check.</p>
+<p><strong>Policy anatomy</strong> (<code>Effect</code>, <code>Action</code>, <code>Resource</code>, <code>Condition</code>, plus <code>Principal</code> in resource policies):</p>
+<pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;ReadReportsPrefixOnly&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;s3:GetObject&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:s3:::acme-data/reports/*&quot;,
+      &quot;Condition&quot;: {
+        &quot;Bool&quot;: {&quot;aws:SecureTransport&quot;: &quot;true&quot;},
+        &quot;StringEquals&quot;: {&quot;aws:PrincipalOrgID&quot;: &quot;o-abc123&quot;}
+      }
+    }
+  ]
+}
+</code></pre>
+<p>Useful global condition keys: <code>aws:PrincipalOrgID</code>, <code>aws:SourceVpce</code>, <code>aws:SourceIp</code>, <code>aws:MultiFactorAuthPresent</code>, <code>aws:SecureTransport</code>, <code>aws:PrincipalTag/*</code>, <code>aws:ResourceTag/*</code>, <code>aws:RequestedRegion</code>.</p>
+<p><strong>Roles and trust</strong>: a role has a <em>trust policy</em> (who may assume it) and <em>permission policies</em> (what it can do). For third parties use an <strong>external ID</strong> in the trust policy to prevent the <strong>confused deputy</strong> problem. Never trust <code>"Principal": "*"</code> without tight conditions.</p>
+<p><strong>Privilege escalation paths to recognize</strong>:</p>
+<ul>
+<li><code>iam:PassRole</code> + <code>ec2:RunInstances</code> or <code>lambda:CreateFunction</code>: launch compute with a more powerful role.</li>
+<li><code>iam:CreatePolicyVersion</code> / <code>iam:SetDefaultPolicyVersion</code>: rewrite your own policy.</li>
+<li><code>iam:AttachUserPolicy</code>, <code>iam:PutRolePolicy</code>: grant yourself admin.</li>
+<li><code>iam:UpdateAssumeRolePolicy</code>: add yourself to a powerful role's trust.</li>
+<li><code>iam:CreateAccessKey</code> on another user.</li>
+</ul>
+<p>Scope <code>iam:PassRole</code> with a <code>Resource</code> list of specific role ARNs and an <code>iam:PassedToService</code> condition.</p>
+<p><strong>Tooling</strong>: IAM Access Analyzer (external access findings, unused access, policy validation and generation from CloudTrail), credential report, last-accessed data, IAM policy simulator.</p>
+<h4 id="azure-iam">Azure IAM</h4>
+<ul>
+<li><strong>Microsoft Entra ID</strong> (formerly Azure AD) is the identity provider: users, groups, app registrations, service principals.</li>
+<li>Two separate role systems, a classic exam trap: <strong>Entra roles</strong> govern the directory (Global Administrator, User Administrator); <strong>Azure RBAC roles</strong> govern resources (Owner, Contributor, Reader, plus granular built-ins).</li>
+<li>Azure RBAC assignment = <strong>security principal + role definition + scope</strong>. Scopes inherit downward: management group → subscription → resource group → resource. Deny assignments exist but are mostly system-created.</li>
+<li><strong>Managed identities</strong> (system-assigned, tied to one resource; user-assigned, reusable) remove the need for secrets.</li>
+<li><strong>Privileged Identity Management (PIM)</strong>: just-in-time, time-boxed, approval-gated role activation.</li>
+<li><strong>Conditional Access</strong>: policies on sign-in (require MFA, compliant device, block legacy auth).</li>
+<li>Azure Policy is governance (what may be deployed), not access control.</li>
+</ul>
+<h4 id="gcp-iam">GCP IAM</h4>
+<ul>
+<li>An <strong>allow policy</strong> binds principals to roles on a resource. Policies inherit down the hierarchy: organization → folders → project → resource. Effective access is the <strong>union</strong> of all inherited bindings, so a grant at the org level cannot be removed lower down.</li>
+<li>Role types: <strong>basic</strong> (Owner, Editor, Viewer; too broad, avoid in prod), <strong>predefined</strong> (per service), <strong>custom</strong>.</li>
+<li><strong>IAM deny policies</strong> override allows; <strong>IAM Conditions</strong> add attribute rules (time, resource name, tags).</li>
+<li><strong>Service accounts</strong> are workload identities. Avoid downloadable service-account keys; disable key creation with the org policy constraint <code>iam.disableServiceAccountKeyCreation</code>. Watch <code>iam.serviceAccountUser</code> and <code>iam.serviceAccountTokenCreator</code>: they allow impersonation.</li>
+<li><strong>Workload Identity Federation</strong> lets AWS, Azure, GitHub Actions or on-prem OIDC/SAML identities get GCP tokens without keys.</li>
+</ul>
+<h4 id="workload-identity-no-static-secrets">Workload identity (no static secrets)</h4>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>AWS</th>
+<th>Azure</th>
+<th>GCP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM</td>
+<td>Instance profile (role)</td>
+<td>Managed identity</td>
+<td>Attached service account</td>
+</tr>
+<tr>
+<td>Kubernetes pod</td>
+<td>EKS Pod Identity / IRSA</td>
+<td>Entra Workload ID</td>
+<td>GKE Workload Identity Federation</td>
+</tr>
+<tr>
+<td>CI/CD (e.g. GitHub Actions)</td>
+<td>OIDC provider + <code>AssumeRoleWithWebIdentity</code></td>
+<td>Federated credential on app registration</td>
+<td>Workload Identity Federation</td>
+</tr>
+</tbody>
+</table>
+<p>For CI, the trust condition must pin the repository and branch or environment (the token's <code>sub</code> claim), otherwise any repo on the platform could assume your role. SPIFFE/SPIRE provides the same idea for service-to-service identity across platforms.</p>
+<h4 id="privileged-access-management">Privileged access management</h4>
+<ul>
+<li><strong>Just-in-time (JIT)</strong> elevation instead of standing admin access.</li>
+<li><strong>Break-glass accounts</strong>: two emergency accounts, excluded from SSO dependency, hardware MFA, monitored with alerts on any use.</li>
+<li><strong>Separation of duties (SoD)</strong>: the person who writes a change is not the one who approves or deploys it.</li>
+<li>Session recording and approval workflows for production access.</li>
+</ul>
+<h4 id="governance">Governance</h4>
+<p>Periodic access reviews (recertification), removal of unused roles and permissions, tagging owners on every role, and alerting on new admin grants. Metrics worth tracking: number of principals with admin, number of long-lived keys, percentage of unused permissions.</p>
+<h4 id="common-iam-mistakes">Common IAM mistakes</h4>
+<ul>
+<li><code>"Action": "*"</code> and <code>"Resource": "*"</code> in app roles.</li>
+<li>Access keys for humans or CI instead of SSO and OIDC federation.</li>
+<li>Daily use of the root account or Global Administrator.</li>
+<li>One shared role for every Lambda or every pod.</li>
+<li>Trust policies open to a whole account or to <code>*</code> without conditions.</li>
+<li>Forgetting that resource policies (S3, KMS, SQS) can grant access the identity side never shows.</li>
+</ul>
+<h2 id="3-compliance-frameworks">3. Compliance frameworks</h2>
+<h3 id="coarse-view_2">Coarse view</h3>
+<p>Compliance is proving to an outside party that your security controls exist and work. Security is the practice; compliance is the evidence. You can be compliant and still insecure, so treat frameworks as a floor.</p>
+<p>Know the four kinds of documents and do not mix them up:</p>
+<ul>
+<li><strong>Laws and regulations</strong> are mandatory where they apply (GDPR, HIPAA, the Philippine Data Privacy Act).</li>
+<li><strong>Standards</strong> are published requirement sets, often certifiable (ISO/IEC 27001, PCI DSS).</li>
+<li><strong>Frameworks</strong> are voluntary structures for organizing a program (NIST CSF, CIS Controls).</li>
+<li><strong>Attestations and certifications</strong> are the auditor's output (a SOC 2 report, an ISO certificate, a FedRAMP authorization).</li>
+</ul>
+<p>In the cloud, compliance is shared just like security. You <strong>inherit</strong> the provider's physical and infrastructure controls (download their reports from AWS Artifact, Microsoft Service Trust Portal, Google Cloud Compliance Reports Manager), but you still own everything you configure.</p>
+<h3 id="deep-dive_2">Deep dive</h3>
+<h4 id="the-main-frameworks-at-a-glance">The main frameworks at a glance</h4>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Type</th>
+<th>Who needs it</th>
+<th>Structure to memorize</th>
+<th>Current version (mid-2026)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ISO/IEC 27001</td>
+<td>Certifiable standard</td>
+<td>Global B2B, anyone selling to enterprises</td>
+<td>ISMS clauses 4–10 + Annex A: 93 controls in 4 themes</td>
+<td>2022 (2013 transition ended Oct 2025)</td>
+</tr>
+<tr>
+<td>SOC 2</td>
+<td>Attestation (AICPA)</td>
+<td>SaaS and service providers, mainly US customers</td>
+<td>5 Trust Services Criteria; Type I vs Type II</td>
+<td>2017 TSC, points of focus revised 2022</td>
+</tr>
+<tr>
+<td>NIST CSF</td>
+<td>Voluntary framework</td>
+<td>Any org; common board-level language</td>
+<td>6 functions: Govern, Identify, Protect, Detect, Respond, Recover</td>
+<td>2.0 (Feb 2024)</td>
+</tr>
+<tr>
+<td>NIST SP 800-53</td>
+<td>Control catalog</td>
+<td>US federal systems and contractors; FedRAMP base</td>
+<td>20 control families; Low/Moderate/High baselines (800-53B)</td>
+<td>Rev. 5</td>
+</tr>
+<tr>
+<td>FedRAMP</td>
+<td>US gov authorization</td>
+<td>Cloud providers selling to US federal agencies</td>
+<td>20x Classes A–D (Class C replaces Moderate); 3PAO assessment; machine-readable evidence</td>
+<td>20x under Consolidated Rules 2026 (CR26); Rev5 ends by 2028</td>
+</tr>
+<tr>
+<td>CIS Controls / Benchmarks</td>
+<td>Best-practice controls + config baselines</td>
+<td>Everyone; what CSPM tools check against</td>
+<td>18 Controls, Implementation Groups IG1–IG3; per-service Benchmarks</td>
+<td>Controls v8.1</td>
+</tr>
+<tr>
+<td>PCI DSS</td>
+<td>Industry standard (card brands)</td>
+<td>Anyone storing, processing or transmitting cardholder data</td>
+<td>12 requirements in 6 goals</td>
+<td>4.0.1 (sole version; next version in RFC since Jun 2026)</td>
+</tr>
+<tr>
+<td>HIPAA</td>
+<td>US law</td>
+<td>US healthcare entities and their business associates</td>
+<td>Security Rule: administrative, physical, technical safeguards</td>
+<td>Update proposed Jan 2025; final rule now targeted Jul 2027</td>
+</tr>
+<tr>
+<td>GDPR</td>
+<td>EU regulation</td>
+<td>Anyone processing EU residents' personal data</td>
+<td>Principles, lawful bases, data-subject rights, Art. 32 security, 72-hour breach notice</td>
+<td>In force since 2018</td>
+</tr>
+<tr>
+<td>Philippine Data Privacy Act</td>
+<td>PH law (RA 10173)</td>
+<td>Anyone processing personal data of people in the PH</td>
+<td>NPC rules; security measures; 72-hour breach notice to NPC</td>
+<td>2012 Act + NPC circulars</td>
+</tr>
+<tr>
+<td>CSA CCM + STAR</td>
+<td>Cloud control framework</td>
+<td>Cloud providers and their customers</td>
+<td>207 controls in 17 domains; CAIQ v4.1; STAR registry; AI Controls Matrix for AI</td>
+<td>CCM v4.1 (Jan 2026)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="isoiec-270012022">ISO/IEC 27001:2022</h4>
+<ul>
+<li>Certifies an <strong>Information Security Management System (ISMS)</strong>: a risk-driven management process, not just a list of controls.</li>
+<li>Clauses 4–10 are mandatory: context, leadership, planning (risk assessment and treatment), support, operation, performance evaluation (internal audit, management review), improvement.</li>
+<li><strong>Annex A</strong> has 93 controls in four themes: Organizational (37), People (8), Physical (14), Technological (34). New in 2022 and cloud-relevant: 5.7 threat intelligence, <strong>5.23 information security for use of cloud services</strong>, 8.9 configuration management, 8.12 data leakage prevention, 8.16 monitoring activities, 8.28 secure coding.</li>
+<li>Key artifact: the <strong>Statement of Applicability (SoA)</strong> listing every Annex A control, whether it applies and why.</li>
+<li>Cycle: stage 1 audit (documentation) → stage 2 audit (implementation) → certificate valid 3 years with annual surveillance audits.</li>
+<li>Cloud extensions: <strong>ISO/IEC 27017</strong> (cloud security controls), <strong>27018</strong> (PII protection in public cloud), <strong>27701</strong> (privacy management).</li>
+</ul>
+<h4 id="soc-2">SOC 2</h4>
+<ul>
+<li>An auditor's (CPA firm) <strong>report</strong>, not a certificate. Customers read it under NDA.</li>
+<li>Trust Services Criteria: <strong>Security</strong> (the Common Criteria, always required), plus optional Availability, Processing Integrity, Confidentiality, Privacy.</li>
+<li><strong>Type I</strong>: controls are suitably designed at a point in time. <strong>Type II</strong>: controls operated effectively over a period (commonly 6–12 months). Customers usually want Type II.</li>
+<li>Know <strong>CUECs</strong> (complementary user entity controls: what the customer must do for the vendor's controls to work) and <strong>subservice organizations</strong> (e.g. AWS) reported with the <strong>carve-out</strong> or <strong>inclusive</strong> method.</li>
+<li>SOC 1 covers controls relevant to customers' financial reporting; SOC 3 is a public, short version of SOC 2.</li>
+</ul>
+<h4 id="nist-csf-20-and-sp-800-53">NIST CSF 2.0 and SP 800-53</h4>
+<ul>
+<li>CSF 2.0 added <strong>Govern</strong> as a sixth function wrapping the other five. Use it with <strong>Profiles</strong> (current vs target) and <strong>Tiers</strong> (Partial, Risk Informed, Repeatable, Adaptive).</li>
+<li>800-53 Rev. 5 is the detailed control catalog behind FedRAMP and US federal systems. Families you meet constantly in cloud work: <strong>AC</strong> (access control), <strong>AU</strong> (audit and accountability), <strong>CM</strong> (configuration management), <strong>IA</strong> (identification and authentication), <strong>SC</strong> (system and communications protection), <strong>SI</strong> (system and information integrity), <strong>IR</strong> (incident response), <strong>CP</strong> (contingency planning), <strong>RA</strong> (risk assessment), <strong>SR</strong> (supply chain).</li>
+<li>The <strong>NIST Risk Management Framework</strong> (SP 800-37): Prepare, Categorize, Select, Implement, Assess, Authorize, Monitor.</li>
+</ul>
+<h4 id="pci-dss-401">PCI DSS 4.0.1</h4>
+<ul>
+<li>12 requirements, e.g. Req. 1 network security controls, Req. 3 protect stored account data, Req. 7–8 access and authentication (MFA for all access into the cardholder data environment), Req. 10 logging, Req. 11 testing, Req. 12 policies.</li>
+<li><strong>Scope is everything.</strong> Shrink the cardholder data environment (CDE) with network segmentation, tokenization or a hosted payment page so fewer systems are in scope.</li>
+<li>4.0 introduced the <strong>customized approach</strong> (meet the objective your own way, with more evidence) alongside the defined approach.</li>
+<li>Levels by transaction volume decide whether you need a QSA-led Report on Compliance or a Self-Assessment Questionnaire.</li>
+</ul>
+<h4 id="privacy-laws-gdpr-and-the-philippine-dpa">Privacy laws (GDPR and the Philippine DPA)</h4>
+<ul>
+<li>Roles: <strong>controller</strong> decides why and how data is processed; <strong>processor</strong> acts on its instructions (a cloud provider is usually a processor). Contracts: GDPR Art. 28 data processing agreement; the PH DPA uses data sharing and outsourcing agreements.</li>
+<li>Security obligation: "appropriate technical and organizational measures" (GDPR Art. 32; NPC Circular 16-01 for the PH, which also requires a Data Protection Officer and registration for larger processors).</li>
+<li><strong>Breach notification within 72 hours</strong> of knowledge to the regulator in both regimes.</li>
+<li>Cloud angle: data residency and cross-border transfers (EU Standard Contractual Clauses, EU–US Data Privacy Framework), encryption, access logging, deletion on request.</li>
+</ul>
+<h4 id="other-names-you-should-recognize">Other names you should recognize</h4>
+<ul>
+<li><strong>NIS2</strong> (EU, essential and important entities) and <strong>DORA</strong> (EU financial sector, applies since Jan 2025, heavy on ICT third-party and cloud risk).</li>
+<li><strong>ISO/IEC 42001</strong> for AI management systems, increasingly paired with 27001.</li>
+<li><strong>CMMC</strong> for US defense contractors, based on NIST SP 800-171.</li>
+</ul>
+<h4 id="how-compliance-actually-runs">How compliance actually runs</h4>
+<ol>
+<li><strong>Scope</strong>: which systems, data, accounts and teams are in scope. Good account structure makes this easy.</li>
+<li><strong>Gap assessment</strong> against the framework.</li>
+<li><strong>Common control framework</strong>: map one internal control to many frameworks (an MFA control satisfies ISO 5.17/8.5, SOC 2 CC6.1, PCI Req. 8, 800-53 IA-2). Build once, prove many times.</li>
+<li><strong>Implement</strong> controls, preferably as code and preventive guardrails.</li>
+<li><strong>Collect evidence</strong> continuously: config snapshots, logs, tickets, access reviews, training records.</li>
+<li><strong>Audit</strong>: the auditor tests <strong>design</strong> (does the control address the risk?) and <strong>operating effectiveness</strong> (did it work every time across a sample?). Failures become exceptions; gaps go to a risk register or a POA&amp;M (plan of action and milestones).</li>
+<li><strong>Monitor</strong> and repeat.</li>
+</ol>
+<p><strong>Continuous compliance in the cloud</strong>: AWS Config conformance packs and Security Hub standards (CIS, PCI, NIST 800-53), AWS Audit Manager; Azure Policy regulatory compliance initiatives and Defender for Cloud; GCP Security Command Center compliance and Assured Workloads. Platforms such as Vanta, Drata and Secureframe automate evidence collection for SOC 2 and ISO.</p>
+<p><strong>Audit vocabulary</strong>: control objective, control activity, test of design, test of operating effectiveness, sampling, exception, compensating control, management assertion, qualified opinion, risk acceptance.</p>
+<h2 id="4-infrastructure-as-code-iac">4. Infrastructure as code (IaC)</h2>
+<h3 id="coarse-view_3">Coarse view</h3>
+<p>IaC defines infrastructure in version-controlled files and lets a tool create and change it. For security this matters because every change becomes <strong>reviewable</strong> (pull requests), <strong>testable</strong> (scanners and policy checks before deploy), <strong>repeatable</strong> (the same secure baseline in every account) and <strong>auditable</strong> (git history is evidence).</p>
+<p>Key terms:</p>
+<ul>
+<li><strong>Declarative</strong> (describe the end state: Terraform, CloudFormation, Bicep) vs <strong>imperative</strong> (describe the steps: scripts, some Pulumi and Ansible usage).</li>
+<li><strong>Idempotent</strong>: applying the same config twice gives the same result.</li>
+<li><strong>Desired state vs actual state</strong>; the difference is <strong>drift</strong>.</li>
+<li><strong>Immutable infrastructure</strong>: replace resources instead of modifying them in place.</li>
+<li><strong>Shift left</strong>: catch misconfigurations at code-review time, where they are cheapest to fix.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Language</th>
+<th>Scope</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terraform</td>
+<td>HCL</td>
+<td>Multi-cloud + SaaS via providers</td>
+<td>Business Source License since 2023; HashiCorp now part of IBM; current line 1.16 (Aug 2026)</td>
+</tr>
+<tr>
+<td>OpenTofu</td>
+<td>HCL</td>
+<td>Same as Terraform</td>
+<td>Open-source (MPL) fork, Linux Foundation and CNCF; client-side state encryption; current 1.13 (Sep 2026)</td>
+</tr>
+<tr>
+<td>AWS CloudFormation / CDK</td>
+<td>YAML/JSON; CDK in TypeScript, Python, Go, etc.</td>
+<td>AWS only</td>
+<td>State managed by AWS; CDK synthesizes CloudFormation</td>
+</tr>
+<tr>
+<td>Azure Bicep / ARM</td>
+<td>Bicep DSL / JSON</td>
+<td>Azure only</td>
+<td>State held by Azure Resource Manager</td>
+</tr>
+<tr>
+<td>Pulumi</td>
+<td>Go, Python, TypeScript, C#, Java</td>
+<td>Multi-cloud</td>
+<td>Real programming languages; good fit if you think in Go/Python</td>
+</tr>
+<tr>
+<td>Crossplane</td>
+<td>Kubernetes CRDs</td>
+<td>Multi-cloud</td>
+<td>Continuous reconciliation from a K8s control plane</td>
+</tr>
+<tr>
+<td>Ansible</td>
+<td>YAML playbooks</td>
+<td>Config management, some provisioning</td>
+<td>Agentless over SSH/WinRM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deep-dive_3">Deep dive</h3>
+<h4 id="terraformopentofu-mechanics">Terraform/OpenTofu mechanics</h4>
+<ul>
+<li>Building blocks: <strong>providers</strong> (API plugins), <strong>resources</strong> (things to manage), <strong>data sources</strong> (read-only lookups), <strong>variables</strong>, <strong>locals</strong>, <strong>outputs</strong>, <strong>modules</strong> (reusable packages).</li>
+<li>Workflow: <code>init</code> (download providers and modules) → <code>plan</code> (diff desired vs actual) → <code>apply</code> → <code>destroy</code>. Always review the plan; it is the change request.</li>
+<li>Use <code>for_each</code> over <code>count</code> for collections so removing one item does not shift addresses and destroy others.</li>
+<li>Refactoring without destroy: <code>moved</code> blocks, <code>import</code> blocks (bring existing resources under management), <code>removed</code> blocks.</li>
+</ul>
+<h4 id="state-the-most-sensitive-file-you-own">State: the most sensitive file you own</h4>
+<ul>
+<li>State maps code to real resource IDs and <strong>stores attribute values in plaintext, including secrets</strong> (database passwords, private keys). <code>sensitive = true</code> only hides values from CLI output; they are still in state.</li>
+<li>Store state in a <strong>remote backend</strong> (S3, Azure Blob, GCS, HCP Terraform) with encryption, versioning, locking and tight IAM. Recent Terraform versions lock natively in S3 (<code>use_lockfile = true</code>), replacing the old DynamoDB lock table.</li>
+<li>Never commit state or <code>.tfvars</code> with secrets to git.</li>
+<li>Keep secrets out of state where possible: reference a secrets manager ARN instead of the value, let the service generate and manage the password (e.g. RDS <code>manage_master_user_password</code>), and use ephemeral values and write-only arguments in recent Terraform releases. OpenTofu can encrypt state client-side.</li>
+<li><strong>Split state</strong> by environment and component (network, IAM, data, app). Smaller state means a smaller blast radius and faster plans. Prefer separate directories or stacks per environment over CLI workspaces for prod isolation.</li>
+</ul>
+<h4 id="secure-by-default-module-example">Secure-by-default module example</h4>
+<pre><code class="language-hcl">resource &quot;aws_s3_bucket&quot; &quot;logs&quot; {
+  bucket = &quot;acme-prod-logs&quot;
+}
+
+resource &quot;aws_s3_bucket_public_access_block&quot; &quot;logs&quot; {
+  bucket                  = aws_s3_bucket.logs.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource &quot;aws_s3_bucket_server_side_encryption_configuration&quot; &quot;logs&quot; {
+  bucket = aws_s3_bucket.logs.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = &quot;aws:kms&quot;
+      kms_master_key_id = aws_kms_key.logs.arn
+    }
+  }
+}
+
+resource &quot;aws_s3_bucket_versioning&quot; &quot;logs&quot; {
+  bucket = aws_s3_bucket.logs.id
+  versioning_configuration { status = &quot;Enabled&quot; }
+}
+</code></pre>
+<p>Package patterns like this as an internal module so teams get encryption, versioning and public-access blocking without remembering them. Pin versions: <code>required_version</code>, <code>required_providers</code> with constraints, commit <code>.terraform.lock.hcl</code>, and reference modules by tag or commit SHA.</p>
+<h4 id="scanning-and-policy-as-code">Scanning and policy as code</h4>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What it catches</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lint and validate</td>
+<td>Syntax, deprecated args, provider-specific mistakes</td>
+<td><code>terraform fmt</code>, <code>terraform validate</code>, TFLint</td>
+</tr>
+<tr>
+<td>Static IaC scanning</td>
+<td>Known misconfigurations (public bucket, open SG, no encryption)</td>
+<td>Checkov, Trivy (absorbed tfsec), KICS, Snyk IaC</td>
+</tr>
+<tr>
+<td>Secret scanning</td>
+<td>Keys and passwords committed to git</td>
+<td>gitleaks, TruffleHog, GitHub push protection</td>
+</tr>
+<tr>
+<td>Policy as code on the plan</td>
+<td>Org-specific rules evaluated against the real plan JSON</td>
+<td>OPA/Rego with Conftest, HashiCorp Sentinel, AWS CloudFormation Guard</td>
+</tr>
+<tr>
+<td>Kubernetes admission</td>
+<td>Bad manifests at deploy time</td>
+<td>Kyverno, OPA Gatekeeper</td>
+</tr>
+<tr>
+<td>Runtime guardrails</td>
+<td>Anything that slips through or is clicked in the console</td>
+<td>SCPs/RCPs, Azure Policy, GCP Org Policy, CSPM</td>
+</tr>
+</tbody>
+</table>
+<p>Scan the <strong>plan</strong> as well as the code: <code>terraform show -json tfplan &gt; plan.json</code> resolves variables and modules, so policies see real values. Example Rego rule that blocks SSH open to the world:</p>
+<pre><code class="language-rego">package terraform.sg
+
+deny contains msg if {
+  rc := input.resource_changes[_]
+  rc.type == &quot;aws_security_group_rule&quot;
+  rc.change.after.type == &quot;ingress&quot;
+  rc.change.after.from_port &lt;= 22
+  rc.change.after.to_port &gt;= 22
+  &quot;0.0.0.0/0&quot; in rc.change.after.cidr_blocks
+  msg := sprintf(&quot;%s opens SSH to the internet&quot;, [rc.address])
+}
+</code></pre>
+<h4 id="a-secure-iac-pipeline">A secure IaC pipeline</h4>
+<ol>
+<li>Developer opens a pull request; branch protection requires review and passing checks.</li>
+<li>CI runs fmt, validate, TFLint, secret scan and IaC scan.</li>
+<li>CI runs <code>plan</code> with a <strong>read-only role</strong>, posts the plan to the PR, and runs policy-as-code against plan JSON.</li>
+<li>A second person reviews code and plan (separation of duties).</li>
+<li>On merge, CI runs <code>apply</code> with a separate <strong>apply role</strong>, using the saved plan, gated by an environment approval for prod.</li>
+<li>CI authenticates by <strong>OIDC federation</strong>, never stored cloud keys. The role trust policy pins repo and branch or environment.</li>
+<li>Scheduled drift detection (<code>plan -refresh-only</code> or <code>plan -detailed-exitcode</code>) alerts when reality differs from code.</li>
+</ol>
+<p>Orchestration options: GitHub Actions or GitLab CI, Atlantis, HCP Terraform, Spacelift, env0. For Kubernetes, <strong>GitOps</strong> (Argo CD, Flux) pulls desired state from git and reconciles continuously, so the cluster needs no inbound CI credentials.</p>
+<p>GitHub Actions OIDC to AWS (no stored keys):</p>
+<pre><code class="language-yaml">permissions:
+  id-token: write
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::111122223333:role/tf-plan-readonly
+          aws-region: ap-southeast-1
+      - run: terraform init &amp;&amp; terraform plan -out tfplan
+</code></pre>
+<h4 id="drift-and-break-glass-changes">Drift and break-glass changes</h4>
+<p>Console changes ("ClickOps") break the guarantee that code equals reality. Deny write access in prod to humans except through break-glass roles; when an emergency change happens, back-port it into code and re-apply. Treat unexplained drift as a possible security event.</p>
+<h4 id="iac-supply-chain">IaC supply chain</h4>
+<p>Third-party modules and providers run with your cloud credentials. Pin to exact versions or commit SHAs, review module source, mirror approved modules in a private registry, verify provider checksums through the lock file, and sign commits. SLSA levels describe how much build provenance you can prove.</p>
+<h4 id="iac-anti-patterns">IaC anti-patterns</h4>
+<ul>
+<li>Hardcoded secrets in <code>.tf</code> files or default variable values.</li>
+<li>One giant state for everything.</li>
+<li><code>apply -auto-approve</code> to prod from a laptop.</li>
+<li>Admin-level CI credentials shared by every pipeline.</li>
+<li>Modules that default to insecure settings and rely on callers to fix them.</li>
+<li>Ignoring scanner findings with blanket skips instead of documented, per-resource exceptions.</li>
+</ul>
+<h2 id="5-putting-it-together-self-check-and-labs">5. Putting it together, self-check and labs</h2>
+<h3 id="how-the-four-topics-connect">How the four topics connect</h3>
+<p>One requirement traced through all four layers shows the pattern. Take "customer data must be encrypted and only reachable by the billing service":</p>
+<ol>
+<li><strong>Concept</strong>: data protection with least privilege and defense in depth.</li>
+<li><strong>IAM</strong>: a dedicated role for the billing service, a KMS key policy allowing only that role to decrypt, a bucket policy restricted to the org and a VPC endpoint.</li>
+<li><strong>IaC</strong>: all of the above written as a module, scanned in CI, applied through a reviewed pipeline; an SCP blocks disabling encryption.</li>
+<li><strong>Compliance</strong>: the same control maps to ISO 27001 8.24, SOC 2 CC6.1/CC6.7, PCI DSS Req. 3, and NIST SC-28; evidence is the PR history, the scan results and the Config rule showing continuous compliance.</li>
+</ol>
+<h3 id="self-check-questions">Self-check questions</h3>
+<p>Answer out loud before reading the hint.</p>
+<ol>
+<li>A bucket policy allows a role in another account, but the role's identity policy is silent. Is access allowed? <em>No: cross-account needs both sides to allow.</em></li>
+<li>An SCP allows only <code>s3:*</code>. A user has <code>AdministratorAccess</code>. Can they launch EC2? <em>No: SCPs cap the maximum.</em></li>
+<li>Why is IMDSv2 a security control? <em>It requires a session token from a PUT request, which blocks most SSRF-based credential theft.</em></li>
+<li>Difference between OAuth 2.0 and OIDC? <em>OAuth delegates authorization; OIDC adds an ID token for authentication.</em></li>
+<li>What does an external ID prevent? <em>The confused deputy problem in third-party role assumption.</em></li>
+<li>Azure: a user is Global Administrator. Can they delete a VM? <em>Not by default: Entra roles and Azure RBAC are separate (though a Global Admin can elevate to User Access Administrator).</em></li>
+<li>GCP: Editor granted at the folder, you remove it at the project. Effect? <em>None: allow policies are a union; use a deny policy or remove the folder grant.</em></li>
+<li>SOC 2 Type I vs Type II? <em>Design at a point in time vs operating effectiveness over a period.</em></li>
+<li>Name the six NIST CSF 2.0 functions. <em>Govern, Identify, Protect, Detect, Respond, Recover.</em></li>
+<li>What is a Statement of Applicability? <em>The ISO 27001 list of Annex A controls, applicability and justification.</em></li>
+<li>How do you reduce PCI DSS scope? <em>Segmentation, tokenization, outsourced payment pages.</em></li>
+<li>Where do Terraform secrets leak even when marked <code>sensitive</code>? <em>The state file.</em></li>
+<li>Why scan the plan JSON and not only the HCL? <em>Variables, modules and computed values are resolved there.</em></li>
+<li>Why separate plan and apply roles in CI? <em>A compromised PR can run plan; it must not be able to change infrastructure.</em></li>
+<li>Envelope encryption in one sentence? <em>Data is encrypted with a data key, and the data key is encrypted with a master key that never leaves KMS.</em></li>
+</ol>
+<h3 id="hands-on-labs">Hands-on labs</h3>
+<ul>
+<li class="task"><input type="checkbox"> Play <strong>flaws.cloud</strong> and <strong>flaws2.cloud</strong> (free AWS misconfiguration challenges, attacker and defender paths).</li>
+<li class="task"><input type="checkbox"> Run <strong>CloudGoat</strong> scenarios in a sandbox account to practise IAM privilege escalation.</li>
+<li class="task"><input type="checkbox"> Scan a sandbox account with <strong>Prowler</strong> or ScoutSuite and fix the top findings against the CIS AWS Foundations Benchmark.</li>
+<li class="task"><input type="checkbox"> Build a small landing zone in Terraform or OpenTofu: org, two OUs, an SCP that denies leaving the org and disabling CloudTrail, a log-archive account.</li>
+<li class="task"><input type="checkbox"> Set up GitHub Actions to Terraform with OIDC, separate plan and apply roles, Checkov or Trivy, and a Conftest policy.</li>
+<li class="task"><input type="checkbox"> Use <strong>LocalStack</strong> for cheap local IaC experiments; tear real resources down with <code>destroy</code> to avoid bills.</li>
+<li class="task"><input type="checkbox"> Map ten controls you built to ISO 27001 Annex A and SOC 2 criteria in a spreadsheet: this is exactly what auditors ask for.</li>
+</ul>
+<h3 id="certifications-these-topics-cover">Certifications these topics cover</h3>
+<p>AWS Certified Security – Specialty, Microsoft AZ-500, Google Professional Cloud Security Engineer, ISC2 CCSP (vendor-neutral, heavy on compliance), CCSK from the Cloud Security Alliance, and HashiCorp Terraform Associate for IaC.</p>
+<h3 id="sources-to-verify-versions-and-dates">Sources to verify versions and dates</h3>
+<p>Sections 1–5 were written from general knowledge and refreshed in November 2026; the "What's new" section links each claim to its own source. Re-check dates before an exam.</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" target="_blank" rel="noopener">AWS IAM policy evaluation logic</a></li>
+<li><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">NIST Cybersecurity Framework</a></li>
+<li><a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener">ISO/IEC 27001</a></li>
+<li><a href="https://www.pcisecuritystandards.org" target="_blank" rel="noopener">PCI Security Standards Council</a></li>
+<li><a href="https://www.cisecurity.org/controls" target="_blank" rel="noopener">CIS Controls</a></li>
+<li><a href="https://cloudsecurityalliance.org/research/cloud-controls-matrix" target="_blank" rel="noopener">CSA Cloud Controls Matrix</a></li>
+<li><a href="https://privacy.gov.ph" target="_blank" rel="noopener">National Privacy Commission (Philippines)</a></li>
+<li><a href="https://developer.hashicorp.com/terraform" target="_blank" rel="noopener">Terraform documentation</a> and <a href="https://opentofu.org" target="_blank" rel="noopener">OpenTofu</a></li>
+</ul></main></div></body></html>
