@@ -36,13 +36,14 @@ li.task{list-style:none;margin-left:-22px}li.task input{margin-right:8px}
 <li><a href="#3-compliance-frameworks">3. Compliance frameworks</a></li>
 <li><a href="#4-infrastructure-as-code-iac">4. Infrastructure as code (IaC)</a></li>
 <li><a href="#5-putting-it-together-self-check-and-labs">5. Putting it together, self-check and labs</a></li>
+<li><a href="#6-roadmap-beginner-to-principal-and-phd-level">6. Roadmap: beginner to principal and PhD level</a></li>
 </ul>
 </div>
 <button class="btn" id="printBtn" hidden onclick="window.print()">Print / Save as PDF</button><script>try{if(window.self===window.top)document.getElementById("printBtn").hidden=false}catch(e){}</script></nav>
 <main><h1 id="cloud-security-review-concepts-iam-compliance-iac">Cloud Security Review: Concepts, IAM, Compliance, IaC</h1>
 <p><em>Updated November 16, 2026</em></p>
 <h2 id="how-to-use-this-reviewer">How to use this reviewer</h2>
-<p>Each of the four topics opens with a <strong>coarse view</strong> (the ideas you must be able to explain in two minutes) and then a <strong>deep dive</strong> (the mechanics, edge cases and examples an interviewer or exam will probe). The last section ties the four together and ends with self-check questions and hands-on labs.</p>
+<p>Each of the four topics opens with a <strong>coarse view</strong> (the ideas you must be able to explain in two minutes) and then a <strong>deep dive</strong> (the mechanics, edge cases and examples an interviewer or exam will probe). Section 5 ties the four together with self-check questions and labs, and section 6 is a roadmap from beginner to principal-engineer and PhD level.</p>
 <p>The four topics form one stack: <strong>concepts</strong> say what to protect and why, <strong>IAM</strong> controls who can touch it, <strong>compliance</strong> proves you did it, and <strong>IaC</strong> makes all of it repeatable and reviewable.</p>
 <p>Examples lean on AWS, with Azure and GCP equivalents named. Framework versions are stated as of mid-2026 and written without a fresh lookup, so confirm dates on the official pages listed at the end before relying on them.</p>
 <h2 id="whats-new-in-20252026-as-of-november-2026">What's new in 2025–2026 (as of November 2026)</h2>
@@ -1045,4 +1046,384 @@ jobs:
 <li><a href="https://cloudsecurityalliance.org/research/cloud-controls-matrix" target="_blank" rel="noopener">CSA Cloud Controls Matrix</a></li>
 <li><a href="https://privacy.gov.ph" target="_blank" rel="noopener">National Privacy Commission (Philippines)</a></li>
 <li><a href="https://developer.hashicorp.com/terraform" target="_blank" rel="noopener">Terraform documentation</a> and <a href="https://opentofu.org" target="_blank" rel="noopener">OpenTofu</a></li>
+</ul>
+<h2 id="6-roadmap-beginner-to-principal-and-phd-level">6. Roadmap: beginner to principal and PhD level</h2>
+<p>Sections 1–5 cover what a strong practitioner must know. Getting to principal-engineer or PhD level needs three more things: deeper foundations under the cloud abstractions, adjacent specialties the current reviewer only touches, and skills that are not technical knowledge at all (judgment, research, influence).</p>
+<p>Be realistic about time. Study can make you an expert in about 3–5 years of steady part-time work. Principal-level judgment also needs years of owning real systems and incidents, and a PhD-level contribution means producing new knowledge, not just absorbing it. The ladder below shows what to prove at each step.</p>
+<h3 id="gaps-in-the-current-curriculum">Gaps in the current curriculum</h3>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Why it matters</th>
+<th>Where it goes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Networking, Linux and OS internals</td>
+<td>Cloud controls are built on TCP/IP, DNS, TLS, namespaces and cgroups; you cannot reason about bypasses without them</td>
+<td>Module A</td>
+</tr>
+<tr>
+<td>Applied cryptography</td>
+<td>KMS, TLS, signing and PQC are all crypto decisions; misuse beats broken algorithms</td>
+<td>Module A</td>
+</tr>
+<tr>
+<td>Distributed systems</td>
+<td>IAM, logging and state are distributed; consistency and failure modes create security bugs</td>
+<td>Module A</td>
+</tr>
+<tr>
+<td>Threat modeling and security architecture</td>
+<td>The core skill of senior and principal engineers: deciding what to protect and how much</td>
+<td>Module B</td>
+</tr>
+<tr>
+<td>Kubernetes and software supply chain in depth</td>
+<td>Most modern workloads and recent breaches run through containers, CI/CD and dependencies</td>
+<td>Module C</td>
+</tr>
+<tr>
+<td>Detection engineering and incident response</td>
+<td>Prevention fails; senior engineers design for detection and recovery</td>
+<td>Module D</td>
+</tr>
+<tr>
+<td>Offensive cloud security</td>
+<td>You defend better once you have attacked cloud environments yourself</td>
+<td>Module E</td>
+</tr>
+<tr>
+<td>AI and agent security</td>
+<td>Fastest-growing attack surface; overlaps your ML learning goal</td>
+<td>Module F</td>
+</tr>
+<tr>
+<td>Confidential computing</td>
+<td>Protects data in use, the last unencrypted state</td>
+<td>Module G</td>
+</tr>
+<tr>
+<td>Formal methods and automated reasoning</td>
+<td>How providers prove policies correct at scale; PhD-level territory</td>
+<td>Module H</td>
+</tr>
+<tr>
+<td>Principal skills: risk, strategy, influence, writing</td>
+<td>Principal impact comes from decisions across many teams, not from your own code</td>
+<td>Module I</td>
+</tr>
+<tr>
+<td>Research method</td>
+<td>Required to reach PhD level: reading, reproducing and publishing</td>
+<td>Research track</td>
+</tr>
+</tbody>
+</table>
+<h3 id="level-ladder">Level ladder</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Focus</th>
+<th>You can...</th>
+<th>Proof you are there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0 Foundations</td>
+<td>Networking, Linux, crypto basics, one programming language well (Go)</td>
+<td>Explain a TLS handshake, a DNS lookup and Linux permissions from memory</td>
+<td>Build and harden a small VPC app by hand; pass a networking self-test</td>
+</tr>
+<tr>
+<td>L1 Practitioner</td>
+<td>Sections 1–5 coarse views; one cloud deeply (AWS)</td>
+<td>Secure a single account: IAM roles, logging, encryption, guardrails</td>
+<td>flaws.cloud done; personal account scores well on Prowler CIS checks</td>
+</tr>
+<tr>
+<td>L2 Engineer</td>
+<td>Sections 1–5 deep dives; IaC pipelines; Modules B–D basics</td>
+<td>Build a multi-account landing zone in Terraform with CI, scanning and OIDC</td>
+<td>Landing-zone capstone repo; write a threat model for a real system</td>
+</tr>
+<tr>
+<td>L3 Senior / specialist</td>
+<td>Pick a specialty: IAM, detection, Kubernetes, or AI security; Modules C–G deep</td>
+<td>Design controls for a whole org; lead an incident; find novel bugs in your specialty</td>
+<td>Open-source contribution or tool; conference talk or detailed blog series; a reported vulnerability or published detection rules</td>
+</tr>
+<tr>
+<td>L4 Staff / principal</td>
+<td>Modules H–I; multi-cloud; security strategy</td>
+<td>Set multi-year security direction, choose trade-offs across teams, write the design doc others follow</td>
+<td>Org-wide initiative shipped (e.g. removing all long-lived keys); a strategy doc adopted by leadership</td>
+</tr>
+<tr>
+<td>L5 Research (PhD-level)</td>
+<td>Research track; formal methods; one open problem</td>
+<td>Identify an unsolved problem, design an evaluation, contribute new knowledge</td>
+<td>Reproduced paper; a workshop or peer-reviewed paper, or a widely adopted original tool with written evaluation</td>
+</tr>
+</tbody>
+</table>
+<p>Certifications are optional checkpoints, not the goal: AWS Security Specialty at L2, CCSP or CKS (Kubernetes Security Specialist) at L3. Beyond L3, public work (talks, papers, tools) counts for more than certificates.</p>
+<h3 id="new-modules">New modules</h3>
+<p>Each module lists what to learn, in rough order, and one exercise that proves it.</p>
+<h4 id="module-a-foundations-under-the-cloud-l0l2">Module A: Foundations under the cloud (L0–L2)</h4>
+<ul>
+<li><strong>Networking</strong>: OSI vs TCP/IP layers, subnetting and CIDR math, routing, NAT, TCP handshake and state, DNS resolution and DNSSEC, HTTP/1.1 vs 2 vs 3 (QUIC), TLS 1.3 handshake, certificates and PKI, mTLS.</li>
+<li><strong>Linux and OS internals</strong>: processes, users, capabilities, file permissions, SELinux/AppArmor, <strong>namespaces and cgroups</strong> (what a container really is), seccomp, eBPF basics, the boot chain.</li>
+<li><strong>Applied cryptography</strong>: symmetric (AES-GCM) vs asymmetric (RSA, ECDSA, Ed25519), hashes vs MACs vs signatures, key derivation (HKDF, Argon2), nonces and why reuse is fatal, envelope encryption, PKI and certificate transparency, post-quantum algorithms (ML-KEM, ML-DSA). Rule: never write your own crypto; learn to spot misuse.</li>
+<li><strong>Distributed systems</strong>: CAP and consistency models, eventual consistency (IAM changes propagate with delay), clocks and ordering, consensus (Raft), idempotency and retries, failure modes.</li>
+<li><em>Exercise</em>: capture a TLS 1.3 handshake in Wireshark and annotate every message; build a container by hand with <code>unshare</code> and cgroups.</li>
+</ul>
+<h4 id="module-b-threat-modeling-and-security-architecture-l2l4">Module B: Threat modeling and security architecture (L2–L4)</h4>
+<ul>
+<li><strong>Threat modeling methods</strong>: the Four Question Framework (What are we working on? What can go wrong? What are we going to do about it? Did we do a good job?), STRIDE, attack trees, PASTA, LINDDUN for privacy, MITRE ATT&amp;CK Cloud Matrix for real adversary techniques.</li>
+<li><strong>Design principles</strong> (Saltzer and Schroeder): least privilege, fail-safe defaults, complete mediation, economy of mechanism, separation of privilege, least common mechanism, psychological acceptability.</li>
+<li><strong>Architecture patterns</strong>: zero trust (NIST SP 800-207), identity-aware proxies, cell-based architecture for blast-radius control, data perimeters, paved roads and secure defaults.</li>
+<li><strong>Security design review</strong>: reading a design doc, finding the trust boundaries, writing actionable findings ranked by risk.</li>
+<li><em>Exercise</em>: threat-model one of your own apps with a data-flow diagram, STRIDE per element, and a ranked mitigation list.</li>
+</ul>
+<h4 id="module-c-kubernetes-and-software-supply-chain-l2l3">Module C: Kubernetes and software supply chain (L2–L3)</h4>
+<ul>
+<li><strong>Kubernetes security</strong>: API server authN/authZ, RBAC design, service accounts and projected tokens, Pod Security Standards, admission control (Kyverno, Gatekeeper, ValidatingAdmissionPolicy), NetworkPolicies, secrets and KMS encryption, node hardening, runtime detection (Falco, Tetragon), multi-tenancy limits.</li>
+<li><strong>Supply chain</strong>: SBOMs (SPDX, CycloneDX), signing and verification (Sigstore: cosign, Fulcio, Rekor), provenance and SLSA levels, in-toto attestations, dependency pinning and update bots, reproducible builds, securing CI runners.</li>
+<li><em>Exercise</em>: build a pipeline that produces a signed image with an SBOM and SLSA provenance, and an admission policy that rejects unsigned images.</li>
+</ul>
+<h4 id="module-d-detection-engineering-and-incident-response-l2l3">Module D: Detection engineering and incident response (L2–L3)</h4>
+<ul>
+<li>Log sources and their gaps (CloudTrail data events, Kubernetes audit logs, flow logs, identity provider logs).</li>
+<li>Detection as code: Sigma rules, testing detections against simulated attacks, tuning false positives, mapping coverage to ATT&amp;CK.</li>
+<li>Incident response: NIST SP 800-61 Rev. 3, incident command roles, cloud forensics (snapshots, memory capture, timeline building), blameless postmortems.</li>
+<li><em>Exercise</em>: run Stratus Red Team techniques in a sandbox and write detections that catch each one.</li>
+</ul>
+<h4 id="module-e-offensive-cloud-security-l2l3">Module E: Offensive cloud security (L2–L3)</h4>
+<ul>
+<li>Cloud attack lifecycle: initial access (leaked keys, SSRF, exposed services), enumeration, privilege escalation, lateral movement across accounts, persistence, exfiltration.</li>
+<li>Tools: Pacu, CloudGoat, Stratus Red Team, ScoutSuite, Prowler; Kubernetes Goat; IAM privilege-escalation path tools (for example PMapper).</li>
+<li>Ethics: only test what you own or are authorized in writing to test; follow provider penetration-testing policies.</li>
+<li><em>Exercise</em>: complete every CloudGoat scenario, then write the defensive control that would have stopped each.</li>
+</ul>
+<h4 id="module-f-ai-and-agent-security-l3">Module F: AI and agent security (L3)</h4>
+<ul>
+<li>Threats: direct and indirect prompt injection, data and model poisoning, model extraction, sensitive data leakage, excessive agency, insecure tool use.</li>
+<li>Frameworks: OWASP Top 10 for LLM Applications and for Agentic Applications, MITRE ATLAS, NIST AI RMF, CSA AI Controls Matrix, ISO/IEC 42001.</li>
+<li>Engineering controls: agent identity and scoped delegation, MCP with OAuth 2.1, tool allow-lists, human approval for high-impact actions, output validation, sandboxed code execution, evaluation and red-teaming of models.</li>
+<li><em>Exercise</em>: build an MCP server in Go with proper OAuth 2.1 audience validation, then red-team it with indirect prompt injection.</li>
+</ul>
+<h4 id="module-g-confidential-computing-and-data-in-use-protection-l3">Module G: Confidential computing and data-in-use protection (L3)</h4>
+<ul>
+<li>Trusted execution environments: AWS Nitro Enclaves, AMD SEV-SNP, Intel TDX, confidential VMs and GPUs on all three clouds.</li>
+<li>Remote attestation: proving what code runs before releasing a key (KMS policies keyed on enclave measurements).</li>
+<li>Limits: side channels (Spectre-class attacks), trust in the hardware vendor.</li>
+<li><em>Exercise</em>: run a Nitro Enclave that only receives a KMS decryption key after attestation succeeds.</li>
+</ul>
+<h4 id="module-h-formal-methods-and-automated-reasoning-l4l5">Module H: Formal methods and automated reasoning (L4–L5)</h4>
+<ul>
+<li>Why: at cloud scale, testing a few cases is not enough; providers use mathematical proof to answer "can anyone outside my org ever read this bucket?"</li>
+<li>Learn: propositional logic, SAT/SMT solvers (Z3), how AWS Zelkova turns IAM policies into SMT formulas (the engine behind IAM Access Analyzer), verifiable policy languages (Cedar), model checking with TLA+ for distributed protocols.</li>
+<li><em>Exercise</em>: encode a small subset of IAM policy evaluation in Z3 (Go or Python bindings) and prove or refute "no public read" for sample policies.</li>
+</ul>
+<h4 id="module-i-principal-engineer-skills-l4">Module I: Principal-engineer skills (L4)</h4>
+<ul>
+<li><strong>Risk and prioritization</strong>: quantitative risk (FAIR model, ranges instead of red/amber/green), risk registers, deciding what not to fix.</li>
+<li><strong>Strategy</strong>: multi-year security roadmaps, build vs buy, platform thinking (secure paved roads that teams choose because they are easier).</li>
+<li><strong>Writing</strong>: design docs, RFCs, one-page decision memos, postmortems. Principal impact travels through documents.</li>
+<li><strong>Influence</strong>: aligning teams without authority, mentoring, saying no with an alternative, presenting risk to executives in business terms.</li>
+<li><strong>Metrics</strong>: measure outcomes (mean time to remediate, % of workloads without long-lived credentials, detection coverage) rather than activity.</li>
+<li><em>Exercise</em>: write a 2-page strategy memo proposing an org-wide change (for example "eliminate long-lived cloud keys in 12 months") with costs, risks and milestones.</li>
+</ul>
+<h3 id="reading-list">Reading list</h3>
+<p>One or two books per level is enough; depth beats breadth.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Book</th>
+<th>Author</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L0</td>
+<td>Computer Networking: A Top-Down Approach</td>
+<td>Kurose, Ross</td>
+<td>Networking foundations</td>
+</tr>
+<tr>
+<td>L0</td>
+<td>The Linux Programming Interface</td>
+<td>Kerrisk</td>
+<td>Linux system internals (reference)</td>
+</tr>
+<tr>
+<td>L0–L1</td>
+<td>Serious Cryptography (2nd ed.)</td>
+<td>Aumasson</td>
+<td>Applied crypto, including post-quantum</td>
+</tr>
+<tr>
+<td>L1</td>
+<td>Practical Cloud Security (2nd ed.)</td>
+<td>Dotson</td>
+<td>Cloud security across providers</td>
+</tr>
+<tr>
+<td>L1–L2</td>
+<td>Terraform: Up &amp; Running (3rd ed.)</td>
+<td>Brikman</td>
+<td>IaC patterns and testing</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Threat Modeling: Designing for Security</td>
+<td>Shostack</td>
+<td>Threat modeling (Module B)</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Solving Identity Management in Modern Applications</td>
+<td>Wilson, Hingnikar</td>
+<td>OAuth, OIDC, SAML, identity lifecycle</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Container Security</td>
+<td>Rice</td>
+<td>Containers from the kernel up</td>
+</tr>
+<tr>
+<td>L2–L3</td>
+<td>Hacking Kubernetes</td>
+<td>Martin, Hausenblas</td>
+<td>Kubernetes attack and defense</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Software Supply Chain Security</td>
+<td>Crossley</td>
+<td>Supply-chain controls (Module C)</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Designing Data-Intensive Applications</td>
+<td>Kleppmann</td>
+<td>Distributed systems depth</td>
+</tr>
+<tr>
+<td>L3–L4</td>
+<td>Building Secure and Reliable Systems</td>
+<td>Google (free online)</td>
+<td>Security and SRE at scale</td>
+</tr>
+<tr>
+<td>L3–L5</td>
+<td>Security Engineering (3rd ed.)</td>
+<td>Anderson (free online)</td>
+<td>The field's broadest reference</td>
+</tr>
+<tr>
+<td>L4</td>
+<td>How to Measure Anything in Cybersecurity Risk</td>
+<td>Hubbard, Seiersen</td>
+<td>Quantitative risk</td>
+</tr>
+<tr>
+<td>L4</td>
+<td>The Staff Engineer's Path</td>
+<td>Reilly</td>
+<td>Principal-level influence and strategy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="research-track-toward-phd-level">Research track (toward PhD level)</h3>
+<p><strong>Landmark papers to read, in this order:</strong></p>
+<ol>
+<li>Saltzer and Schroeder, <em>The Protection of Information in Computer Systems</em> (1975): the design principles still used today.</li>
+<li>Thompson, <em>Reflections on Trusting Trust</em> (1984): the original supply-chain attack argument.</li>
+<li>Ristenpart et al., <em>Hey, You, Get Off of My Cloud</em> (ACM CCS 2009): co-residency attacks in public clouds.</li>
+<li>Ward and Beyer, <em>BeyondCorp: A New Approach to Enterprise Security</em> (;login:, 2014): the zero-trust blueprint.</li>
+<li>Backes et al., <em>Semantic-based Automated Reasoning for AWS Access Policies using SMT</em> (FMCAD 2018): Zelkova, the math behind IAM Access Analyzer.</li>
+<li>Kocher et al., <em>Spectre Attacks: Exploiting Speculative Execution</em> (IEEE S&amp;P 2019): why hardware isolation leaks.</li>
+<li>Pang et al., <em>Zanzibar: Google's Consistent, Global Authorization System</em> (USENIX ATC 2019): relationship-based authorization at planet scale.</li>
+<li>Torres-Arias et al., <em>in-toto: Providing farm-to-table guarantees for bits and bytes</em> (USENIX Security 2019): supply-chain integrity.</li>
+<li>Greshake et al., <em>Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</em> (2023): the founding paper of agent security.</li>
+<li>Cutler et al., <em>Cedar: A New Language for Expressive, Fast, Safe, and Analyzable Authorization</em> (OOPSLA 2024): verified policy language design.</li>
+</ol>
+<p><strong>How to read papers</strong>: use S. Keshav's three-pass method (skim structure; read for argument; re-derive the details). Keep a one-paragraph summary per paper: problem, method, result, limitation, idea it gives you.</p>
+<p><strong>Venues to follow</strong>: the top four academic security conferences (USENIX Security, IEEE S&amp;P, ACM CCS, NDSS), plus practitioner venues fwd:cloudsec, AWS re:Inforce and KubeCon's security events. Read the accepted-paper lists each year and pick the cloud, identity and supply-chain papers.</p>
+<p><strong>From reader to researcher:</strong></p>
+<ol>
+<li><strong>Reproduce</strong> a published result (for example, re-run an IAM privilege-escalation analysis on your own test accounts).</li>
+<li><strong>Extend</strong> it: new cloud, new policy type, larger scale, or a counter-measure.</li>
+<li><strong>Evaluate</strong> honestly: define a dataset, metrics and a baseline before you build.</li>
+<li><strong>Write it up</strong>: a detailed blog post first, then a workshop paper, then a conference submission.</li>
+<li><strong>Find collaborators</strong>: a university security lab, or a mentor through open-source projects in this space (OPA, Cedar, OpenTofu, Prowler, Sigstore).</li>
+</ol>
+<p>If you want the formal credential, a master's or PhD in security is the structured path; the steps above are how you test whether you enjoy research first.</p>
+<p><strong>Open problems worth exploring:</strong> least-privilege policy synthesis from real usage, authorization for AI agents acting on behalf of users, verifying IaC changes before deploy, post-quantum migration at scale, and detecting abuse of non-human identities.</p>
+<h3 id="build-it-projects-in-go">Build-it projects (in Go)</h3>
+<p>Building the tool teaches more than using it. Each project maps to a level and grows into a portfolio piece.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Project</th>
+<th>What you learn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>Mini CSPM: scan an AWS account with the AWS SDK for Go v2 for 10 CIS checks, output JSON and Markdown</td>
+<td>Cloud APIs, CIS Benchmark logic, pagination, multi-region</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>IAM policy evaluator: implement the evaluation flow from section 2 (explicit deny, SCPs, boundaries, conditions) with table-driven tests</td>
+<td>Deep IAM semantics; test design</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Terraform plan checker: read <code>terraform show -json</code>, enforce your own rules, post results to a PR</td>
+<td>Plan JSON, policy as code, CI integration</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Secretless CI kit: GitHub Actions OIDC → AWS, GCP and Azure, with least-privilege roles generated per repo</td>
+<td>Workload identity federation on three clouds</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Detection pipeline: ingest CloudTrail, apply Sigma-style rules, alert, and replay Stratus Red Team attacks as tests</td>
+<td>Detection as code, streaming, testing detections</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Secure MCP server: OAuth 2.1 resource server with audience validation, scoped tools, audit log</td>
+<td>Agent security, OAuth in depth</td>
+</tr>
+<tr>
+<td>L4–L5</td>
+<td>Policy prover: translate a subset of IAM or Cedar policies to Z3 and answer "can principal X ever do Y?"</td>
+<td>Formal methods, the research frontier</td>
+</tr>
+</tbody>
+</table>
+<p>Publish each on GitHub with a README that states the threat model, design decisions and limitations. That README is practice for principal-level writing.</p>
+<h3 id="study-system">Study system</h3>
+<ul>
+<li><strong>Cadence</strong>: a steady 5–7 hours a week beats occasional long sessions. Suggested split: 50% building, 30% reading, 20% review and writing.</li>
+<li><strong>Retention</strong>: put definitions, evaluation rules and framework structures into spaced-repetition flashcards (Anki or similar) on the day you learn them; review daily for 10 minutes.</li>
+<li><strong>Explain to learn</strong>: after each module, write a one-page explanation as if teaching a junior engineer. Gaps in the explanation are gaps in understanding.</li>
+<li><strong>Checkpoint every quarter</strong>: re-take the self-check questions, update this roadmap, and move one level's exit criteria from "planned" to "proved".</li>
+<li><strong>Stay current</strong>: once a month, skim provider security blogs and release notes (AWS, Azure, GCP), the CSA blog, and the accepted papers of one top conference. Add anything durable to the "What's new" section.</li>
+<li><strong>Get feedback</strong>: share threat models and design docs with peers or online communities; principal-level skill is built by having your reasoning challenged.</li>
 </ul></main></div></body></html>

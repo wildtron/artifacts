@@ -52,7 +52,7 @@ h2{font:700 1.7rem/1.25 Fraunces,serif;margin:48px 0 12px;padding-top:12px;borde
 h3{font:600 1.25rem/1.3 Fraunces,serif;margin:0 0 12px;scroll-margin-top:16px}
 #course-overview h3, h2 + p + h3{margin-top:28px}
 section.module, section.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 26px;margin:22px 0;border-left:5px solid var(--track-a)}
-section.module.kind-aie{border-left-color:var(--track-b)}section.module.kind-thesis{border-left-color:var(--accent)}
+section.module.kind-aie{border-left-color:var(--track-b)}section.module.kind-sol{border-left-color:#8a5cc2}section.module.kind-adv,section.module.kind-scale,section.module.kind-res,section.module.kind-lead,section.module.kind-diss{border-left-color:#b08a1e}h1.part-h{font:700 2rem/1.2 Fraunces,serif;margin:64px 0 8px;padding-top:16px;border-top:4px double var(--ink)}nav li.part a{margin-top:14px;text-transform:uppercase;font-size:.72rem;letter-spacing:.08em;color:var(--muted)}section.module.kind-thesis{border-left-color:var(--accent)}
 section.block{border-left-color:var(--accent)}
 section.block h2{border-top:none;margin-top:0;padding-top:0}
 p strong:first-child{color:var(--ink)}
@@ -86,7 +86,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <div class="layout">
 <nav aria-label="Contents">
   <div class="brand">ML &amp; AI Engineering</div>
-  <div class="overall"><span id="doneCount">0</span> of 67 checkpoints done</div>
+  <div class="overall"><span id="doneCount">0</span> of 140 checkpoints done</div>
   <div class="bar"><span id="overallBar"></span></div>
   <ul><li><a href="#program-overview">Program overview<span class="prog" data-for="program-overview"></span></a></li>
 <li><a href="#textbooks">Textbooks<span class="prog" data-for="textbooks"></span></a></li>
@@ -99,16 +99,36 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <li class="sub"><a href="#aie-602-prompting-and-rag-weeks-2832">AIE 602 — Prompting and RAG<span class="prog" data-for="aie-602-prompting-and-rag-weeks-2832"></span></a></li>
 <li class="sub"><a href="#aie-603-agents-and-mcp-weeks-3336">AIE 603 — Agents and MCP<span class="prog" data-for="aie-603-agents-and-mcp-weeks-3336"></span></a></li>
 <li class="sub"><a href="#aie-604-evals-and-production-weeks-3740">AIE 604 — Evals and production<span class="prog" data-for="aie-604-evals-and-production-weeks-3740"></span></a></li>
-<li><a href="#term-3-deep-learning-weeks-4164">Term 3 — Deep learning<span class="prog" data-for="term-3-deep-learning-weeks-4164"></span></a></li>
-<li class="sub"><a href="#dl-701-neural-networks-and-deep-learning-weeks-4156">DL 701 — Neural networks and deep learning<span class="prog" data-for="dl-701-neural-networks-and-deep-learning-weeks-4156"></span></a></li>
-<li class="sub"><a href="#dl-702-generative-models-weeks-5764">DL 702 — Generative models<span class="prog" data-for="dl-702-generative-models-weeks-5764"></span></a></li>
-<li><a href="#term-4-llms-and-reasoning-weeks-6588">Term 4 — LLMs and reasoning<span class="prog" data-for="term-4-llms-and-reasoning-weeks-6588"></span></a></li>
-<li class="sub"><a href="#llm-801-llms-from-scratch-weeks-6576">LLM 801 — LLMs from scratch<span class="prog" data-for="llm-801-llms-from-scratch-weeks-6576"></span></a></li>
-<li class="sub"><a href="#llm-802-fine-tuning-alignment-and-reasoning-weeks-7788">LLM 802 — Fine-tuning, alignment and reasoning<span class="prog" data-for="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788"></span></a></li>
-<li><a href="#term-5-systems-and-thesis-weeks-89108">Term 5 — Systems and thesis<span class="prog" data-for="term-5-systems-and-thesis-weeks-89108"></span></a></li>
-<li class="sub"><a href="#sys-901-ml-systems-and-mlops-weeks-8996">SYS 901 — ML systems and MLOps<span class="prog" data-for="sys-901-ml-systems-and-mlops-weeks-8996"></span></a></li>
-<li class="sub"><a href="#thesis-999-capstone-thesis-and-defense-weeks-97108">THESIS 999 — Capstone thesis and defense<span class="prog" data-for="thesis-999-capstone-thesis-and-defense-weeks-97108"></span></a></li>
-<li><a href="#graduation-week-108">Graduation<span class="prog" data-for="graduation-week-108"></span></a></li>
+<li><a href="#term-3-ai-solutions-engineering-weeks-4160">Term 3 — AI solutions engineering<span class="prog" data-for="term-3-ai-solutions-engineering-weeks-4160"></span></a></li>
+<li class="sub"><a href="#sol-651-cloud-ai-platforms-and-infrastructure-weeks-4146">SOL 651 — Cloud AI platforms and infrastructure<span class="prog" data-for="sol-651-cloud-ai-platforms-and-infrastructure-weeks-4146"></span></a></li>
+<li class="sub"><a href="#sol-652-enterprise-integration-data-and-multimodal-weeks-4750">SOL 652 — Enterprise integration, data and multimodal<span class="prog" data-for="sol-652-enterprise-integration-data-and-multimodal-weeks-4750"></span></a></li>
+<li class="sub"><a href="#sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153">SOL 653 — Security, privacy, compliance and responsible AI<span class="prog" data-for="sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153"></span></a></li>
+<li class="sub"><a href="#sol-654-solution-architecture-economics-and-delivery-weeks-5456">SOL 654 — Solution architecture, economics and delivery<span class="prog" data-for="sol-654-solution-architecture-economics-and-delivery-weeks-5456"></span></a></li>
+<li class="sub"><a href="#sol-655-customer-engagement-discovery-demos-and-communication-weeks-5760">SOL 655 — Customer engagement: discovery, demos and communication<span class="prog" data-for="sol-655-customer-engagement-discovery-demos-and-communication-weeks-5760"></span></a></li>
+<li><a href="#term-4-deep-learning-weeks-6184">Term 4 — Deep learning<span class="prog" data-for="term-4-deep-learning-weeks-6184"></span></a></li>
+<li class="sub"><a href="#dl-701-neural-networks-and-deep-learning-weeks-6176">DL 701 — Neural networks and deep learning<span class="prog" data-for="dl-701-neural-networks-and-deep-learning-weeks-6176"></span></a></li>
+<li class="sub"><a href="#dl-702-generative-models-weeks-7784">DL 702 — Generative models<span class="prog" data-for="dl-702-generative-models-weeks-7784"></span></a></li>
+<li><a href="#term-5-llms-and-reasoning-weeks-85108">Term 5 — LLMs and reasoning<span class="prog" data-for="term-5-llms-and-reasoning-weeks-85108"></span></a></li>
+<li class="sub"><a href="#llm-801-llms-from-scratch-weeks-8596">LLM 801 — LLMs from scratch<span class="prog" data-for="llm-801-llms-from-scratch-weeks-8596"></span></a></li>
+<li class="sub"><a href="#llm-802-fine-tuning-alignment-and-reasoning-weeks-97108">LLM 802 — Fine-tuning, alignment and reasoning<span class="prog" data-for="llm-802-fine-tuning-alignment-and-reasoning-weeks-97108"></span></a></li>
+<li><a href="#term-6-systems-and-thesis-weeks-109128">Term 6 — Systems and thesis<span class="prog" data-for="term-6-systems-and-thesis-weeks-109128"></span></a></li>
+<li class="sub"><a href="#sys-901-ml-systems-and-mlops-weeks-109116">SYS 901 — ML systems and MLOps<span class="prog" data-for="sys-901-ml-systems-and-mlops-weeks-109116"></span></a></li>
+<li class="sub"><a href="#thesis-999-capstone-thesis-and-defense-weeks-117128">THESIS 999 — Capstone thesis and defense<span class="prog" data-for="thesis-999-capstone-thesis-and-defense-weeks-117128"></span></a></li>
+<li><a href="#part-i-graduation-masters-level-week-128">Part I graduation: master's level<span class="prog" data-for="part-i-graduation-masters-level-week-128"></span></a></li>
+<li class="part"><a href="#part-ii-doctoral-and-principal-level-weeks-129232">Part II — Doctoral and principal level</a></li>
+<li><a href="#term-7-advanced-theory-weeks-129152">Term 7 — Advanced theory<span class="prog" data-for="term-7-advanced-theory-weeks-129152"></span></a></li>
+<li class="sub"><a href="#adv-1001-optimization-and-learning-theory-weeks-129140">ADV 1001 — Optimization and learning theory<span class="prog" data-for="adv-1001-optimization-and-learning-theory-weeks-129140"></span></a></li>
+<li class="sub"><a href="#adv-1002-probabilistic-and-bayesian-ml-information-theory-weeks-141152">ADV 1002 — Probabilistic and Bayesian ML, information theory<span class="prog" data-for="adv-1002-probabilistic-and-bayesian-ml-information-theory-weeks-141152"></span></a></li>
+<li><a href="#term-8-large-scale-ml-systems-weeks-153176">Term 8 — Large-scale ML systems<span class="prog" data-for="term-8-large-scale-ml-systems-weeks-153176"></span></a></li>
+<li class="sub"><a href="#scale-1101-gpu-programming-and-performance-weeks-153164">SCALE 1101 — GPU programming and performance<span class="prog" data-for="scale-1101-gpu-programming-and-performance-weeks-153164"></span></a></li>
+<li class="sub"><a href="#scale-1102-distributed-training-and-inference-at-scale-weeks-165176">SCALE 1102 — Distributed training and inference at scale<span class="prog" data-for="scale-1102-distributed-training-and-inference-at-scale-weeks-165176"></span></a></li>
+<li><a href="#term-9-research-weeks-177200">Term 9 — Research<span class="prog" data-for="term-9-research-weeks-177200"></span></a></li>
+<li class="sub"><a href="#res-1201-research-methods-weeks-177184">RES 1201 — Research methods<span class="prog" data-for="res-1201-research-methods-weeks-177184"></span></a></li>
+<li class="sub"><a href="#res-1202-specialization-seminar-weeks-185200">RES 1202 — Specialization seminar<span class="prog" data-for="res-1202-specialization-seminar-weeks-185200"></span></a></li>
+<li><a href="#term-10-leadership-and-dissertation-weeks-201232">Term 10 — Leadership and dissertation<span class="prog" data-for="term-10-leadership-and-dissertation-weeks-201232"></span></a></li>
+<li class="sub"><a href="#lead-1301-technical-leadership-weeks-201208">LEAD 1301 — Technical leadership<span class="prog" data-for="lead-1301-technical-leadership-weeks-201208"></span></a></li>
+<li class="sub"><a href="#diss-1999-dissertation-weeks-209232">DISS 1999 — Dissertation<span class="prog" data-for="diss-1999-dissertation-weeks-209232"></span></a></li>
+<li><a href="#part-ii-completion-doctoral-and-principal-level-week-232">Part II completion: doctoral and principal level<span class="prog" data-for="part-ii-completion-doctoral-and-principal-level-week-232"></span></a></li>
 <li><a href="#sources">Sources<span class="prog" data-for="sources"></span></a></li></ul>
   <div class="tools">
     <button id="themeBtn" type="button">Toggle theme</button>
@@ -118,11 +138,12 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <main>
 <header class="hero">
   <h1>ML &amp; AI Engineering Curriculum</h1>
-  <p>One track · 13 courses and a thesis · 108 weeks at 10–12 hours a week · Updated November 16, 2026</p>
+  <p>One track in two parts · 26 courses · 232 weeks (about 4.5 years) at about 12 hours a week · Updated November 20, 2026</p>
 </header>
 <h2 id="program-overview">Program overview</h2>
-<p>This is one track: 13 courses over 108 weeks (about 25 months) at 10–12 hours a week, ending in a thesis. It merges the earlier two-track roadmap with the <a href="https://claude.ai/artifact/BhSc2hCW96oeFuo5B7rAex" target="_blank" rel="noopener">Self-Taught MS in ML, Deep Learning &amp; LLMs</a> plan. You get the master's-level depth (generative models, reasoning and RL, Stanford lectures, a thesis) and the practical engineering (weekly schedules, checkpoint tests, RAG, agents, evals, MLOps).</p>
-<p>The order is deliberate. After the foundations, Term 2 teaches you to build LLM products, so you're employable as an AI engineer about 9 months in. Terms 3–5 then take you to model-building depth.</p>
+<p>This is one track in two parts. Part I (Terms 1–6, 128 weeks) takes you to master's level and ends in a thesis. Part II (Terms 7–10, 104 weeks) takes you to doctoral and principal-engineer level and ends in a dissertation. That's 26 courses over 232 weeks (about 4.5 years) at about 12 hours a week. It merges the earlier two-track roadmap with the <a href="https://claude.ai/artifact/BhSc2hCW96oeFuo5B7rAex" target="_blank" rel="noopener">Self-Taught MS in ML, Deep Learning &amp; LLMs</a> plan. You get the master's-level depth (generative models, reasoning and RL, Stanford lectures, a thesis), the practical engineering (weekly schedules, checkpoint tests, RAG, agents, evals, MLOps), and the customer-facing skills of an AI solutions engineer (cloud platforms, enterprise integration, security and compliance, discovery, demos and proposals).</p>
+<p>The order is deliberate, with two job-ready milestones early. After the foundations, Term 2 teaches you to build LLM products, so you're employable as an AI engineer about 9 months in. Term 3 adds the cloud, enterprise and customer-facing skills of an AI solutions engineer, a second milestone at about 14 months. Terms 4–6 then take you to model-building depth, and Part II to research and large-scale systems depth.</p>
+<p><strong>What "PhD or principal level" means here:</strong> Part II gives you the knowledge and portfolio of someone at that level, but both titles also need outside proof. A PhD is judged by original, peer-reviewed research. A principal engineer is judged by years of technical impact across an organization. So Part II's targets are external: a paper submitted to a peer-reviewed venue, open-source work other people use, and technical leadership on real projects. Expect Part II to overlap with your job, where most principal-level growth happens.</p>
 <h3 id="schedule-at-a-glance">Schedule at a glance</h3>
 <div class="tbl"><table>
 <thead>
@@ -133,6 +154,11 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><strong>PART I — MASTER'S LEVEL</strong></td>
+<td></td>
+<td></td>
+</tr>
 <tr>
 <td><strong>Term 1 — Foundations</strong></td>
 <td></td>
@@ -179,49 +205,144 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>Huyen; Husain; OWASP</td>
 </tr>
 <tr>
-<td><strong>Term 3 — Deep learning</strong></td>
+<td><strong>Term 3 — AI solutions engineering</strong></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>41–56</td>
+<td>41–46</td>
+<td>SOL 651 — Cloud AI platforms and infrastructure</td>
+<td>AWS, Azure and Google Cloud AI docs; Terraform; a cloud AI certification</td>
+</tr>
+<tr>
+<td>47–50</td>
+<td>SOL 652 — Enterprise integration, data and multimodal</td>
+<td>OAuth and OIDC; MCP; Docling; LangGraph</td>
+</tr>
+<tr>
+<td>51–53</td>
+<td>SOL 653 — Security, privacy, compliance and responsible AI</td>
+<td>OWASP; NIST AI RMF; Philippine Data Privacy Act; EU AI Act</td>
+</tr>
+<tr>
+<td>54–56</td>
+<td>SOL 654 — Solution architecture, economics and delivery</td>
+<td>Lakshmanan and Hapke; Kleppmann and Riccomini</td>
+</tr>
+<tr>
+<td>57–60</td>
+<td>SOL 655 — Customer engagement: discovery, demos and communication</td>
+<td>Care; Cohan; Fitzpatrick; Minto</td>
+</tr>
+<tr>
+<td><strong>Term 4 — Deep learning</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>61–76</td>
 <td>DL 701 — Neural networks and deep learning</td>
 <td>Prince; Géron; d2l; Karpathy; CS231n</td>
 </tr>
 <tr>
-<td>57–64</td>
+<td>77–84</td>
 <td>DL 702 — Generative models</td>
 <td>Bishop; Prince; Stanford CS236</td>
 </tr>
 <tr>
-<td><strong>Term 4 — LLMs and reasoning</strong></td>
+<td><strong>Term 5 — LLMs and reasoning</strong></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>65–76</td>
+<td>85–96</td>
 <td>LLM 801 — LLMs from scratch</td>
 <td>Raschka; Stanford CS336</td>
 </tr>
 <tr>
-<td>77–88</td>
+<td>97–108</td>
 <td>LLM 802 — Fine-tuning, alignment and reasoning</td>
 <td>Raschka's reasoning book; Sutton and Barto</td>
 </tr>
 <tr>
-<td><strong>Term 5 — Systems and thesis</strong></td>
+<td><strong>Term 6 — Systems and thesis</strong></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
-<td>89–96</td>
+<td>109–116</td>
 <td>SYS 901 — ML systems and MLOps</td>
 <td>Huyen, <em>Designing ML Systems</em>; CS329S</td>
 </tr>
 <tr>
-<td>97–108</td>
+<td>117–128</td>
 <td>THESIS 999 — Capstone thesis and defense</td>
 <td>Murphy as theory reference</td>
+</tr>
+<tr>
+<td><strong>PART II — DOCTORAL AND PRINCIPAL LEVEL</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Term 7 — Advanced theory</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>129–140</td>
+<td>ADV 1001 — Optimization and learning theory</td>
+<td>Shalev-Shwartz and Ben-David; Boyd and Vandenberghe</td>
+</tr>
+<tr>
+<td>141–152</td>
+<td>ADV 1002 — Probabilistic and Bayesian ML, information theory</td>
+<td>Murphy, <em>Advanced Topics</em>; MacKay</td>
+</tr>
+<tr>
+<td><strong>Term 8 — Large-scale ML systems</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>153–164</td>
+<td>SCALE 1101 — GPU programming and performance</td>
+<td>Hwu et al.; CUDA and Triton docs; GPU MODE</td>
+</tr>
+<tr>
+<td>165–176</td>
+<td>SCALE 1102 — Distributed training and inference at scale</td>
+<td><em>How to Scale Your Model</em>; <em>The Ultra-Scale Playbook</em></td>
+</tr>
+<tr>
+<td><strong>Term 9 — Research</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>177–184</td>
+<td>RES 1201 — Research methods</td>
+<td>Stanford CS197; Google's tuning playbook</td>
+</tr>
+<tr>
+<td>185–200</td>
+<td>RES 1202 — Specialization seminar</td>
+<td>30+ papers in your chosen area</td>
+</tr>
+<tr>
+<td><strong>Term 10 — Leadership and dissertation</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>201–208</td>
+<td>LEAD 1301 — Technical leadership</td>
+<td>Larson; Reilly; Ousterhout</td>
+</tr>
+<tr>
+<td>209–232</td>
+<td>DISS 1999 — Dissertation</td>
+<td>Your own research</td>
 </tr>
 </tbody>
 </table></div>
@@ -251,8 +372,18 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </tr>
 <tr>
 <td>Weekend block</td>
-<td>4–5 h</td>
+<td>4 h</td>
 <td>Watch the matching lecture, code the chapter, push to GitHub</td>
+</tr>
+<tr>
+<td>Daily review</td>
+<td>10–15 min</td>
+<td>Spaced-repetition flashcards (Anki) made from each chapter's key ideas</td>
+</tr>
+<tr>
+<td>Paper of the week (from Term 2)</td>
+<td>1 h</td>
+<td>Read one paper with the three-pass method and write a one-paragraph summary; two a week from Term 7</td>
 </tr>
 <tr>
 <td>Sunday review</td>
@@ -261,9 +392,54 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </tr>
 </tbody>
 </table></div>
-<p><strong>Grading yourself:</strong> a course passes only when (1) every checkpoint test item is done, (2) its projects are on GitHub with a README, (3) you can explain the core ideas without notes, and (4) you've written a short public post about one thing you learned. A course you can't pass this way gets repeated, not skipped. If time gets tight, compress Terms 4–5, but never skip ML 501's math.</p>
+<p><strong>Grading yourself:</strong> a course passes only when (1) every checkpoint test item is done, (2) its projects are on GitHub with a README, (3) you can explain the core ideas without notes, and (4) you've written a short public post about one thing you learned. A course you can't pass this way gets repeated, not skipped. If time gets tight, compress Terms 5–6, but never skip ML 501's math.</p>
+<h3 id="habits-that-run-through-every-term">Habits that run through every term</h3>
+<p>These aren't courses. They're the practices that turn 4.5 years of study into lasting skill.</p>
+<ul>
+<li><strong>Retention:</strong> after every chapter, write 5–10 flashcards in <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener">Anki</a> and review daily. Spaced repetition is the cheapest way to keep Term 1's math alive until you need it in Term 7.</li>
+<li><strong>Papers:</strong> start the paper of the week in Term 2. Use the three-pass method from <a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf" target="_blank" rel="noopener">How to Read a Paper</a> (S. Keshav), and keep a one-paragraph summary of each in a searchable notes file. By Term 9 you'll have 150+ summaries to draw on.</li>
+<li><strong>Engineering standards:</strong> every project gets type hints, tests, a linter, CI and a README with results. Principal engineers are judged on code others can maintain, and habits formed in Term 1 last.</li>
+<li><strong>Compute plan:</strong> use free GPUs (<a href="https://www.kaggle.com/docs/notebooks" target="_blank" rel="noopener">Kaggle notebooks</a>, <a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a>) through Term 4. Rent cloud GPUs by the hour for the big projects in Terms 5 and 8. Set a monthly budget and a billing alert before you start.</li>
+<li><strong>Community:</strong> join one study group or community (e.g. the <a href="https://github.com/gpu-mode" target="_blank" rel="noopener">GPU MODE</a> community, Hugging Face forums, or a local AI meetup) and find one mentor ahead of you. Teach what you learn; it's the strongest test of understanding.</li>
+<li><strong>Open source:</strong> make small contributions from Term 2 (docs, bug fixes) so the larger contribution in Part I's graduation isn't your first.</li>
+<li><strong>Rest:</strong> take one lighter week after each term to review flashcards and catch up. Plans this long fail from burnout more than from difficulty.</li>
+</ul>
+<h3 id="career-milestones">Career milestones</h3>
+<p>The curriculum has four points where you should test yourself against the job market. Do a short round of interview prep at each, even if you aren't job hunting.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>You're ready for</th>
+<th>Interview prep</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>40</td>
+<td>AI engineer</td>
+<td>Coding interview practice (e.g. <a href="https://neetcode.io/" target="_blank" rel="noopener">NeetCode</a> roadmap, 2–3 problems a week from Term 2), LLM app design, a portfolio walkthrough</td>
+</tr>
+<tr>
+<td>60</td>
+<td>AI solutions engineer, forward-deployed engineer</td>
+<td>A mock discovery call and demo, a live whiteboard design, a cloud certification</td>
+</tr>
+<tr>
+<td>128</td>
+<td>ML engineer, senior AI engineer</td>
+<td>ML system design, ML coding (implement a model or training loop live), a thesis talk</td>
+</tr>
+<tr>
+<td>232</td>
+<td>Research engineer, staff or principal engineer track</td>
+<td>Research talk on your dissertation, large-scale system design, leadership stories in a structured format</td>
+</tr>
+</tbody>
+</table></div>
+<p>Titles above senior come from impact on the job, not from finishing courses. Use Part II to build that impact at work: lead designs, mentor others and write the documents that set technical direction.</p>
 <h2 id="textbooks">Textbooks</h2>
-<p>Eighteen books in reading order. Twelve are core (read fully) and six are supplementary (read the parts each course names). Seven are free online.</p>
+<p>Thirty-six books in reading order. Twenty-four are core (read fully, or the chapters each course names) and twelve are supplementary. Fifteen are free online. Terms 3, 8 and 9 also lean on docs, papers and course sites, listed in each course.</p>
 <div class="tbl"><table>
 <thead>
 <tr>
@@ -342,6 +518,54 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </tr>
 <tr>
 <td>9</td>
+<td><a href="https://www.oreilly.com/library/view/-/9798341622654/" target="_blank" rel="noopener">Generative AI Design Patterns</a></td>
+<td>Valliappa Lakshmanan, Hannes Hapke, 2025</td>
+<td>Core</td>
+<td>SOL 654</td>
+<td>No</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="https://www.oreilly.com/library/view/designing-data-intensive/9781098119058/" target="_blank" rel="noopener">Designing Data-Intensive Applications, 2nd ed.</a></td>
+<td>Martin Kleppmann, Chris Riccomini, 2026</td>
+<td>Supplementary</td>
+<td>SOL 654, SYS 901</td>
+<td>No</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="https://www.simonandschuster.ca/books/The-Mom-Test/Rob-Fitzpatrick/9798893312560" target="_blank" rel="noopener">The Mom Test</a></td>
+<td>Rob Fitzpatrick, 2013</td>
+<td>Supplementary</td>
+<td>SOL 655</td>
+<td>No</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="https://us.artechhouse.com/Mastering-Technical-Sales-The-Sales-Engineers-Handbook-Fourth-Edition-P2257.aspx" target="_blank" rel="noopener">Mastering Technical Sales: The Sales Engineer's Handbook, 4th ed.</a></td>
+<td>John Care, 2022</td>
+<td>Core</td>
+<td>SOL 655</td>
+<td>No</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="https://greatdemo.blogspot.com/2023/08/great-demo-third-edition-launch.html" target="_blank" rel="noopener">Great Demo!, 3rd ed.</a></td>
+<td>Peter Cohan, 2023</td>
+<td>Core</td>
+<td>SOL 655</td>
+<td>No</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="https://barbaraminto.com/textbook" target="_blank" rel="noopener">The Pyramid Principle, 3rd ed.</a></td>
+<td>Barbara Minto</td>
+<td>Supplementary</td>
+<td>SOL 655</td>
+<td>No</td>
+</tr>
+<tr>
+<td>15</td>
 <td><a href="https://udlbook.github.io/udlbook/" target="_blank" rel="noopener">Understanding Deep Learning</a></td>
 <td>Simon J.D. Prince, 2023</td>
 <td>Core</td>
@@ -349,7 +573,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>Yes</td>
 </tr>
 <tr>
-<td>10</td>
+<td>16</td>
 <td><a href="https://d2l.ai/" target="_blank" rel="noopener">Dive into Deep Learning</a></td>
 <td>Zhang, Lipton, Li, Smola, 2023</td>
 <td>Supplementary (labs)</td>
@@ -357,7 +581,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>Yes</td>
 </tr>
 <tr>
-<td>11</td>
+<td>17</td>
 <td><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank" rel="noopener">Deep Learning: Foundations and Concepts</a></td>
 <td>Christopher &amp; Hugh Bishop, 2024</td>
 <td>Core</td>
@@ -365,7 +589,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>12</td>
+<td>18</td>
 <td><a href="https://www.manning.com/books/build-a-large-language-model-from-scratch" target="_blank" rel="noopener">Build a Large Language Model (From Scratch)</a></td>
 <td>Sebastian Raschka, 2024</td>
 <td>Core</td>
@@ -373,7 +597,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>13</td>
+<td>19</td>
 <td><a href="https://www.oreilly.com/library/view/natural-language-processing-with-transformers/9781098136789/" target="_blank" rel="noopener">Natural Language Processing with Transformers, Revised ed.</a></td>
 <td>Tunstall, von Werra, Wolf, 2022</td>
 <td>Supplementary</td>
@@ -381,7 +605,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>14</td>
+<td>20</td>
 <td><a href="https://www.manning.com/books/build-a-reasoning-model-from-scratch" target="_blank" rel="noopener">Build a Reasoning Model (From Scratch)</a></td>
 <td>Sebastian Raschka, 2026</td>
 <td>Core</td>
@@ -389,7 +613,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>15</td>
+<td>21</td>
 <td><a href="http://incompleteideas.net/book/the-book-2nd.html" target="_blank" rel="noopener">Reinforcement Learning: An Introduction, 2nd ed.</a></td>
 <td>Sutton &amp; Barto, 2018</td>
 <td>Core (selected chapters)</td>
@@ -397,7 +621,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>Yes</td>
 </tr>
 <tr>
-<td>16</td>
+<td>22</td>
 <td><a href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/" target="_blank" rel="noopener">Designing Machine Learning Systems</a></td>
 <td>Chip Huyen, 2022</td>
 <td>Core</td>
@@ -405,7 +629,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>17</td>
+<td>23</td>
 <td><a href="https://www.packtpub.com/product/llm-engineers-handbook/9781836200079" target="_blank" rel="noopener">LLM Engineer's Handbook</a></td>
 <td>Paul Iusztin, Maxime Labonne, 2024</td>
 <td>Supplementary</td>
@@ -413,12 +637,108 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <td>No</td>
 </tr>
 <tr>
-<td>18</td>
+<td>24</td>
 <td><a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Probabilistic Machine Learning: An Introduction</a></td>
 <td>Kevin P. Murphy, 2022</td>
 <td>Supplementary (master reference)</td>
 <td>All, especially THESIS 999</td>
 <td>Yes</td>
+</tr>
+<tr>
+<td>25</td>
+<td><a href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/" target="_blank" rel="noopener">Understanding Machine Learning: From Theory to Algorithms</a></td>
+<td>Shai Shalev-Shwartz, Shai Ben-David, 2014</td>
+<td>Core</td>
+<td>ADV 1001</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>26</td>
+<td><a href="https://web.stanford.edu/~boyd/cvxbook/" target="_blank" rel="noopener">Convex Optimization</a></td>
+<td>Stephen Boyd, Lieven Vandenberghe, 2004</td>
+<td>Core (selected chapters)</td>
+<td>ADV 1001</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>27</td>
+<td><a href="https://arxiv.org/abs/2106.10165" target="_blank" rel="noopener">The Principles of Deep Learning Theory</a></td>
+<td>Roberts, Yaida, Hanin, 2022</td>
+<td>Supplementary</td>
+<td>ADV 1001</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>28</td>
+<td><a href="https://probml.github.io/pml-book/book2.html" target="_blank" rel="noopener">Probabilistic Machine Learning: Advanced Topics</a></td>
+<td>Kevin P. Murphy, 2023</td>
+<td>Core (selected chapters)</td>
+<td>ADV 1002, DISS 1999</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>29</td>
+<td><a href="http://www.inference.org.uk/itila/book.html" target="_blank" rel="noopener">Information Theory, Inference, and Learning Algorithms</a></td>
+<td>David MacKay, 2003</td>
+<td>Supplementary</td>
+<td>ADV 1002</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>30</td>
+<td><a href="https://shop.elsevier.com/books/programming-massively-parallel-processors/hwu/978-0-443-43900-1" target="_blank" rel="noopener">Programming Massively Parallel Processors, 5th ed.</a></td>
+<td>Wen-mei Hwu et al.</td>
+<td>Core</td>
+<td>SCALE 1101</td>
+<td>No</td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="https://jax-ml.github.io/scaling-book/" target="_blank" rel="noopener">How to Scale Your Model</a></td>
+<td>Jacob Austin et al. (Google DeepMind), 2025</td>
+<td>Core</td>
+<td>SCALE 1102</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>32</td>
+<td><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook" target="_blank" rel="noopener">The Ultra-Scale Playbook</a></td>
+<td>Hugging Face nanotron team, 2025</td>
+<td>Core</td>
+<td>SCALE 1102</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>33</td>
+<td><a href="https://web.stanford.edu/~ouster/cgi-bin/book.php" target="_blank" rel="noopener">A Philosophy of Software Design, 2nd ed.</a></td>
+<td>John Ousterhout, 2021</td>
+<td>Core</td>
+<td>LEAD 1301</td>
+<td>No</td>
+</tr>
+<tr>
+<td>34</td>
+<td><a href="https://abseil.io/resources/swe-book" target="_blank" rel="noopener">Software Engineering at Google</a></td>
+<td>Winters, Manshreck, Wright, 2020</td>
+<td>Supplementary</td>
+<td>LEAD 1301</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>35</td>
+<td><a href="https://staffeng.com/book" target="_blank" rel="noopener">Staff Engineer: Leadership Beyond the Management Track</a></td>
+<td>Will Larson, 2021</td>
+<td>Core</td>
+<td>LEAD 1301</td>
+<td>No</td>
+</tr>
+<tr>
+<td>36</td>
+<td><a href="https://www.oreilly.com/library/view/the-staff-engineers/9781098118723/" target="_blank" rel="noopener">The Staff Engineer's Path</a></td>
+<td>Tanya Reilly, 2022</td>
+<td>Core</td>
+<td>LEAD 1301</td>
+<td>No</td>
 </tr>
 </tbody>
 </table></div>
@@ -1184,9 +1504,600 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <li class="task"><label><input type="checkbox" data-id="c29"><span>Write a one-page cost estimate for running the app for 1,000 daily users</span></label></li>
 </ul>
 <p>Chapter numbers for <em>AI Engineering</em> are from the first edition; check your copy's table of contents.</p>
-</section><h2 id="term-3-deep-learning-weeks-4164">Term 3 — Deep learning (Weeks 41–64)</h2>
-<p>Term goal: by week 64 you can implement a transformer from a blank file, train it on a GPU, and train a small generative model.</p>
-<section class="module kind-dl" data-mod="dl-701-neural-networks-and-deep-learning-weeks-4156"><h3 id="dl-701-neural-networks-and-deep-learning-weeks-4156">DL 701 — Neural networks and deep learning (Weeks 41–56)</h3>
+</section><h2 id="term-3-ai-solutions-engineering-weeks-4160">Term 3 — AI solutions engineering (Weeks 41–60)</h2>
+<p>Term goal: by week 60 you can run a full customer engagement on your own: discovery, solution design, security review, a working proof of concept (POC) on the customer's cloud, a demo, a proposal and a production handoff. You'll also hold one cloud AI certification.</p>
+<p>An AI solutions engineer sits between the customer and the technology. The role goes by several titles: solutions engineer, sales engineer, solutions architect, customer engineer, forward-deployed engineer and implementation engineer. Job postings consistently ask for four things on top of Term 2's skills: cloud and enterprise infrastructure, integration with the customer's systems, security and compliance fluency, and the ability to discover needs, demo and explain trade-offs to both engineers and executives (<a href="https://www.hireinsouth.com/post/what-does-an-ai-solutions-engineer-do" target="_blank" rel="noopener">role overview</a>, <a href="https://jobdescription.org/jobs/artificial-intelligence/ai-solutions-engineer" target="_blank" rel="noopener">role description</a>). Each course below covers one of those, and SOL 655 ties them together in a real engagement.</p>
+<p><strong>From now on, practice out loud.</strong> Present every project from here to the end of the curriculum to someone else in under 10 minutes. It's the cheapest way to build the communication skills this role is hired for.</p>
+<section class="module kind-sol" data-mod="sol-651-cloud-ai-platforms-and-infrastructure-weeks-4146"><h3 id="sol-651-cloud-ai-platforms-and-infrastructure-weeks-4146">SOL 651 — Cloud AI platforms and infrastructure (Weeks 41–46)</h3>
+<p><strong>Summary:</strong> Enterprise customers rarely call model APIs from a laptop. They run models inside their own cloud account, behind their own network and identity controls. Learn the three major platforms well enough to deploy the same app on any of them, and earn one certification to prove it.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Deploy an LLM app on Amazon Bedrock, Azure AI Foundry and Google Vertex AI, and compare their model catalogs, quotas, pricing and regions</li>
+<li>Use each platform's managed building blocks: knowledge bases, agents, guardrails, evaluations and batch inference</li>
+<li>Apply cloud basics the security team will check: IAM roles and least privilege, VPCs and private endpoints, secrets management, encryption keys and audit logging</li>
+<li>Explain data residency and data-retention options, including when a customer needs a self-hosted open model</li>
+<li>Choose between serverless functions, containers and Kubernetes, and run a basic Kubernetes deployment</li>
+<li>Describe infrastructure as code with Terraform, and add tracing with OpenTelemetry</li>
+<li>Pass one professional-level cloud AI certification</li>
+</ul>
+<p><strong>Focus on:</strong> one cloud deeply (AWS is the most common in enterprise AI work, Azure is strongest where customers already use Microsoft 365), and the other two well enough to port an app. Spend extra time on IAM and networking; they decide most security reviews.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://docs.aws.amazon.com/bedrock/" target="_blank" rel="noopener">Amazon Bedrock docs</a></td>
+<td>Docs</td>
+<td>Models, Knowledge Bases, Agents, Guardrails</td>
+</tr>
+<tr>
+<td><a href="https://learn.microsoft.com/azure/ai-foundry/" target="_blank" rel="noopener">Azure AI Foundry docs</a></td>
+<td>Docs</td>
+<td>Azure models, agents and evaluation</td>
+</tr>
+<tr>
+<td><a href="https://cloud.google.com/vertex-ai/docs" target="_blank" rel="noopener">Google Vertex AI docs</a></td>
+<td>Docs</td>
+<td>Gemini and Model Garden</td>
+</tr>
+<tr>
+<td><a href="https://aws.amazon.com/certification/certified-generative-ai-developer-professional/" target="_blank" rel="noopener">AWS Certified Generative AI Developer – Professional (AIP-C01)</a></td>
+<td>Certification</td>
+<td>Recommended target: production generative AI on AWS</td>
+</tr>
+<tr>
+<td><a href="https://aws.amazon.com/certification/certified-ai-practitioner/" target="_blank" rel="noopener">AWS Certified AI Practitioner</a></td>
+<td>Certification</td>
+<td>Optional warm-up; foundational level</td>
+</tr>
+<tr>
+<td>Microsoft AI-103: Developing AI Apps and Agents on Azure (<a href="https://open-exam-prep.com/blog/ai-102-vs-ai-103-which-exam-2026" target="_blank" rel="noopener">overview</a>)</td>
+<td>Certification</td>
+<td>Azure alternative; AI-102 retired on June 30, 2026</td>
+</tr>
+<tr>
+<td><a href="https://kubernetes.io/docs/tutorials/" target="_blank" rel="noopener">Kubernetes docs: tutorials</a></td>
+<td>Docs</td>
+<td>Kubernetes basics</td>
+</tr>
+<tr>
+<td><a href="https://developer.hashicorp.com/terraform/tutorials" target="_blank" rel="noopener">Terraform tutorials</a></td>
+<td>Docs</td>
+<td>Infrastructure as code</td>
+</tr>
+<tr>
+<td><a href="https://opentelemetry.io/docs/" target="_blank" rel="noopener">OpenTelemetry docs</a></td>
+<td>Docs</td>
+<td>Tracing across services, including Go</td>
+</tr>
+<tr>
+<td><a href="https://anthropic.skilljar.com/" target="_blank" rel="noopener">Anthropic Academy</a></td>
+<td>Free courses</td>
+<td>Claude on Bedrock and Vertex, tool use and agents</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>41</td>
+<td>Cloud fundamentals for AI: IAM, networking, storage, keys</td>
+<td>AWS AI Practitioner exam guide; your chosen cloud's well-architected guidance</td>
+<td>Set up a fresh account with least-privilege roles and billing alerts</td>
+</tr>
+<tr>
+<td>42</td>
+<td>Amazon Bedrock in depth</td>
+<td>Bedrock docs: models, Knowledge Bases, Agents, Guardrails</td>
+<td>Rebuild your AIE 602 RAG app on Bedrock</td>
+</tr>
+<tr>
+<td>43</td>
+<td>Azure AI Foundry and Google Vertex AI</td>
+<td>Foundry and Vertex docs</td>
+<td>Port the same app to one of them; log cost and latency differences</td>
+</tr>
+<tr>
+<td>44</td>
+<td>Containers to Kubernetes; serverless</td>
+<td>Kubernetes tutorials</td>
+<td>Run your Go API on a local Kubernetes cluster (kind or k3d) and as a serverless function</td>
+</tr>
+<tr>
+<td>45</td>
+<td>Terraform and observability</td>
+<td>Terraform tutorials; OpenTelemetry docs</td>
+<td>Provision the whole stack with Terraform; trace one request end to end</td>
+</tr>
+<tr>
+<td>46</td>
+<td>Certification and checkpoint</td>
+<td>Exam guide and practice tests</td>
+<td>Sit the exam; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c30"><span>The same RAG app runs on two clouds, each provisioned from scratch with one <code>terraform apply</code></span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c31"><span>The model endpoint is reachable only through private networking, and every role follows least privilege (show the IAM policies)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c32"><span>A one-page comparison table of the three platforms: models, regions, quotas, pricing, data retention and private networking</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c33"><span>Pass AWS AIP-C01 or Microsoft AI-103</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c34"><span>Explain to a non-technical listener, in 2 minutes, where the customer's data goes during one request</span></label></li>
+</ul>
+<p>Anthropic's Claude certifications are currently limited to members of its partner network (<a href="https://anthropic-partners.skilljar.com/page/faq-certifications" target="_blank" rel="noopener">certification FAQ</a>). Use the free Anthropic Academy courses now, and take a Claude certification later if you join a partner company.</p>
+</section><section class="module kind-sol" data-mod="sol-652-enterprise-integration-data-and-multimodal-weeks-4750"><h3 id="sol-652-enterprise-integration-data-and-multimodal-weeks-4750">SOL 652 — Enterprise integration, data and multimodal (Weeks 47–50)</h3>
+<p><strong>Summary:</strong> Most of a real AI deployment is integration work: plugging into the customer's identity system, their SaaS tools, their messy documents and their databases. This course covers that work, plus the voice and vision use cases and the agent frameworks customers will ask you about.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Implement OAuth 2.0, OpenID Connect and SAML single sign-on (SSO), service accounts and role-based access control</li>
+<li>Connect to systems customers use (Salesforce, ServiceNow, Microsoft 365 and SharePoint, Google Workspace, Slack) through APIs, webhooks, MCP servers and low-code tools such as n8n</li>
+<li>Apply standard integration patterns: request–reply, events and queues, retries and idempotency, batch jobs</li>
+<li>Build permission-aware retrieval, so users only get answers from documents they're allowed to see, and design for multiple tenants</li>
+<li>Parse messy documents (scanned PDFs, tables, forms) with OCR and layout-aware parsers, and extract structured data from them</li>
+<li>Build text-to-SQL over a data warehouse safely, with read-only access and query checks</li>
+<li>Build a voice agent (speech-to-text, LLM, text-to-speech) and a vision use case, and manage their latency</li>
+<li>Explain and use the frameworks customers already run (LangGraph, LlamaIndex, Claude Agent SDK, OpenAI Agents SDK), and say when raw SDKs are better</li>
+<li>Build a quick demo UI in Streamlit or Next.js</li>
+</ul>
+<p><strong>Focus on:</strong> permission-aware retrieval and document parsing. They're where most enterprise RAG projects fail, and where you can stand out.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://oauth.net/2/" target="_blank" rel="noopener">OAuth 2.0</a></td>
+<td>Reference</td>
+<td>Authorization flows</td>
+</tr>
+<tr>
+<td><a href="https://openid.net/developers/how-connect-works/" target="_blank" rel="noopener">How OpenID Connect works</a></td>
+<td>Reference</td>
+<td>Login and SSO</td>
+</tr>
+<tr>
+<td><a href="https://www.enterpriseintegrationpatterns.com/" target="_blank" rel="noopener">Enterprise Integration Patterns</a> — Hohpe, Woolf</td>
+<td>Reference site</td>
+<td>Messaging and integration patterns</td>
+</tr>
+<tr>
+<td><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol docs</a></td>
+<td>Docs</td>
+<td>Connecting agents to enterprise systems</td>
+</tr>
+<tr>
+<td><a href="https://docs.n8n.io/" target="_blank" rel="noopener">n8n docs</a></td>
+<td>Docs</td>
+<td>Self-hostable workflow automation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/docling-project/docling" target="_blank" rel="noopener">Docling</a></td>
+<td>Tool</td>
+<td>Layout-aware document parsing</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Unstructured-IO/unstructured" target="_blank" rel="noopener">Unstructured</a></td>
+<td>Tool</td>
+<td>Document ingestion for many file types</td>
+</tr>
+<tr>
+<td><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph docs</a></td>
+<td>Docs</td>
+<td>Stateful agent workflows</td>
+</tr>
+<tr>
+<td><a href="https://docs.llamaindex.ai/" target="_blank" rel="noopener">LlamaIndex docs</a></td>
+<td>Docs</td>
+<td>Data framework for RAG</td>
+</tr>
+<tr>
+<td><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI Agents SDK</a></td>
+<td>Docs</td>
+<td>OpenAI's agent framework</td>
+</tr>
+<tr>
+<td><a href="https://docs.claude.com" target="_blank" rel="noopener">Claude API docs</a></td>
+<td>Docs</td>
+<td>Claude Agent SDK, vision and PDF support</td>
+</tr>
+<tr>
+<td><a href="https://docs.livekit.io/agents/" target="_blank" rel="noopener">LiveKit Agents</a></td>
+<td>Docs</td>
+<td>Real-time voice agents</td>
+</tr>
+<tr>
+<td><a href="https://streamlit.io/" target="_blank" rel="noopener">Streamlit</a></td>
+<td>Tool</td>
+<td>Fast Python demo UIs</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>47</td>
+<td>Identity: OAuth 2.0, OIDC, SAML, SSO, RBAC</td>
+<td>OAuth and OIDC references</td>
+<td>Add SSO and roles to your Term 2 app</td>
+</tr>
+<tr>
+<td>48</td>
+<td>Integration patterns and connectors</td>
+<td>Enterprise Integration Patterns; MCP docs; n8n docs</td>
+<td>Integrate with Slack or Google Workspace through webhooks and an MCP server</td>
+</tr>
+<tr>
+<td>49</td>
+<td>Document AI, permission-aware retrieval, text-to-SQL</td>
+<td>Docling and Unstructured docs</td>
+<td>Ingest 50 scanned PDFs (e.g. court decisions); enforce per-user access; text-to-SQL over Postgres</td>
+</tr>
+<tr>
+<td>50</td>
+<td>Voice, vision and agent frameworks; checkpoint</td>
+<td>LiveKit Agents; LangGraph and LlamaIndex docs</td>
+<td>Voice agent; rebuild one agent in LangGraph; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c35"><span>SSO login works, and automated tests prove a user can never retrieve a document they lack access to</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c36"><span>A webhook-driven integration with a real SaaS tool handles retries without duplicate actions</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c37"><span>Field extraction from 50 scanned PDFs reaches at least 95% accuracy on a labeled sample</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c38"><span>Text-to-SQL runs with a read-only database role and blocks any write or schema-changing query</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c39"><span>The voice agent responds in under 1.5 seconds on average</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c40"><span>A one-page comparison of LangGraph, LlamaIndex and raw SDKs for the same agent: code size, control, debugging and lock-in</span></label></li>
+</ul>
+</section><section class="module kind-sol" data-mod="sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153"><h3 id="sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153">SOL 653 — Security, privacy, compliance and responsible AI (Weeks 51–53)</h3>
+<p><strong>Summary:</strong> Enterprise AI deals are often won or lost in the security review. Learn to threat-model an LLM system, protect personal data, answer security questionnaires, and map a deployment to the laws and frameworks customers cite. Your law studies are a real advantage here.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Threat-model an LLM app, covering prompt injection, data exfiltration through tools, over-permissioned agents and supply-chain risks</li>
+<li>Detect and redact personal data, and design retention, encryption and audit logging</li>
+<li>Answer security questionnaires and explain SOC 2 and ISO/IEC 27001 reports to a customer's security team</li>
+<li>Explain provider data-handling options: zero data retention, regional processing and training opt-outs</li>
+<li>Apply privacy law to a deployment: the Philippine Data Privacy Act of 2012 (RA 10173), GDPR, and sector rules such as HIPAA</li>
+<li>Explain the EU AI Act's risk tiers, and use the NIST AI Risk Management Framework and ISO/IEC 42001 for governance</li>
+<li>Test for bias, design human-in-the-loop review, and write model cards and risk registers</li>
+<li>Write an AI incident response plan</li>
+</ul>
+<p><strong>Focus on:</strong> prompt injection and permissions for agents, plus the Data Privacy Act. Local customers will ask about it first, and you can read the law itself.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications</a></td>
+<td>Reference</td>
+<td>Main threat checklist</td>
+</tr>
+<tr>
+<td><a href="https://microsoft.github.io/presidio/" target="_blank" rel="noopener">Microsoft Presidio</a></td>
+<td>Tool</td>
+<td>PII detection and redaction</td>
+</tr>
+<tr>
+<td><a href="https://privacy.gov.ph/data-privacy-act/" target="_blank" rel="noopener">Data Privacy Act of 2012 — National Privacy Commission</a></td>
+<td>Law</td>
+<td>Philippine privacy law and NPC guidance</td>
+</tr>
+<tr>
+<td><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">GDPR text — EUR-Lex</a></td>
+<td>Law</td>
+<td>EU data protection</td>
+</tr>
+<tr>
+<td><a href="https://artificialintelligenceact.eu/" target="_blank" rel="noopener">EU AI Act explorer</a></td>
+<td>Reference</td>
+<td>Risk tiers and obligations</td>
+</tr>
+<tr>
+<td><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST AI Risk Management Framework</a></td>
+<td>Framework</td>
+<td>Govern, Map, Measure, Manage</td>
+</tr>
+<tr>
+<td><a href="https://www.iso.org/standard/81230.html" target="_blank" rel="noopener">ISO/IEC 42001</a></td>
+<td>Standard</td>
+<td>AI management systems</td>
+</tr>
+<tr>
+<td><a href="https://www.hhs.gov/hipaa/index.html" target="_blank" rel="noopener">HIPAA — HHS</a></td>
+<td>Law</td>
+<td>US health data, common in healthcare deals</td>
+</tr>
+<tr>
+<td><a href="https://cloudsecurityalliance.org/star" target="_blank" rel="noopener">Cloud Security Alliance STAR</a></td>
+<td>Reference</td>
+<td>Standard cloud security questionnaires</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>51</td>
+<td>AI security and threat modeling</td>
+<td>OWASP LLM Top 10; your AIE 604 red-team notes</td>
+<td>Threat-model your SOL 652 app; add PII redaction with Presidio</td>
+</tr>
+<tr>
+<td>52</td>
+<td>Privacy law and compliance</td>
+<td>Data Privacy Act and NPC guidance; GDPR; SOC 2 and ISO 27001 overviews</td>
+<td>Privacy impact assessment for a hypothetical law-firm deployment; fill a 50-question security questionnaire</td>
+</tr>
+<tr>
+<td>53</td>
+<td>Responsible AI and governance; checkpoint</td>
+<td>NIST AI RMF; EU AI Act explorer; ISO/IEC 42001 overview</td>
+<td>Model card, risk register and incident response plan; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c41"><span>A written threat model covers every OWASP LLM Top 10 risk for your app, with a mitigation and a test for each</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c42"><span>Redaction catches at least 95% of seeded personal data in 100 test documents</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c43"><span>A complete security questionnaire (50+ questions) for your app, with honest answers and gaps listed</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c44"><span>A privacy impact assessment under the Data Privacy Act for an AI assistant at a Philippine law firm</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c45"><span>A model card and risk register mapped to the NIST AI RMF functions (Govern, Map, Measure, Manage)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c46"><span>Explain in 3 minutes to a skeptical compliance officer why customer data won't be used to train the model, and what evidence backs that claim</span></label></li>
+</ul>
+<p>This course teaches you to work with compliance teams, not to replace legal advice. Laws and frameworks change, so check the current text before quoting any obligation to a customer.</p>
+</section><section class="module kind-sol" data-mod="sol-654-solution-architecture-economics-and-delivery-weeks-5456"><h3 id="sol-654-solution-architecture-economics-and-delivery-weeks-5456">SOL 654 — Solution architecture, economics and delivery (Weeks 54–56)</h3>
+<p><strong>Summary:</strong> Turn a customer problem into a design they can approve, a budget they can defend, and a plan that gets from POC to production. This is the judgment that separates a solutions engineer from a builder: picking the simplest thing that works, and proving it's worth paying for.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Decide whether a problem needs AI at all, and which approach fits: prompting, RAG, fine-tuning, an agent, classic ML or plain code</li>
+<li>Apply the standard generative AI architectures: copilots, RAG assistants, extraction pipelines, agentic workflows, contact-center and voice systems, and batch processing</li>
+<li>Choose and route models on quality, latency and cost, with fallbacks, through an LLM gateway</li>
+<li>Plan capacity: rate limits, quotas, concurrency and latency budgets</li>
+<li>Build total cost of ownership (TCO) and ROI models, including the break-even point between API use and self-hosting</li>
+<li>Write a solution design document with C4 diagrams and architecture decision records (ADRs)</li>
+<li>Scope a POC with measurable success criteria, a fixed timeline and a go/no-go decision</li>
+<li>Plan the path to production: SLAs, phased rollout, runbooks, user training, change management and handoff</li>
+</ul>
+<p><strong>Focus on:</strong> success criteria and cost models. Most failed AI projects had neither, and customers remember the engineer who brought both.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/-/9798341622654/" target="_blank" rel="noopener">Generative AI Design Patterns</a> — Valliappa Lakshmanan, Hannes Hapke</td>
+<td>Book</td>
+<td>Main text: 32 patterns with trade-offs</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/designing-data-intensive/9781098119058/" target="_blank" rel="noopener">Designing Data-Intensive Applications, 2nd ed.</a> — Martin Kleppmann, Chris Riccomini</td>
+<td>Book</td>
+<td>System design foundations: storage, replication, streams</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/ai-engineering/9781098166298/" target="_blank" rel="noopener">AI Engineering</a> — Huyen</td>
+<td>Book</td>
+<td>Ch. 9–10 on inference optimization and architecture, revisited</td>
+</tr>
+<tr>
+<td><a href="https://c4model.com/" target="_blank" rel="noopener">The C4 model</a></td>
+<td>Reference</td>
+<td>Architecture diagrams at four levels of detail</td>
+</tr>
+<tr>
+<td><a href="https://adr.github.io/" target="_blank" rel="noopener">Architecture decision records</a></td>
+<td>Reference</td>
+<td>Recording design decisions</td>
+</tr>
+<tr>
+<td><a href="https://docs.litellm.ai/" target="_blank" rel="noopener">LiteLLM</a></td>
+<td>Tool</td>
+<td>LLM gateway: routing, fallbacks, cost tracking</td>
+</tr>
+<tr>
+<td><a href="https://www.prosci.com/methodology/adkar" target="_blank" rel="noopener">Prosci ADKAR model</a></td>
+<td>Framework</td>
+<td>Change management and user adoption</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>54</td>
+<td>Patterns and architecture decisions</td>
+<td>Lakshmanan and Hapke; Kleppmann and Riccomini (selected chapters); C4 and ADR guides</td>
+<td>Three reference architectures (RAG assistant, extraction pipeline, agentic workflow), each with C4 diagrams and ADRs</td>
+</tr>
+<tr>
+<td>55</td>
+<td>Model selection, routing and economics</td>
+<td>Huyen ch. 9–10; LiteLLM docs</td>
+<td>Put a gateway with fallbacks in front of your app; build a TCO and ROI model in a spreadsheet</td>
+</tr>
+<tr>
+<td>56</td>
+<td>POC planning and delivery; checkpoint</td>
+<td>ADKAR overview</td>
+<td>POC plan, rollout plan and runbook for one case; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c47"><span>A solution design document for a realistic case (e.g. AI contract review for a Philippine law firm) with C4 diagrams, ADRs, risks and alternatives considered</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c48"><span>A TCO and ROI model with a sensitivity analysis on usage, model price and adoption rate, plus the API vs self-hosting break-even point</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c49"><span>A POC plan with 3–5 measurable success criteria, a timeline of 6 weeks or less, and an explicit go/no-go meeting</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c50"><span>A runbook and handoff document that a peer can follow to operate the system without asking you questions</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c51"><span>Given 5 short customer requests, decide for each whether to use AI, and justify it in two sentences</span></label></li>
+</ul>
+</section><section class="module kind-sol" data-mod="sol-655-customer-engagement-discovery-demos-and-communication-weeks-5760"><h3 id="sol-655-customer-engagement-discovery-demos-and-communication-weeks-5760">SOL 655 — Customer engagement: discovery, demos and communication (Weeks 57–60)</h3>
+<p><strong>Summary:</strong> Learn the customer-facing half of the job: finding the real problem, showing a solution people want, writing documents executives read, and earning trust. The course ends with a real engagement that pulls the whole term together.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain the role in a sales cycle: working with account executives, qualifying deals (MEDDICC), and where pre-sales ends and implementation begins</li>
+<li>Run discovery: business pain, metrics, stakeholders, current workflow, data readiness, technical environment and decision process</li>
+<li>Qualify AI use cases on value and feasibility, and set realistic expectations about accuracy and hallucinations</li>
+<li>Build and deliver demos that start with the customer's outcome, and recover gracefully when a live demo fails</li>
+<li>Whiteboard an architecture live and adjust the depth for engineers or executives</li>
+<li>Write proposals, statements of work, RFP responses and one-page executive summaries</li>
+<li>Handle common objections: accuracy, cost, security, vendor lock-in and job displacement</li>
+<li>Run workshops and enablement sessions, write integration guides, and pass customer feedback to product teams as clear, prioritized requests</li>
+<li>Manage several stakeholders and workstreams without formal authority</li>
+</ul>
+<p><strong>Focus on:</strong> discovery and demos. Record yourself and watch it back; it's uncomfortable and it's the fastest way to improve.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://us.artechhouse.com/Mastering-Technical-Sales-The-Sales-Engineers-Handbook-Fourth-Edition-P2257.aspx" target="_blank" rel="noopener">Mastering Technical Sales: The Sales Engineer's Handbook, 4th ed.</a> — John Care</td>
+<td>Book</td>
+<td>Main text: the role, discovery, RFPs, demos, whiteboarding, trusted advisor</td>
+</tr>
+<tr>
+<td><a href="https://greatdemo.blogspot.com/2023/08/great-demo-third-edition-launch.html" target="_blank" rel="noopener">Great Demo!, 3rd ed.</a> — Peter Cohan</td>
+<td>Book</td>
+<td>Main text for demos</td>
+</tr>
+<tr>
+<td><a href="https://www.simonandschuster.ca/books/The-Mom-Test/Rob-Fitzpatrick/9798893312560" target="_blank" rel="noopener">The Mom Test</a> — Rob Fitzpatrick</td>
+<td>Book</td>
+<td>Asking questions that get honest answers</td>
+</tr>
+<tr>
+<td><a href="https://barbaraminto.com/textbook" target="_blank" rel="noopener">The Pyramid Principle</a> — Barbara Minto</td>
+<td>Book</td>
+<td>Structuring proposals and executive summaries</td>
+</tr>
+<tr>
+<td><a href="https://meddicc.com/" target="_blank" rel="noopener">MEDDICC</a></td>
+<td>Framework</td>
+<td>Deal qualification</td>
+</tr>
+<tr>
+<td><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents</a> — Anthropic</td>
+<td>Article</td>
+<td>Reread: a model for explaining design choices simply</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>57</td>
+<td>The role, the sales cycle and discovery</td>
+<td>Care: role, sales process and discovery chapters; The Mom Test; MEDDICC overview</td>
+<td>3 role-played discovery calls (a friend or Claude as the customer); write discovery notes for each</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Demos, presentations and whiteboarding</td>
+<td>Great Demo!; Care: demo, presentation and whiteboarding chapters</td>
+<td>Record a 5-minute executive demo, a 20-minute technical demo and a whiteboard session</td>
+</tr>
+<tr>
+<td>59</td>
+<td>Writing, RFPs and objections</td>
+<td>The Pyramid Principle; Care: RFP chapter</td>
+<td>A proposal with a one-page executive summary; answer one RFP section; build an objection bank</td>
+</tr>
+<tr>
+<td>60</td>
+<td>Term capstone engagement and checkpoint</td>
+<td>—</td>
+<td>Present the capstone to the stakeholder; checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Term capstone engagement (Weeks 57–60, alongside the weekly work):</strong> find a real organization with a real problem, such as a law office, a school, a barangay office or a small business you know. Run discovery with them, write a solution design and security summary, build a POC on their kind of data, demo it, and deliver a proposal with success criteria and costs. If you can't find one, use a detailed fictional brief and have someone else play the customer.</p>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c52"><span>A recorded discovery call, with notes mapped to MEDDICC and the top 3 pains quantified</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c53"><span>A 5-minute executive demo and a 20-minute technical demo, recorded and scored by someone else against a written rubric</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c54"><span>A proposal with a one-page executive summary, scope, timeline, pricing assumptions and success criteria</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c55"><span>An objection bank of 20+ common AI objections, each with a short, honest answer</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c56"><span>The capstone engagement is complete, with written feedback from the stakeholder</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c57"><span>One public post or talk about what you learned from the engagement</span></label></li>
+</ul>
+</section><h2 id="term-4-deep-learning-weeks-6184">Term 4 — Deep learning (Weeks 61–84)</h2>
+<p>Term goal: by week 84 you can implement a transformer from a blank file, train it on a GPU, and train a small generative model.</p>
+<section class="module kind-dl" data-mod="dl-701-neural-networks-and-deep-learning-weeks-6176"><h3 id="dl-701-neural-networks-and-deep-learning-weeks-6176">DL 701 — Neural networks and deep learning (Weeks 61–76)</h3>
 <p><strong>Summary:</strong> Understand how neural networks learn, and train them confidently in PyTorch. You'll build the core machinery from scratch once, so frameworks stop being magic, then use PyTorch properly.</p>
 <p><strong>Learning outcomes</strong> — by the end you can:</p>
 <ul>
@@ -1278,73 +2189,73 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>41–42</td>
+<td>61–62</td>
 <td>Backpropagation from scratch</td>
 <td>Karpathy: micrograd; UDL ch. 1–7</td>
 <td>Build micrograd yourself; train an MLP with it</td>
 </tr>
 <tr>
-<td>43</td>
+<td>63</td>
 <td>PyTorch fundamentals</td>
 <td>PyTorch tutorials; Géron: PyTorch intro</td>
 <td>Rewrite your ML 502 logistic regression in PyTorch</td>
 </tr>
 <tr>
-<td>44–45</td>
+<td>64–65</td>
 <td>MLPs, language modeling basics</td>
 <td>Karpathy: makemore parts 1–2</td>
 <td>Character-level name generator</td>
 </tr>
 <tr>
-<td>46</td>
+<td>66</td>
 <td>Initialization, batch norm</td>
 <td>Karpathy: makemore part 3; UDL ch. 11</td>
 <td>Plot activation statistics per layer</td>
 </tr>
 <tr>
-<td>47</td>
+<td>67</td>
 <td>Optimizers and learning-rate schedules</td>
 <td>Géron: training deep nets; UDL ch. 6</td>
 <td>Compare SGD, momentum and Adam</td>
 </tr>
 <tr>
-<td>48</td>
+<td>68</td>
 <td>Regularization</td>
 <td>UDL ch. 9</td>
 <td>Reduce overfitting on a small dataset</td>
 </tr>
 <tr>
-<td>49–50</td>
+<td>69–70</td>
 <td>CNNs and residual networks</td>
 <td>CS231n; UDL ch. 10–11; Géron: computer vision</td>
 <td>CIFAR-10 classifier</td>
 </tr>
 <tr>
-<td>51</td>
+<td>71</td>
 <td>Transfer learning and deployment</td>
 <td>fast.ai lessons 1–2</td>
 <td>Fine-tune a pretrained ResNet; serve it in Docker</td>
 </tr>
 <tr>
-<td>52</td>
+<td>72</td>
 <td>RNNs and attention</td>
 <td>d2l RNN and attention chapters; Illustrated Transformer</td>
 <td>Implement scaled dot-product attention</td>
 </tr>
 <tr>
-<td>53–54</td>
+<td>73–74</td>
 <td>Transformers</td>
 <td>UDL ch. 12; Karpathy: Let's build GPT; the original paper</td>
 <td>Build a small GPT following the lecture</td>
 </tr>
 <tr>
-<td>55</td>
+<td>75</td>
 <td>Debugging training</td>
 <td>Karpathy's recipe post</td>
 <td>Debugging drill (see test)</td>
 </tr>
 <tr>
-<td>56</td>
+<td>76</td>
 <td>Checkpoint</td>
 <td>—</td>
 <td>Checkpoint test</td>
@@ -1354,13 +2265,13 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <p><strong>Projects:</strong> (1) build micrograd yourself and train an MLP with it; (2) an image classifier using transfer learning, deployed as a FastAPI or Go service in Docker.</p>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c30"><span>Rebuild micrograd without looking at the source, and verify your gradients against PyTorch on 3 functions</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c31"><span>Train a CNN on CIFAR-10 to at least 85% test accuracy, then fine-tune a pretrained model and compare</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c32"><span>Deploy the classifier as a Dockerized API and call it from a Go client</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c33"><span>Implement multi-head self-attention from scratch and match <code>nn.MultiheadAttention</code> on the same inputs</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c34"><span>Debugging drill: have someone (or Claude) insert 3 bugs into a working training script; find them all</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c58"><span>Rebuild micrograd without looking at the source, and verify your gradients against PyTorch on 3 functions</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c59"><span>Train a CNN on CIFAR-10 to at least 85% test accuracy, then fine-tune a pretrained model and compare</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c60"><span>Deploy the classifier as a Dockerized API and call it from a Go client</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c61"><span>Implement multi-head self-attention from scratch and match <code>nn.MultiheadAttention</code> on the same inputs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c62"><span>Debugging drill: have someone (or Claude) insert 3 bugs into a working training script; find them all</span></label></li>
 </ul>
-</section><section class="module kind-dl" data-mod="dl-702-generative-models-weeks-5764"><h3 id="dl-702-generative-models-weeks-5764">DL 702 — Generative models (Weeks 57–64)</h3>
+</section><section class="module kind-dl" data-mod="dl-702-generative-models-weeks-7784"><h3 id="dl-702-generative-models-weeks-7784">DL 702 — Generative models (Weeks 77–84)</h3>
 <p><strong>Summary:</strong> Go beyond classifiers to models that generate data: VAEs, GANs, normalizing flows and diffusion. This course also covers self-supervised learning and scaling laws, the ideas behind modern foundation models.</p>
 <p><strong>Learning outcomes</strong> — by the end you can:</p>
 <ul>
@@ -1436,43 +2347,43 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>57</td>
+<td>77</td>
 <td>Self-supervised learning, embeddings</td>
 <td>UDL ch. 14; Bishop: representation learning</td>
 <td>Contrastive embeddings on a small image dataset</td>
 </tr>
 <tr>
-<td>58</td>
+<td>78</td>
 <td>VAEs and the ELBO</td>
 <td>UDL ch. 17; Bishop: VAEs; CS236</td>
 <td>Train a VAE on MNIST</td>
 </tr>
 <tr>
-<td>59</td>
+<td>79</td>
 <td>GANs</td>
 <td>UDL ch. 15; Bishop: GANs</td>
 <td>Train a small GAN; observe mode collapse</td>
 </tr>
 <tr>
-<td>60</td>
+<td>80</td>
 <td>Normalizing flows</td>
 <td>UDL ch. 16; Bishop: flows</td>
 <td>Read and summarize; no project needed</td>
 </tr>
 <tr>
-<td>61–62</td>
+<td>81–82</td>
 <td>Diffusion models</td>
 <td>UDL ch. 18; DDPM paper; Weng's post; Bishop: diffusion</td>
 <td>Train a small diffusion model from scratch</td>
 </tr>
 <tr>
-<td>63</td>
+<td>83</td>
 <td>Transformer internals, scaling laws</td>
 <td>Bishop: transformers; Kaplan et al.</td>
 <td>Plot loss vs model size for 4 tiny models</td>
 </tr>
 <tr>
-<td>64</td>
+<td>84</td>
 <td>Midterm and checkpoint</td>
 <td>—</td>
 <td>Paper replication; checkpoint test</td>
@@ -1482,15 +2393,15 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <p><strong>Project:</strong> train a small diffusion model (e.g. on MNIST or a sprite dataset) from scratch in PyTorch.</p>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c35"><span>Your diffusion model generates recognizable samples; include a grid of outputs in the README</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c36"><span>Derive the ELBO on paper, without notes</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c37"><span>Write a one-page comparison of VAEs, GANs and diffusion: sample quality, training stability and speed</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c38"><span>Midterm: reproduce one figure from a classic paper (e.g. ResNet or <em>Attention Is All You Need</em>) at small scale</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c63"><span>Your diffusion model generates recognizable samples; include a grid of outputs in the README</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c64"><span>Derive the ELBO on paper, without notes</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c65"><span>Write a one-page comparison of VAEs, GANs and diffusion: sample quality, training stability and speed</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c66"><span>Midterm: reproduce one figure from a classic paper (e.g. ResNet or <em>Attention Is All You Need</em>) at small scale</span></label></li>
 </ul>
 <p>UDL chapter numbers refer to the free online edition.</p>
-</section><h2 id="term-4-llms-and-reasoning-weeks-6588">Term 4 — LLMs and reasoning (Weeks 65–88)</h2>
-<p>Term goal: by week 88 you have pretrained a small GPT, fine-tuned an open model, and improved a model's reasoning with reinforcement learning.</p>
-<section class="module kind-llm" data-mod="llm-801-llms-from-scratch-weeks-6576"><h3 id="llm-801-llms-from-scratch-weeks-6576">LLM 801 — LLMs from scratch (Weeks 65–76)</h3>
+</section><h2 id="term-5-llms-and-reasoning-weeks-85108">Term 5 — LLMs and reasoning (Weeks 85–108)</h2>
+<p>Term goal: by week 108 you have pretrained a small GPT, fine-tuned an open model, and improved a model's reasoning with reinforcement learning.</p>
+<section class="module kind-llm" data-mod="llm-801-llms-from-scratch-weeks-8596"><h3 id="llm-801-llms-from-scratch-weeks-8596">LLM 801 — LLMs from scratch (Weeks 85–96)</h3>
 <p><strong>Summary:</strong> Learn how large language models are built and pretrained by building one yourself, from tokenizer to training loop to fine-tuning. Type every line of code; don't copy it.</p>
 <p><strong>Learning outcomes</strong> — by the end you can:</p>
 <ul>
@@ -1501,7 +2412,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <li>Fine-tune for classification and instruction following</li>
 <li>Make training efficient on one GPU: mixed precision, gradient accumulation, checkpointing</li>
 </ul>
-<p><strong>Focus on:</strong> Raschka's book end to end, then the \~100M-parameter pretraining project. Rent a cloud GPU for the project weeks rather than buying hardware.</p>
+<p><strong>Focus on:</strong> Raschka's book end to end, then the ~100M-parameter pretraining project. Rent a cloud GPU for the project weeks rather than buying hardware.</p>
 <p><strong>Resources</strong></p>
 <div class="tbl"><table>
 <thead>
@@ -1561,70 +2472,70 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>65</td>
+<td>85</td>
 <td>LLM overview, tokenization</td>
 <td>Raschka ch. 1–2; Karpathy tokenizer lecture; CS336 lecture 1</td>
 <td>Train a BPE tokenizer on your own text</td>
 </tr>
 <tr>
-<td>66</td>
+<td>86</td>
 <td>Attention, coded step by step</td>
 <td>Raschka ch. 3</td>
 <td>Causal multi-head attention</td>
 </tr>
 <tr>
-<td>67</td>
+<td>87</td>
 <td>GPT architecture</td>
 <td>Raschka ch. 4</td>
 <td>Full GPT model class</td>
 </tr>
 <tr>
-<td>68–69</td>
+<td>88–89</td>
 <td>Pretraining, sampling, loading weights</td>
 <td>Raschka ch. 5; CS336 training lectures</td>
 <td>Pretrain on a small corpus; load GPT-2 weights</td>
 </tr>
 <tr>
-<td>70</td>
+<td>90</td>
 <td>Fine-tuning for classification</td>
 <td>Raschka ch. 6</td>
 <td>Spam or sentiment classifier</td>
 </tr>
 <tr>
-<td>71</td>
+<td>91</td>
 <td>Instruction fine-tuning</td>
 <td>Raschka ch. 7</td>
 <td>Instruction-tune your model</td>
 </tr>
 <tr>
-<td>72</td>
+<td>92</td>
 <td>Efficient training on GPUs</td>
 <td>Raschka appendix D; CS336 systems lectures</td>
 <td>Add mixed precision and gradient accumulation</td>
 </tr>
 <tr>
-<td>73–75</td>
+<td>93–95</td>
 <td>Pretraining project</td>
 <td>nanoGPT; CS336</td>
-<td>Pretrain the \~100M GPT (see project)</td>
+<td>Pretrain the ~100M GPT (see project)</td>
 </tr>
 <tr>
-<td>76</td>
+<td>96</td>
 <td>Checkpoint</td>
 <td>—</td>
 <td>Checkpoint test</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Project:</strong> pretrain a \~100M-parameter GPT on a domain corpus (e.g. Philippine law texts or Go source code), and write up the loss curves and sample outputs.</p>
+<p><strong>Project:</strong> pretrain a ~100M-parameter GPT on a domain corpus (e.g. Philippine law texts or Go source code), and write up the loss curves and sample outputs.</p>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c39"><span>Finish the project: the model generates coherent domain text, and the write-up includes loss curves</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c40"><span>Train a BPE tokenizer and explain why the same sentence uses more tokens in Filipino than in English</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c41"><span>Explain without notes: the KV cache, causal masking, and why we scale attention scores</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c42"><span>Score 80% or more on the free <em>Test Yourself</em> PDF for Raschka's book (linked from its Manning page)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c67"><span>Finish the project: the model generates coherent domain text, and the write-up includes loss curves</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c68"><span>Train a BPE tokenizer and explain why the same sentence uses more tokens in Filipino than in English</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c69"><span>Explain without notes: the KV cache, causal masking, and why we scale attention scores</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c70"><span>Score 80% or more on the free <em>Test Yourself</em> PDF for Raschka's book (linked from its Manning page)</span></label></li>
 </ul>
-</section><section class="module kind-llm" data-mod="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788"><h3 id="llm-802-fine-tuning-alignment-and-reasoning-weeks-7788">LLM 802 — Fine-tuning, alignment and reasoning (Weeks 77–88)</h3>
+</section><section class="module kind-llm" data-mod="llm-802-fine-tuning-alignment-and-reasoning-weeks-97108"><h3 id="llm-802-fine-tuning-alignment-and-reasoning-weeks-97108">LLM 802 — Fine-tuning, alignment and reasoning (Weeks 97–108)</h3>
 <p><strong>Summary:</strong> Adapt real open models to your tasks and improve how they reason. The course starts with just enough reinforcement learning theory to understand RLHF and GRPO, then moves to parameter-efficient fine-tuning, preference tuning and reasoning methods.</p>
 <p><strong>Learning outcomes</strong> — by the end you can:</p>
 <ul>
@@ -1715,67 +2626,67 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>77</td>
+<td>97</td>
 <td>RL basics: bandits, MDPs, value functions</td>
 <td>Sutton &amp; Barto ch. 1–3; Silver lectures 1–3</td>
 <td>Multi-armed bandit simulation</td>
 </tr>
 <tr>
-<td>78</td>
+<td>98</td>
 <td>Dynamic programming, Monte Carlo, TD learning</td>
 <td>Sutton &amp; Barto ch. 4–6; Silver lectures 4–5</td>
 <td>Q-learning on a grid world</td>
 </tr>
 <tr>
-<td>79</td>
+<td>99</td>
 <td>Policy gradients</td>
 <td>Sutton &amp; Barto ch. 13; Silver lecture 7</td>
 <td>REINFORCE on CartPole</td>
 </tr>
 <tr>
-<td>80</td>
+<td>100</td>
 <td>LoRA and QLoRA</td>
 <td>LoRA paper; Huyen ch. 7; HF PEFT docs</td>
 <td>LoRA-fine-tune a small open model</td>
 </tr>
 <tr>
-<td>81</td>
+<td>101</td>
 <td>Dataset engineering</td>
 <td>Huyen ch. 8</td>
 <td>Build a custom instruction dataset</td>
 </tr>
 <tr>
-<td>82</td>
+<td>102</td>
 <td>Project 1</td>
 <td>Hands-On LLMs fine-tuning chapters</td>
 <td>QLoRA fine-tune a Qwen- or Llama-class model</td>
 </tr>
 <tr>
-<td>83</td>
+<td>103</td>
 <td>Preference tuning: RLHF and DPO</td>
 <td>DPO paper; HF TRL docs</td>
 <td>Run DPO on a small preference dataset</td>
 </tr>
 <tr>
-<td>84</td>
+<td>104</td>
 <td>Evaluation and inference-time scaling</td>
 <td>Raschka reasoning book: early chapters</td>
 <td>Self-consistency on a math benchmark</td>
 </tr>
 <tr>
-<td>85–86</td>
+<td>105–106</td>
 <td>RL with verifiable rewards, distillation</td>
 <td>Raschka reasoning book: later chapters; DeepSeekMath; DeepSeek-R1</td>
 <td>GRPO on a small model</td>
 </tr>
 <tr>
-<td>87</td>
+<td>107</td>
 <td>Project 2</td>
 <td>—</td>
 <td>Finish and write up the reasoning gain</td>
 </tr>
 <tr>
-<td>88</td>
+<td>108</td>
 <td>Checkpoint</td>
 <td>—</td>
 <td>Checkpoint test</td>
@@ -1785,14 +2696,14 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <p><strong>Projects:</strong> (1) QLoRA fine-tune an open model on a custom instruction dataset, evaluated before and after; (2) apply the reasoning book's methods to raise a small model's math accuracy, and report the benchmark gain.</p>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c43"><span>Project 1 shows a measurable gain on a held-out set, with the eval code in the repo</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c44"><span>Project 2 reports a benchmark gain with numbers, and compares inference-time scaling against RL training</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c45"><span>REINFORCE solves CartPole, and you can explain the policy gradient theorem without notes</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c46"><span>Explain without notes: why LoRA saves memory, what DPO optimizes, and how GRPO differs from PPO</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c71"><span>Project 1 shows a measurable gain on a held-out set, with the eval code in the repo</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c72"><span>Project 2 reports a benchmark gain with numbers, and compares inference-time scaling against RL training</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c73"><span>REINFORCE solves CartPole, and you can explain the policy gradient theorem without notes</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c74"><span>Explain without notes: why LoRA saves memory, what DPO optimizes, and how GRPO differs from PPO</span></label></li>
 </ul>
-</section><h2 id="term-5-systems-and-thesis-weeks-89108">Term 5 — Systems and thesis (Weeks 89–108)</h2>
-<p>Term goal: by week 108 you have a production-grade AI system running and a written thesis defending its design. Start scoping the thesis in week 89, alongside SYS 901.</p>
-<section class="module kind-sys" data-mod="sys-901-ml-systems-and-mlops-weeks-8996"><h3 id="sys-901-ml-systems-and-mlops-weeks-8996">SYS 901 — ML systems and MLOps (Weeks 89–96)</h3>
+</section><h2 id="term-6-systems-and-thesis-weeks-109128">Term 6 — Systems and thesis (Weeks 109–128)</h2>
+<p>Term goal: by week 128 you have a production-grade AI system running and a written thesis defending its design. Start scoping the thesis in week 109, alongside SYS 901.</p>
+<section class="module kind-sys" data-mod="sys-901-ml-systems-and-mlops-weeks-109116"><h3 id="sys-901-ml-systems-and-mlops-weeks-109116">SYS 901 — ML systems and MLOps (Weeks 109–116)</h3>
 <p><strong>Summary:</strong> Take models from notebook to reliable service. Your backend, Go and Docker experience is an advantage here, since many ML engineers struggle with exactly this part.</p>
 <p><strong>Learning outcomes</strong> — by the end you can:</p>
 <ul>
@@ -1873,49 +2784,49 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>89</td>
+<td>109</td>
 <td>ML systems design, framing</td>
 <td>Huyen ch. 1–2; CS329S notes</td>
 <td>Design doc for one of your projects; start the thesis proposal</td>
 </tr>
 <tr>
-<td>90</td>
+<td>110</td>
 <td>Data engineering, training data</td>
-<td>Huyen ch. 3–4</td>
+<td>Huyen ch. 3–4; Kleppmann and Riccomini (relevant chapters)</td>
 <td>Version a dataset; build a data pipeline</td>
 </tr>
 <tr>
-<td>91</td>
+<td>111</td>
 <td>Feature engineering, offline evaluation</td>
 <td>Huyen ch. 5–6</td>
 <td>Add MLflow tracking to an earlier project</td>
 </tr>
 <tr>
-<td>92</td>
+<td>112</td>
 <td>Deployment and prediction services</td>
 <td>Huyen ch. 7; vLLM docs</td>
-<td>Serve your LLM 802 model with vLLM in Docker; thesis proposal due</td>
+<td>Serve your LLM 802 model with vLLM on the Kubernetes setup from SOL 651; thesis proposal due</td>
 </tr>
 <tr>
-<td>93</td>
+<td>113</td>
 <td>Distribution shift and monitoring</td>
 <td>Huyen ch. 8; Evidently docs</td>
 <td>Simulate drift and detect it</td>
 </tr>
 <tr>
-<td>94</td>
+<td>114</td>
 <td>Continual learning, infrastructure</td>
 <td>Huyen ch. 9–10; Full Stack Deep Learning</td>
 <td>Automated retraining job</td>
 </tr>
 <tr>
-<td>95</td>
+<td>115</td>
 <td>Human side of ML; LLM pipelines</td>
 <td>Huyen ch. 11; LLM Engineer's Handbook (skim)</td>
 <td>CI/CD and a model registry for one project</td>
 </tr>
 <tr>
-<td>96</td>
+<td>116</td>
 <td>Checkpoint</td>
 <td>—</td>
 <td>Checkpoint test</td>
@@ -1925,28 +2836,29 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <p><strong>Project:</strong> take your DL 701 classifier or LLM 802 model and give it CI/CD, a model registry, monitoring and a drift alert, all in Docker Compose.</p>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c47"><span>The project runs end to end with one <code>docker compose up</code>, with a dashboard showing live metrics</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c48"><span>Load-test the serving API (e.g. with <a href="https://k6.io/" target="_blank" rel="noopener">k6</a> or a Go client) and report p95 latency</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c49"><span>Reproduce any training run exactly from a git commit and an MLflow run ID</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c50"><span>Detect simulated drift with Evidently and trigger retraining automatically</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c51"><span>Whiteboard "design a recommendation system" in 45 minutes using Huyen's framework, and record yourself</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c75"><span>The project runs end to end with one <code>docker compose up</code>, with a dashboard showing live metrics</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c76"><span>Load-test the serving API (e.g. with <a href="https://k6.io/" target="_blank" rel="noopener">k6</a> or a Go client) and report p95 latency</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c77"><span>Reproduce any training run exactly from a git commit and an MLflow run ID</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c78"><span>Detect simulated drift with Evidently and trigger retraining automatically</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c79"><span>Whiteboard "design a recommendation system" in 45 minutes using Huyen's framework, and record yourself</span></label></li>
 </ul>
-</section><section class="module kind-thesis" data-mod="thesis-999-capstone-thesis-and-defense-weeks-97108"><h3 id="thesis-999-capstone-thesis-and-defense-weeks-97108">THESIS 999 — Capstone thesis and defense (Weeks 97–108)</h3>
+</section><section class="module kind-thesis" data-mod="thesis-999-capstone-thesis-and-defense-weeks-117128"><h3 id="thesis-999-capstone-thesis-and-defense-weeks-117128">THESIS 999 — Capstone thesis and defense (Weeks 117–128)</h3>
 <p><strong>Summary:</strong> Combine everything into one substantial project, written up like a research paper and defended out loud. This is the centerpiece of your portfolio.</p>
 <p><strong>Pick one thesis type:</strong></p>
 <ol>
 <li><strong>Domain model:</strong> a fine-tuned model for a domain you know (e.g. classifying or summarizing Philippine legal texts), with a public eval</li>
 <li><strong>Production system:</strong> a RAG or agent system with real users</li>
 <li><strong>Research replication:</strong> a small-scale replication of a 2025–26 paper</li>
+<li><strong>Solution engagement:</strong> a full AI solution delivered for a real organization (e.g. a law office or local business), from discovery through production handoff, with measured business results</li>
 </ol>
 <p><strong>Every thesis must include:</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c52"><span>A model you trained or fine-tuned yourself, with before/after scores on a held-out set</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c53"><span>Reproducible training with experiment tracking</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c54"><span>A Dockerized serving layer behind a Go API, with monitoring and p95 latency reported</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c55"><span>An LLM feature (RAG or agent) exposed through an MCP server</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c56"><span>An eval suite that runs in CI, with tracing</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c57"><span>A theory section grounded in <a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Murphy's Probabilistic Machine Learning</a> and the papers you build on</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c80"><span>A model you trained or fine-tuned yourself, with before/after scores on a held-out set</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c81"><span>Reproducible training with experiment tracking</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c82"><span>A Dockerized serving layer behind a Go API, with monitoring and p95 latency reported</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c83"><span>An LLM feature (RAG or agent) exposed through an MCP server</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c84"><span>An eval suite that runs in CI, with tracing</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c85"><span>A theory section grounded in <a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Murphy's Probabilistic Machine Learning</a> and the papers you build on</span></label></li>
 </ul>
 <p><strong>Weekly schedule</strong></p>
 <div class="tbl"><table>
@@ -1958,50 +2870,990 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 </thead>
 <tbody>
 <tr>
-<td>89–92</td>
+<td>109–112</td>
 <td>Scope and write a 2-page proposal: problem, method, data, evaluation plan (during SYS 901)</td>
 </tr>
 <tr>
-<td>97–100</td>
+<td>117–120</td>
 <td>Build the system and the baseline</td>
 </tr>
 <tr>
-<td>101–104</td>
+<td>121–124</td>
 <td>Experiments, evals and ablations</td>
 </tr>
 <tr>
-<td>105–106</td>
+<td>125–126</td>
 <td>Write the 10–15 page paper-format write-up</td>
 </tr>
 <tr>
-<td>107</td>
+<td>127</td>
 <td>Record the 20-minute defense talk</td>
 </tr>
 <tr>
-<td>108</td>
+<td>128</td>
 <td>Graduation review</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>Deliverables</strong></p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c58"><span>Public GitHub repo with a README covering architecture, results and trade-offs</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c59"><span>10–15 page write-up in paper format: problem, method, experiments, results, limitations</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c60"><span>Recorded 20-minute defense talk, with answers to 5 hard questions you wrote in advance</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c86"><span>Public GitHub repo with a README covering architecture, results and trade-offs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c87"><span>10–15 page write-up in paper format: problem, method, experiments, results, limitations</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c88"><span>Recorded 20-minute defense talk, with answers to 5 hard questions you wrote in advance</span></label></li>
 </ul>
-</section><section class="block" data-mod="graduation-week-108"><h2 id="graduation-week-108">Graduation (Week 108)</h2>
-<p>You graduate, and are ready for senior ML or AI engineering roles, when every item below is done.</p>
+</section><h2 id="part-i-graduation-masters-level-week-128">Part I graduation: master's level (Week 128)</h2>
+<p>You graduate, and are ready for senior ML, AI or AI solutions engineering roles, when every item below is done.</p>
 <ul class="checklist">
-<li class="task"><label><input type="checkbox" data-id="c61"><span>All 13 courses passed, with every checkpoint test complete</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c62"><span>The 12 core books finished</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c63"><span>10+ public projects on GitHub, including one deployed system with real users</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c64"><span>Thesis written and defense recorded</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c65"><span>One merged open-source contribution to an ML library (e.g. Hugging Face, PyTorch, vLLM)</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c66"><span>Timed session: implement logistic regression, an attention layer and an agent loop from memory in 60 minutes total</span></label></li>
-<li class="task"><label><input type="checkbox" data-id="c67"><span>Answer one ML system design question and one LLM app design question, 45 minutes each</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c89"><span>All 18 courses passed, with every checkpoint test complete</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c90"><span>The 15 core books finished</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c91"><span>10+ public projects on GitHub, including one deployed system with real users</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c92"><span>At least one cloud AI certification passed (AWS AIP-C01 or Azure AI-103)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c93"><span>At least one real customer or stakeholder engagement completed, with their written feedback</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c94"><span>Thesis written and defense recorded</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c95"><span>One merged open-source contribution to an ML library (e.g. Hugging Face, PyTorch, vLLM)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c96"><span>Timed session: implement logistic regression, an attention layer and an agent loop from memory in 60 minutes total</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c97"><span>Answer one ML system design question and one LLM app design question, 45 minutes each</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c98"><span>Run a 45-minute mock customer call: discovery, live whiteboard design and a demo, recorded and reviewed</span></label></li>
 </ul>
-<p><strong>Staying relevant after graduation:</strong> read 2 papers a week (<a href="https://arxiv.org/list/cs.LG/recent" target="_blank" rel="noopener">arXiv</a> and <a href="https://huggingface.co/papers" target="_blank" rel="noopener">Hugging Face daily papers</a>), follow <a href="https://magazine.sebastianraschka.com/" target="_blank" rel="noopener">Sebastian Raschka</a> and <a href="https://karpathy.ai/" target="_blank" rel="noopener">Andrej Karpathy</a>, and review this reading list once a year, since LLM books age fast.</p>
-</section><h2 id="sources">Sources</h2>
+<p><strong>Staying current, in Part I and beyond:</strong> read 2 papers a week (<a href="https://arxiv.org/list/cs.LG/recent" target="_blank" rel="noopener">arXiv</a> and <a href="https://huggingface.co/papers" target="_blank" rel="noopener">Hugging Face daily papers</a>), follow <a href="https://magazine.sebastianraschka.com/" target="_blank" rel="noopener">Sebastian Raschka</a> and <a href="https://karpathy.ai/" target="_blank" rel="noopener">Andrej Karpathy</a>, and review this reading list once a year, since LLM books age fast.</p>
+<h1 class="part-h" id="part-ii-doctoral-and-principal-level-weeks-129232">Part II — Doctoral and principal level (Weeks 129–232)</h1>
+<p>Part I makes you a strong practitioner. Part II covers what separates the top of the field: the theory behind why methods work, the systems knowledge to run them at scale, the ability to produce new knowledge, and the leadership to set direction for others. It mirrors the first two years of an ML PhD (advanced coursework, then a research specialization) and the skills staff and principal engineers are promoted for.</p>
+<p>The pace changes in Part II. Courses lean more on papers and less on textbooks, and checkpoints are judged by people outside the curriculum: reviewers, users and colleagues.</p>
+<h2 id="term-7-advanced-theory-weeks-129152">Term 7 — Advanced theory (Weeks 129–152)</h2>
+<p>Term goal: by week 152 you can read the theory sections of a NeurIPS or ICML paper without getting stuck, and prove simple results yourself.</p>
+<section class="module kind-adv" data-mod="adv-1001-optimization-and-learning-theory-weeks-129140"><h3 id="adv-1001-optimization-and-learning-theory-weeks-129140">ADV 1001 — Optimization and learning theory (Weeks 129–140)</h3>
+<p><strong>Summary:</strong> Learn why learning works: when a model will generalize from training data, and how and when optimization finds good solutions. This is the language of ML research papers, and the main gap between a strong engineer and a researcher.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain and use PAC learning, VC dimension, Rademacher complexity and generalization bounds</li>
+<li>Explain regularization, stability and the bias–complexity trade-off formally</li>
+<li>Recognize convex problems, use duality and KKT conditions, and explain why they matter</li>
+<li>Analyze gradient descent, SGD and adaptive methods: convergence rates and the role of learning rate and batch size</li>
+<li>Discuss where classical theory fails for deep networks: double descent, overparameterization and implicit regularization</li>
+<li>Write short proofs, and check a paper's theorem against its assumptions</li>
+</ul>
+<p><strong>Focus on:</strong> writing proofs by hand. Reading theory is not the same as doing it, and this is the course where that skill is built.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/" target="_blank" rel="noopener">Understanding Machine Learning: From Theory to Algorithms</a> — Shalev-Shwartz, Ben-David</td>
+<td>Book (free PDF)</td>
+<td>Main text: Part I and selected Part II chapters</td>
+</tr>
+<tr>
+<td><a href="https://web.stanford.edu/~boyd/cvxbook/" target="_blank" rel="noopener">Convex Optimization</a> — Boyd, Vandenberghe</td>
+<td>Book (free PDF)</td>
+<td>Ch. 1–5 and 9</td>
+</tr>
+<tr>
+<td><a href="https://web.stanford.edu/class/ee364a/" target="_blank" rel="noopener">Stanford EE364A</a> — Boyd</td>
+<td>Lectures</td>
+<td>Watch alongside the convex optimization weeks</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2106.10165" target="_blank" rel="noopener">The Principles of Deep Learning Theory</a> — Roberts, Yaida, Hanin</td>
+<td>Book (free on arXiv)</td>
+<td>Optional deep dive on theory for deep networks</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1912.02292" target="_blank" rel="noopener">Deep Double Descent</a> — Nakkiran et al.</td>
+<td>Paper</td>
+<td>Where classical theory breaks</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>129–130</td>
+<td>PAC learning, ERM, uniform convergence</td>
+<td>Shalev-Shwartz and Ben-David ch. 2–4</td>
+<td>Book exercises; write out each proof</td>
+</tr>
+<tr>
+<td>131–132</td>
+<td>VC dimension, bias–complexity trade-off</td>
+<td>Ch. 5–6</td>
+<td>Compute VC dimensions for 3 hypothesis classes</td>
+</tr>
+<tr>
+<td>133</td>
+<td>Rademacher complexity, regularization and stability</td>
+<td>Ch. 13 and 26</td>
+<td>Derive a generalization bound for a linear model</td>
+</tr>
+<tr>
+<td>134–135</td>
+<td>Convex sets, functions and problems; duality and KKT</td>
+<td>Boyd and Vandenberghe ch. 1–5; EE364A</td>
+<td>Solve problems with CVXPY; derive one dual by hand</td>
+</tr>
+<tr>
+<td>136</td>
+<td>Unconstrained optimization, convergence</td>
+<td>Boyd and Vandenberghe ch. 9</td>
+<td>Prove the convergence rate of gradient descent on a smooth convex function</td>
+</tr>
+<tr>
+<td>137</td>
+<td>Stochastic and adaptive optimization</td>
+<td>Shalev-Shwartz and Ben-David ch. 14; the Adam paper</td>
+<td>Plot SGD vs Adam convergence against theory</td>
+</tr>
+<tr>
+<td>138</td>
+<td>Theory of deep learning</td>
+<td>Deep Double Descent; Principles of Deep Learning Theory (intro)</td>
+<td>Reproduce double descent on a small model</td>
+</tr>
+<tr>
+<td>139–140</td>
+<td>Review and checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c99"><span>Solve at least 70% of the end-of-chapter exercises in chapters 2–6 of Shalev-Shwartz and Ben-David, with written proofs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c100"><span>Prove from scratch the convergence rate of gradient descent on an L-smooth convex function</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c101"><span>Reproduce double descent on a small model and explain it in a one-page write-up</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c102"><span>Pick a recent NeurIPS or ICML paper with a theorem, and write a one-page explanation of its assumptions, proof idea and limits</span></label></li>
+</ul>
+</section><section class="module kind-adv" data-mod="adv-1002-probabilistic-and-bayesian-ml-information-theory-weeks-141152"><h3 id="adv-1002-probabilistic-and-bayesian-ml-information-theory-weeks-141152">ADV 1002 — Probabilistic and Bayesian ML, information theory (Weeks 141–152)</h3>
+<p><strong>Summary:</strong> Learn to reason about uncertainty: how models represent what they don't know, how to do inference when exact answers are impossible, and how information theory underlies losses, compression and generalization. Much of modern generative modeling and evaluation research is written in this language.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain entropy, KL divergence, mutual information and cross-entropy, and why they appear in loss functions</li>
+<li>Build Bayesian models, and do inference with MCMC and variational inference</li>
+<li>Explain and use Gaussian processes and Bayesian neural networks</li>
+<li>Quantify a model's uncertainty and calibration, and explain why it matters in production</li>
+<li>Explain causal inference basics: causal graphs, confounding and interventions</li>
+<li>Read the probabilistic derivations in generative-model papers (VAEs, diffusion, energy-based models)</li>
+</ul>
+<p><strong>Focus on:</strong> variational inference and calibration. Both show up constantly, in generative models and in deciding when to trust a model's output.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://probml.github.io/pml-book/book2.html" target="_blank" rel="noopener">Probabilistic Machine Learning: Advanced Topics</a> — Kevin Murphy</td>
+<td>Book (free PDF)</td>
+<td>Main text: chapters on inference, Gaussian processes, Bayesian deep learning and causality</td>
+</tr>
+<tr>
+<td><a href="http://www.inference.org.uk/itila/book.html" target="_blank" rel="noopener">Information Theory, Inference, and Learning Algorithms</a> — David MacKay</td>
+<td>Book (free PDF)</td>
+<td>Information theory and inference, with famously clear explanations</td>
+</tr>
+<tr>
+<td><a href="https://probml.github.io/pml-book/book1.html" target="_blank" rel="noopener">Probabilistic Machine Learning: An Introduction</a> — Murphy</td>
+<td>Book (free PDF)</td>
+<td>Prerequisite refresher</td>
+</tr>
+<tr>
+<td><a href="https://num.pyro.ai/" target="_blank" rel="noopener">NumPyro</a></td>
+<td>Tool</td>
+<td>Probabilistic programming for MCMC and variational inference</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1706.04599" target="_blank" rel="noopener">On Calibration of Modern Neural Networks</a> — Guo et al.</td>
+<td>Paper</td>
+<td>Calibration in deep learning</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>141–142</td>
+<td>Information theory</td>
+<td>MacKay ch. 1–2, 4–6</td>
+<td>Measure the entropy of your LLM 801 model's outputs; relate it to its loss</td>
+</tr>
+<tr>
+<td>143</td>
+<td>Bayesian modeling, refresher</td>
+<td>Murphy book 1 (Bayesian statistics chapter)</td>
+<td>A Bayesian regression in NumPyro</td>
+</tr>
+<tr>
+<td>144–145</td>
+<td>Monte Carlo and MCMC</td>
+<td>Murphy book 2 (Monte Carlo and MCMC chapters); MacKay ch. 29–30</td>
+<td>Implement Metropolis–Hastings; compare with NumPyro's NUTS sampler</td>
+</tr>
+<tr>
+<td>146–147</td>
+<td>Variational inference</td>
+<td>Murphy book 2 (variational inference chapter)</td>
+<td>Derive and implement VI for a small model; revisit your DL 702 VAE</td>
+</tr>
+<tr>
+<td>148</td>
+<td>Gaussian processes</td>
+<td>Murphy book 2 (Gaussian process chapter)</td>
+<td>GP regression from scratch</td>
+</tr>
+<tr>
+<td>149</td>
+<td>Bayesian deep learning and calibration</td>
+<td>Murphy book 2 (Bayesian neural networks chapter); Guo et al.</td>
+<td>Measure and fix the calibration of a classifier</td>
+</tr>
+<tr>
+<td>150</td>
+<td>Causal inference basics</td>
+<td>Murphy book 2 (causality chapter)</td>
+<td>Show how a confounder misleads a model on simulated data</td>
+</tr>
+<tr>
+<td>151–152</td>
+<td>Review and checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c103"><span>Derive the ELBO and the VAE loss from first principles, and connect both to KL divergence</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c104"><span>Your Metropolis–Hastings sampler and NumPyro agree on the same posterior, with convergence diagnostics</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c105"><span>Improve a classifier's expected calibration error with temperature scaling, and report before and after</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c106"><span>Explain in writing why minimizing cross-entropy is the same as maximizing likelihood, and when that breaks</span></label></li>
+</ul>
+<p>Murphy's book 2 is long; read only the chapters named, and use it as a reference afterward.</p>
+</section><h2 id="term-8-large-scale-ml-systems-weeks-153176">Term 8 — Large-scale ML systems (Weeks 153–176)</h2>
+<p>Term goal: by week 176 you can write a fast GPU kernel, explain where every millisecond and gigabyte goes in a training or inference run, and plan how to train or serve a model across many GPUs. This is the core of senior and principal ML infrastructure work.</p>
+<section class="module kind-scale" data-mod="scale-1101-gpu-programming-and-performance-weeks-153164"><h3 id="scale-1101-gpu-programming-and-performance-weeks-153164">SCALE 1101 — GPU programming and performance (Weeks 153–164)</h3>
+<p><strong>Summary:</strong> Learn how GPUs actually execute your models, and how to make them faster. You'll write CUDA and Triton kernels, profile real workloads, and understand why tricks like FlashAttention and quantization work.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain GPU architecture: streaming multiprocessors, warps, the memory hierarchy and tensor cores</li>
+<li>Write CUDA kernels for common operations, using shared memory, tiling and coalesced access</li>
+<li>Write the same kernels in Triton, and know when Triton is the better choice</li>
+<li>Profile PyTorch workloads with the PyTorch profiler and NVIDIA Nsight, and find the bottleneck</li>
+<li>Use the roofline model to tell whether a workload is compute-bound or memory-bound</li>
+<li>Explain and apply kernel fusion, mixed precision, quantization and FlashAttention-style memory-aware attention</li>
+<li>Speed up a model with <code>torch.compile</code> and custom kernels</li>
+</ul>
+<p><strong>Focus on:</strong> profiling before optimizing, and the roofline model. Most performance wins come from finding the real bottleneck, not from clever code. Your C background helps here, so refresh it in week 153.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://shop.elsevier.com/books/programming-massively-parallel-processors/hwu/978-0-443-43900-1" target="_blank" rel="noopener">Programming Massively Parallel Processors, 5th ed.</a> — Hwu et al.</td>
+<td>Book</td>
+<td>Main text for CUDA and parallel patterns</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gpu-mode/lectures" target="_blank" rel="noopener">GPU MODE lectures</a></td>
+<td>Lectures and code</td>
+<td>Community lecture series on CUDA, Triton and profiling</td>
+</tr>
+<tr>
+<td><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/" target="_blank" rel="noopener">CUDA C++ Programming Guide</a></td>
+<td>Docs</td>
+<td>Official CUDA reference</td>
+</tr>
+<tr>
+<td><a href="https://triton-lang.org/main/getting-started/tutorials/index.html" target="_blank" rel="noopener">Triton tutorials</a></td>
+<td>Docs</td>
+<td>Writing kernels in Python</td>
+</tr>
+<tr>
+<td><a href="https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html" target="_blank" rel="noopener">PyTorch profiler</a></td>
+<td>Docs</td>
+<td>Profiling PyTorch code</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noopener">FlashAttention paper</a> — Dao et al.</td>
+<td>Paper</td>
+<td>Memory-aware attention</td>
+</tr>
+<tr>
+<td><a href="https://horace.io/brrr_intro.html" target="_blank" rel="noopener">Making Deep Learning Go Brrrr From First Principles</a> — Horace He</td>
+<td>Article</td>
+<td>Compute, memory and overhead bottlenecks</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>153</td>
+<td>C refresher, GPU architecture</td>
+<td>Hwu et al. ch. 1–4; Horace He's article</td>
+<td>Vector add and matrix-vector kernels in CUDA</td>
+</tr>
+<tr>
+<td>154–155</td>
+<td>Memory hierarchy, tiling, coalescing</td>
+<td>Hwu et al. ch. 5–6; GPU MODE early lectures</td>
+<td>Tiled matrix multiply; measure speed at each step</td>
+</tr>
+<tr>
+<td>156</td>
+<td>Parallel patterns: reduction, scan, histogram</td>
+<td>Hwu et al. pattern chapters</td>
+<td>Implement softmax and layer norm as kernels</td>
+</tr>
+<tr>
+<td>157–158</td>
+<td>Triton</td>
+<td>Triton tutorials; GPU MODE Triton lectures</td>
+<td>Rewrite matmul and softmax in Triton; compare with CUDA and PyTorch</td>
+</tr>
+<tr>
+<td>159</td>
+<td>Profiling and the roofline model</td>
+<td>PyTorch profiler docs; Nsight docs</td>
+<td>Profile your LLM 801 GPT; classify each kernel as compute- or memory-bound</td>
+</tr>
+<tr>
+<td>160–161</td>
+<td>Attention and FlashAttention</td>
+<td>FlashAttention paper</td>
+<td>Implement a simplified FlashAttention forward pass in Triton</td>
+</tr>
+<tr>
+<td>162</td>
+<td>Mixed precision, quantization, <code>torch.compile</code></td>
+<td>PyTorch docs</td>
+<td>Speed up your GPT's inference with compile and int8 or fp8</td>
+</tr>
+<tr>
+<td>163–164</td>
+<td>Project and checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c107"><span>Your tiled CUDA matrix multiply reaches at least 50% of cuBLAS speed on the same GPU</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c108"><span>Your Triton fused softmax beats the unfused PyTorch version, with a benchmark across input sizes</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c109"><span>A profiling report on your GPT: top 5 kernels, roofline position for each, and one optimization with measured gain</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c110"><span>Explain on a whiteboard why FlashAttention is faster despite doing more arithmetic</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c111"><span>Open a pull request (even a small one) to a GPU-related open-source project</span></label></li>
+</ul>
+</section><section class="module kind-scale" data-mod="scale-1102-distributed-training-and-inference-at-scale-weeks-165176"><h3 id="scale-1102-distributed-training-and-inference-at-scale-weeks-165176">SCALE 1102 — Distributed training and inference at scale (Weeks 165–176)</h3>
+<p><strong>Summary:</strong> Learn how frontier-scale models are trained across hundreds of GPUs and served to millions of users. You'll run multi-GPU training yourself on rented hardware, and learn the inference techniques that decide whether an LLM product is affordable.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Estimate the memory and compute a model needs for training and inference, on paper, before running anything</li>
+<li>Explain and apply data parallelism, ZeRO and FSDP sharding, tensor parallelism, pipeline parallelism, sequence or context parallelism and expert parallelism</li>
+<li>Explain collective communication (all-reduce, all-gather, reduce-scatter) and network bottlenecks</li>
+<li>Run multi-GPU training with PyTorch FSDP, and debug common failures</li>
+<li>Explain inference optimizations: KV caching, paged attention, continuous batching, speculative decoding, quantization and prefill/decode separation</li>
+<li>Plan a serving fleet: throughput, latency targets, GPU choice and cost per million tokens</li>
+<li>Explain fault tolerance and checkpointing for long training runs</li>
+</ul>
+<p><strong>Focus on:</strong> back-of-envelope estimates. Principal engineers are valued for knowing, before anyone writes code, whether a plan fits in memory and budget.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jax-ml.github.io/scaling-book/" target="_blank" rel="noopener">How to Scale Your Model</a> — Austin et al. (Google DeepMind)</td>
+<td>Book (free online)</td>
+<td>Main text: a systems view of training and serving LLMs</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook" target="_blank" rel="noopener">The Ultra-Scale Playbook</a> — Hugging Face</td>
+<td>Book (free online)</td>
+<td>Main text: parallelism on GPU clusters, with experiments</td>
+</tr>
+<tr>
+<td><a href="https://pytorch.org/tutorials/intermediate/FSDP_tutorial.html" target="_blank" rel="noopener">PyTorch FSDP tutorial</a></td>
+<td>Docs</td>
+<td>Sharded data parallel training</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1910.02054" target="_blank" rel="noopener">ZeRO paper</a> — Rajbhandari et al.</td>
+<td>Paper</td>
+<td>Memory-sharded training</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1909.08053" target="_blank" rel="noopener">Megatron-LM paper</a> — Shoeybi et al.</td>
+<td>Paper</td>
+<td>Tensor parallelism</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noopener">PagedAttention (vLLM) paper</a> — Kwon et al.</td>
+<td>Paper</td>
+<td>Efficient KV cache memory for serving</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2211.17192" target="_blank" rel="noopener">Speculative decoding paper</a> — Leviathan et al.</td>
+<td>Paper</td>
+<td>Faster decoding with a draft model</td>
+</tr>
+<tr>
+<td><a href="https://docs.vllm.ai/" target="_blank" rel="noopener">vLLM docs</a></td>
+<td>Docs</td>
+<td>Serving engine internals</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>165</td>
+<td>Estimating memory and compute</td>
+<td>Scaling book: rooflines and transformer math parts</td>
+<td>Estimate memory and FLOPs for training and serving 3 model sizes</td>
+</tr>
+<tr>
+<td>166–167</td>
+<td>Data parallelism, ZeRO and FSDP</td>
+<td>Ultra-Scale Playbook: data parallelism and ZeRO; ZeRO paper</td>
+<td>Train your GPT with FSDP on 2–4 rented GPUs</td>
+</tr>
+<tr>
+<td>168–169</td>
+<td>Tensor, pipeline, sequence and expert parallelism</td>
+<td>Ultra-Scale Playbook; Scaling book: sharding parts; Megatron-LM paper</td>
+<td>Implement simple tensor parallelism for one MLP layer</td>
+</tr>
+<tr>
+<td>170</td>
+<td>Collectives, networks and fault tolerance</td>
+<td>Scaling book; PyTorch distributed docs</td>
+<td>Benchmark all-reduce; add checkpoint and resume to your training</td>
+</tr>
+<tr>
+<td>171–172</td>
+<td>Inference: KV cache, batching, paged attention</td>
+<td>Scaling book: inference parts; PagedAttention paper; vLLM docs</td>
+<td>Add a KV cache and continuous batching to your own serving code</td>
+</tr>
+<tr>
+<td>173</td>
+<td>Speculative decoding and quantized serving</td>
+<td>Speculative decoding paper</td>
+<td>Implement speculative decoding with a small draft model</td>
+</tr>
+<tr>
+<td>174</td>
+<td>Serving fleet planning</td>
+<td>Scaling book: serving part</td>
+<td>Cost-per-million-tokens model for a real open model on 2 GPU types</td>
+</tr>
+<tr>
+<td>175–176</td>
+<td>Project and checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c112"><span>Your memory estimate for training a model is within 15% of the measured peak memory</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c113"><span>Multi-GPU FSDP training of your GPT shows near-linear speedup from 1 to 4 GPUs, with a write-up of where the loss comes from</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c114"><span>Your serving code with KV cache and continuous batching beats a naive loop on throughput, with a benchmark</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c115"><span>Speculative decoding gives a measured speedup without changing the outputs</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c116"><span>A 2-page design doc: train a 7B model on a fixed budget, choosing parallelism, hardware and timeline with numbers</span></label></li>
+</ul>
+<p>Rented GPUs make this course cost real money. Budget for it in advance, and use spot or community cloud instances where possible.</p>
+</section><h2 id="term-9-research-weeks-177200">Term 9 — Research (Weeks 177–200)</h2>
+<p>Term goal: by week 200 you can find an open problem, design experiments that would convince a skeptical reviewer, and write it up in a form a peer-reviewed venue would consider. You'll also have a chosen specialization and a dissertation proposal.</p>
+<section class="module kind-res" data-mod="res-1201-research-methods-weeks-177184"><h3 id="res-1201-research-methods-weeks-177184">RES 1201 — Research methods (Weeks 177–184)</h3>
+<p><strong>Summary:</strong> Learn the craft of research: choosing problems, reading a literature fast, designing experiments, being honest about results, and writing papers. This is what a PhD advisor teaches in the first year, mostly through feedback; here you get it deliberately.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Find and scope a research question that is new, important and doable with your compute</li>
+<li>Survey a subfield quickly, and find the real open problems behind the hype</li>
+<li>Design experiments with proper baselines, ablations, multiple seeds and confidence intervals</li>
+<li>Tune hyperparameters systematically, and report results without cherry-picking</li>
+<li>Make work reproducible: code release, configs, seeds and data documentation</li>
+<li>Write a paper in the standard structure, make clear figures, and review other papers fairly</li>
+<li>Pick the right venue (arXiv, workshops, conferences, journals) and understand how peer review works</li>
+</ul>
+<p><strong>Focus on:</strong> experiment design and honest reporting. Reviewers reject papers more for weak baselines and single-seed results than for unexciting ideas.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://web.stanford.edu/class/cs197/" target="_blank" rel="noopener">Stanford CS197: Computer Science Research</a> — Michael Bernstein</td>
+<td>Course materials</td>
+<td>Main course: research process, from ideas to papers</td>
+</tr>
+<tr>
+<td><a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf" target="_blank" rel="noopener">How to Read a Paper</a> — S. Keshav</td>
+<td>Article</td>
+<td>Three-pass reading method</td>
+</tr>
+<tr>
+<td><a href="https://github.com/google-research/tuning_playbook" target="_blank" rel="noopener">Deep Learning Tuning Playbook</a> — Google Research</td>
+<td>Guide</td>
+<td>Systematic hyperparameter tuning</td>
+</tr>
+<tr>
+<td><a href="https://neurips.cc/public/guides/PaperChecklist" target="_blank" rel="noopener">NeurIPS paper checklist</a></td>
+<td>Guide</td>
+<td>What reviewers expect on claims, limitations and reproducibility</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/papers" target="_blank" rel="noopener">Hugging Face papers</a></td>
+<td>Site</td>
+<td>Tracking new papers and their code</td>
+</tr>
+<tr>
+<td><a href="https://openreview.net/" target="_blank" rel="noopener">OpenReview</a></td>
+<td>Site</td>
+<td>Read real reviews of accepted and rejected papers</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>177</td>
+<td>What research is; choosing problems</td>
+<td>CS197 early lectures</td>
+<td>Write 10 research questions from your paper notes; rank them by impact and feasibility</td>
+</tr>
+<tr>
+<td>178</td>
+<td>Literature review</td>
+<td>Keshav; CS197</td>
+<td>Map one subfield: 20 papers, grouped by approach, with open problems</td>
+</tr>
+<tr>
+<td>179–180</td>
+<td>Experiment design, baselines, ablations, statistics</td>
+<td>Tuning Playbook; CS197</td>
+<td>Rerun one of your earlier projects with 5 seeds, confidence intervals and ablations</td>
+</tr>
+<tr>
+<td>181</td>
+<td>Reproducibility</td>
+<td>NeurIPS checklist</td>
+<td>Make your LLM 802 project fully reproducible from a fresh machine</td>
+</tr>
+<tr>
+<td>182</td>
+<td>Writing and figures</td>
+<td>CS197 writing lectures</td>
+<td>Rewrite your Part I thesis as a 4-page workshop-style paper</td>
+</tr>
+<tr>
+<td>183</td>
+<td>Peer review</td>
+<td>Reviews on OpenReview</td>
+<td>Write full reviews of 3 recent papers; compare with the real reviews</td>
+</tr>
+<tr>
+<td>184</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c117"><span>A 4-page paper from your Part I thesis, with seeds, confidence intervals, ablations and a limitations section, posted to arXiv or submitted to a workshop</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c118"><span>Three peer reviews you'd be comfortable signing, checked against the real reviews on OpenReview</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c119"><span>A one-page map of your chosen subfield with its 5 most important open problems</span></label></li>
+</ul>
+</section><section class="module kind-res" data-mod="res-1202-specialization-seminar-weeks-185200"><h3 id="res-1202-specialization-seminar-weeks-185200">RES 1202 — Specialization seminar (Weeks 185–200)</h3>
+<p><strong>Summary:</strong> Choose one research area and go deep enough to contribute to it. You'll read its key papers, reproduce one recent result, find a gap, and write the dissertation proposal. PhD students specialize because no one can be at the frontier of everything.</p>
+<p><strong>Pick one specialization.</strong> Choose based on your paper notes, your career goals and what you can run on your compute budget.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Specialization</th>
+<th>What it studies</th>
+<th>Starting point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Efficient LLMs</td>
+<td>Faster, cheaper training and inference: quantization, sparsity, distillation, serving</td>
+<td>Your SCALE 1101–1102 work; recent quantization and distillation papers</td>
+</tr>
+<tr>
+<td>Reasoning and RL for LLMs</td>
+<td>Improving reasoning with RL, search and verification</td>
+<td>Your LLM 802 work; Raschka's reasoning book references</td>
+</tr>
+<tr>
+<td>Agents and tool use</td>
+<td>Planning, memory, tool use and evaluation of agents</td>
+<td>Your AIE 603 work; agent benchmark papers</td>
+</tr>
+<tr>
+<td>Retrieval and knowledge</td>
+<td>RAG, long context, search and grounding</td>
+<td>Your AIE 602 work; recent RAG surveys</td>
+</tr>
+<tr>
+<td>Evaluation and benchmarks</td>
+<td>Measuring what models can do, reliably</td>
+<td>Your AIE 604 work; benchmark design papers</td>
+</tr>
+<tr>
+<td>Interpretability</td>
+<td>How models compute internally</td>
+<td><a href="https://transformer-circuits.pub/" target="_blank" rel="noopener">Transformer Circuits</a></td>
+</tr>
+<tr>
+<td>Alignment and safety</td>
+<td>Making models behave as intended</td>
+<td>Recent alignment and safety research agendas</td>
+</tr>
+<tr>
+<td>Multimodal models</td>
+<td>Vision–language and speech models</td>
+<td>Your DL 702 and SOL 652 work</td>
+</tr>
+<tr>
+<td>Recommender systems</td>
+<td>Ranking and personalization at scale</td>
+<td>Industry recommender papers from large platforms</td>
+</tr>
+<tr>
+<td>Legal AI</td>
+<td>Language models for legal text, reasoning and compliance</td>
+<td>Your law studies and your Philippine legal-text projects</td>
+</tr>
+</tbody>
+</table></div>
+<p>Legal AI deserves a serious look. Few researchers have both law training and ML depth, and Philippine legal text is an underserved area. That combination makes original research easier to find.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain the history, main methods and open problems of your chosen area</li>
+<li>Reproduce a recent paper's main result, and explain any differences from the reported numbers</li>
+<li>Propose a research project with a clear question, method, baselines and evaluation</li>
+<li>Present your area to a technical audience in 30 minutes</li>
+</ul>
+<p><strong>Focus on:</strong> the reproduction. Reproducing a paper teaches you the field's real methods and almost always reveals a gap worth studying.</p>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>185–188</td>
+<td>Foundations of the area</td>
+<td>Read and summarize 20 key papers, oldest to newest; start from a recent survey</td>
+</tr>
+<tr>
+<td>189–194</td>
+<td>Reproduction</td>
+<td>Reproduce one recent paper's main result; write up the differences</td>
+</tr>
+<tr>
+<td>195–196</td>
+<td>Frontier</td>
+<td>Read and summarize 10+ papers from the last 12 months; list open problems</td>
+</tr>
+<tr>
+<td>197–199</td>
+<td>Dissertation proposal</td>
+<td>Write the proposal (see DISS 1999); get feedback from at least 2 people in the field</td>
+</tr>
+<tr>
+<td>200</td>
+<td>Checkpoint</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c120"><span>A survey of your area (8–12 pages) covering 30+ papers, posted publicly</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c121"><span>A reproduction report with code, posted publicly; contact the original authors if your numbers differ</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c122"><span>A 5–8 page dissertation proposal, reviewed by at least 2 people working in the area</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c123"><span>A recorded 30-minute talk on your area</span></label></li>
+</ul>
+</section><h2 id="term-10-leadership-and-dissertation-weeks-201232">Term 10 — Leadership and dissertation (Weeks 201–232)</h2>
+<p>Term goal: by week 232 you have made an original contribution to your field, and you can lead technical direction for a team or organization.</p>
+<section class="module kind-lead" data-mod="lead-1301-technical-leadership-weeks-201208"><h3 id="lead-1301-technical-leadership-weeks-201208">LEAD 1301 — Technical leadership (Weeks 201–208)</h3>
+<p><strong>Summary:</strong> Staff and principal engineers are measured by their effect on other people's work: the designs they shape, the decisions they unblock, the engineers they grow and the direction they set. This course teaches those skills, and has you practice them at your job.</p>
+<p><strong>Learning outcomes</strong> — by the end you can:</p>
+<ul>
+<li>Explain what staff and principal engineers do, and the common archetypes (tech lead, architect, solver, right hand)</li>
+<li>Design software that stays simple as it grows: deep modules, information hiding and managing complexity</li>
+<li>Write design docs and RFCs that get decisions made, and run design reviews</li>
+<li>Write a technical strategy and vision for an area, grounded in the business's goals</li>
+<li>Influence without authority: build consensus, handle disagreement and know when to escalate</li>
+<li>Mentor and sponsor engineers, and give useful code and design reviews</li>
+<li>Lead incident reviews and turn them into lasting improvements</li>
+<li>Manage your time and energy across many projects, and pick the work that matters most</li>
+</ul>
+<p><strong>Focus on:</strong> writing. At this level, most of your impact travels through documents other people read when you're not in the room.</p>
+<p><strong>Resources</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://staffeng.com/book" target="_blank" rel="noopener">Staff Engineer: Leadership Beyond the Management Track</a> — Will Larson</td>
+<td>Book</td>
+<td>Main text: the role, archetypes and getting there</td>
+</tr>
+<tr>
+<td><a href="https://www.oreilly.com/library/view/the-staff-engineers/9781098118723/" target="_blank" rel="noopener">The Staff Engineer's Path</a> — Tanya Reilly</td>
+<td>Book</td>
+<td>Main text: big-picture thinking, executing projects, leveling up others</td>
+</tr>
+<tr>
+<td><a href="https://web.stanford.edu/~ouster/cgi-bin/book.php" target="_blank" rel="noopener">A Philosophy of Software Design, 2nd ed.</a> — John Ousterhout</td>
+<td>Book</td>
+<td>Managing complexity in software design</td>
+</tr>
+<tr>
+<td><a href="https://abseil.io/resources/swe-book" target="_blank" rel="noopener">Software Engineering at Google</a> — Winters, Manshreck, Wright</td>
+<td>Book (free online)</td>
+<td>Engineering practices at scale: code review, testing, culture</td>
+</tr>
+<tr>
+<td><a href="https://staffeng.com/" target="_blank" rel="noopener">StaffEng stories</a></td>
+<td>Interviews</td>
+<td>How real staff and principal engineers work</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Reading</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>201</td>
+<td>The staff and principal role</td>
+<td>Larson (role and archetypes); Reilly part I</td>
+<td>Write which archetype fits you and your company's next need</td>
+</tr>
+<tr>
+<td>202</td>
+<td>Software design and complexity</td>
+<td>Ousterhout</td>
+<td>Review one of your earlier codebases with Ousterhout's ideas; write the refactoring plan</td>
+</tr>
+<tr>
+<td>203</td>
+<td>Design docs, RFCs and reviews</td>
+<td>Reilly; Software Engineering at Google (design and review chapters)</td>
+<td>Write an RFC for a real change at work and run a review</td>
+</tr>
+<tr>
+<td>204</td>
+<td>Technical strategy and vision</td>
+<td>Larson (strategy and vision chapters); Reilly part I</td>
+<td>Write a 2-page strategy for an area you know</td>
+</tr>
+<tr>
+<td>205</td>
+<td>Influence, alignment and disagreement</td>
+<td>Reilly part II</td>
+<td>Lead one cross-team decision at work, and write a short retrospective</td>
+</tr>
+<tr>
+<td>206</td>
+<td>Mentoring, sponsorship and reviews</td>
+<td>Reilly part III; Software Engineering at Google (code review chapter)</td>
+<td>Mentor someone for the rest of Part II</td>
+</tr>
+<tr>
+<td>207</td>
+<td>Incidents and operational excellence</td>
+<td>Software Engineering at Google; blameless postmortem guides</td>
+<td>Write or lead a blameless postmortem</td>
+</tr>
+<tr>
+<td>208</td>
+<td>Checkpoint</td>
+<td>—</td>
+<td>Checkpoint test</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Checkpoint test</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c124"><span>An RFC or design doc that was reviewed and decided at work (or in an open-source project)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c125"><span>A 2-page technical strategy, reviewed by a senior engineer or manager</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c126"><span>One ongoing mentoring relationship, with written goals and monthly check-ins</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c127"><span>A recorded 10-minute talk to non-technical leaders on a technical trade-off</span></label></li>
+</ul>
+<p>If your current job doesn't offer these chances, use an open-source project, a community group or your own side projects to practice them.</p>
+</section><section class="module kind-diss" data-mod="diss-1999-dissertation-weeks-209232"><h3 id="diss-1999-dissertation-weeks-209232">DISS 1999 — Dissertation (Weeks 209–232)</h3>
+<p><strong>Summary:</strong> Make an original contribution to your specialization: a new method, a new finding, a new benchmark or a new system that others in the field can use and cite. Unlike the Part I thesis, which shows you can apply what's known, the dissertation must add something new.</p>
+<p><strong>What counts as a contribution:</strong></p>
+<ul>
+<li>A method that measurably beats strong baselines on a recognized task</li>
+<li>A careful empirical study that changes how people understand a technique</li>
+<li>A benchmark or dataset that fills a real gap (for example, Philippine legal-language tasks)</li>
+<li>An open-source system that others adopt, with an accompanying paper</li>
+</ul>
+<p><strong>Weekly schedule</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Milestone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>197–199</td>
+<td>Dissertation proposal (during RES 1202)</td>
+</tr>
+<tr>
+<td>209–212</td>
+<td>Baselines reproduced; experiment plan locked</td>
+</tr>
+<tr>
+<td>213–220</td>
+<td>Main experiments, with ablations and multiple seeds</td>
+</tr>
+<tr>
+<td>221–224</td>
+<td>Write the paper; get feedback from 2+ researchers; revise</td>
+</tr>
+<tr>
+<td>225</td>
+<td>Submit to a peer-reviewed venue (a workshop or main conference); post a preprint</td>
+</tr>
+<tr>
+<td>226–229</td>
+<td>Write the full dissertation (40–80 pages) around the paper; release code and data</td>
+</tr>
+<tr>
+<td>230–231</td>
+<td>Public talk and defense with outside reviewers</td>
+</tr>
+<tr>
+<td>232</td>
+<td>Completion review</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Deliverables</strong></p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c128"><span>A paper submitted to a peer-reviewed venue, and a public preprint</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c129"><span>A full dissertation document: introduction, related work, methods, experiments, results, limitations and future work</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c130"><span>Code, data and model release that reproduces every main result</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c131"><span>A recorded 45-minute defense, with questions from at least 2 people working in the field</span></label></li>
+</ul>
+<p>Acceptance isn't required to complete the curriculum, since review cycles are slow and partly luck. But respond to the reviews, revise, and resubmit until it's accepted somewhere.</p>
+</section><h2 id="part-ii-completion-doctoral-and-principal-level-week-232">Part II completion: doctoral and principal level (Week 232)</h2>
+<p>You've reached the knowledge and portfolio of a PhD graduate and a principal-track engineer when every item below is done.</p>
+<ul class="checklist">
+<li class="task"><label><input type="checkbox" data-id="c132"><span>All 26 courses passed, with every checkpoint test complete</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c133"><span>The 24 core books finished</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c134"><span>At least one paper submitted to a peer-reviewed venue, and a public reproduction of someone else's paper</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c135"><span>A public survey of your specialization</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c136"><span>Dissertation written and defended</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c137"><span>An open-source project or contribution that other people use (stars, downloads, issues or citations from people you don't know)</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c138"><span>At least 3 design docs or RFCs that shaped real decisions, and one technical strategy document</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c139"><span>At least one engineer you've mentored for 6+ months</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c140"><span>A large-scale design interview: plan training and serving for a model of a given size and budget, with numbers, in 60 minutes</span></label></li>
+</ul>
+<p><strong>After completion:</strong> keep reading 2 papers a week, publish at least one piece of research or major open-source work a year, and take on work with wider scope at your job. At this level, growth comes from harder problems and more responsibility, not more courses.</p>
+<h2 id="sources">Sources</h2>
 <p>Book and course pages used to confirm titles, authors, editions and links:</p>
 <ul>
 <li><a href="https://www.oreilly.com/library/view/-/9798341607972" target="_blank" rel="noopener">Hands-On Machine Learning with Scikit-Learn and PyTorch — O'Reilly</a></li>
@@ -2015,6 +3867,25 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <li><a href="https://www.oreilly.com/library/view/llm-engineers-handbook/9781836200079" target="_blank" rel="noopener">LLM Engineer's Handbook — O'Reilly listing</a></li>
 <li><a href="https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/" target="_blank" rel="noopener">Practical Statistics for Data Scientists, 2nd ed. — O'Reilly</a></li>
 <li><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank" rel="noopener">Deep Learning: Foundations and Concepts — Springer</a></li>
+<li><a href="https://www.oreilly.com/library/view/-/9798341622654/" target="_blank" rel="noopener">Generative AI Design Patterns — O'Reilly</a></li>
+<li><a href="https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html" target="_blank" rel="noopener">Designing Data-Intensive Applications, 2nd ed. — Martin Kleppmann</a></li>
+<li><a href="https://us.artechhouse.com/Mastering-Technical-Sales-The-Sales-Engineers-Handbook-Fourth-Edition-P2257.aspx" target="_blank" rel="noopener">Mastering Technical Sales, 4th ed. — Artech House</a></li>
+<li><a href="https://greatdemo.blogspot.com/2023/08/great-demo-third-edition-launch.html" target="_blank" rel="noopener">Great Demo!, 3rd ed. launch — Peter Cohan</a></li>
+<li><a href="https://barbaraminto.com/textbook" target="_blank" rel="noopener">The Pyramid Principle — Barbara Minto</a></li>
+<li><a href="https://probml.github.io/pml-book/book2.html" target="_blank" rel="noopener">Probabilistic Machine Learning: Advanced Topics — Murphy</a></li>
+<li><a href="https://shop.elsevier.com/books/programming-massively-parallel-processors/hwu/978-0-443-43900-1" target="_blank" rel="noopener">Programming Massively Parallel Processors, 5th ed. — Elsevier</a></li>
+<li><a href="https://jax-ml.github.io/scaling-book/" target="_blank" rel="noopener">How to Scale Your Model — Google DeepMind</a></li>
+<li><a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook" target="_blank" rel="noopener">The Ultra-Scale Playbook — Hugging Face</a></li>
+<li><a href="https://staffeng.com/book" target="_blank" rel="noopener">Staff Engineer — Will Larson</a></li>
+<li><a href="https://www.oreilly.com/library/view/the-staff-engineers/9781098118723/" target="_blank" rel="noopener">The Staff Engineer's Path — O'Reilly</a></li>
+<li><a href="https://web.stanford.edu/class/cs197/" target="_blank" rel="noopener">Stanford CS197 Computer Science Research — course site</a></li>
+<li><a href="https://github.com/gpu-mode/lectures" target="_blank" rel="noopener">GPU MODE lectures — GitHub</a></li>
+<li><a href="https://aws.amazon.com/certification/certified-generative-ai-developer-professional/" target="_blank" rel="noopener">AWS Certified Generative AI Developer – Professional — AWS</a></li>
+<li><a href="https://open-exam-prep.com/blog/ai-102-vs-ai-103-which-exam-2026" target="_blank" rel="noopener">AI-102 vs AI-103 — Open Exam Prep</a></li>
+<li><a href="https://anthropic-partners.skilljar.com/page/faq-certifications" target="_blank" rel="noopener">Claude certification FAQ — Anthropic partner academy</a></li>
+<li><a href="https://www.hireinsouth.com/post/what-does-an-ai-solutions-engineer-do" target="_blank" rel="noopener">What does an AI solutions engineer do? — South</a></li>
+<li><a href="https://jobdescription.org/jobs/artificial-intelligence/ai-solutions-engineer" target="_blank" rel="noopener">AI solutions engineer job description — jobdescription.org</a></li>
+<li><a href="https://data.org/jobs/ai-solutions-engineer-2/" target="_blank" rel="noopener">AI Solutions Engineer posting — data.org</a></li>
 <li><a href="https://stanford-cs336.github.io/spring2025/" target="_blank" rel="noopener">Stanford CS336 — course site</a></li>
 <li><a href="https://deepgenerativemodels.github.io/" target="_blank" rel="noopener">Stanford CS236 — course site</a></li>
 <li><a href="https://stanford-cs329s.github.io/" target="_blank" rel="noopener">Stanford CS329S — course site</a></li>
