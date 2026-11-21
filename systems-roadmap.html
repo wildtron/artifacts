@@ -8,12 +8,12 @@
   :root{
     --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6a63; --card:#ffffff; --line:#e4e2da;
     --accent:#c4501b; --accent-soft:#fbe9df; --ok:#2f7d4f; --chip:#efede5;
-    --ph-p0:#7a5ea8; --ph-p1:#c4501b; --ph-p2:#2b6cb0; --ph-p3:#2f7d4f; --ph-p4:#a07a12; --ph-p5:#b03a72;
+    --ph-p0:#7a5ea8; --ph-p1:#c4501b; --ph-p2:#2b6cb0; --ph-p3:#2f7d4f; --ph-p4:#a07a12; --ph-p5:#b03a72; --ph-p6:#0f7c8c; --ph-p7:#6b7d1e; --ph-p8:#4a4fc4;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#161614; --fg:#ecebe5; --muted:#a09f96; --card:#1f1f1c; --line:#33322d;
       --accent:#ee7a45; --accent-soft:#33241b; --ok:#5cc489; --chip:#2a2a26;
-      --ph-p0:#a98fd6; --ph-p1:#ee7a45; --ph-p2:#6aa6e8; --ph-p3:#5cc489; --ph-p4:#d9b24a; --ph-p5:#e07aaa; }
+      --ph-p0:#a98fd6; --ph-p1:#ee7a45; --ph-p2:#6aa6e8; --ph-p3:#5cc489; --ph-p4:#d9b24a; --ph-p5:#e07aaa; --ph-p6:#4fc3d1; --ph-p7:#a9bd4f; --ph-p8:#8f94f0; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -67,6 +67,13 @@
   label.chk{display:flex;gap:9px;align-items:flex-start;padding:3px 0;cursor:pointer}
   label.chk input{margin-top:5px;accent-color:var(--ok)}
   label.chk.done span{color:var(--muted);text-decoration:line-through}
+  ul.refs{list-style:none;margin:6px 0;padding:0}
+  ul.refs li{display:flex;gap:9px;align-items:baseline;padding:3px 0;font-size:.92rem}
+  ul.refs a{color:var(--fg);text-decoration-color:var(--line);text-underline-offset:3px}
+  ul.refs a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+  .ra{color:var(--muted)}
+  .rk{flex:none;width:44px;text-align:center;font-size:.68rem;font-weight:650;letter-spacing:.02em;border-radius:5px;padding:1px 0;background:var(--chip);color:var(--muted)}
+  .rk-book{background:var(--accent-soft);color:var(--accent)}
   .done-box{margin-top:14px;padding:10px 12px;background:var(--accent-soft);border-radius:8px;font-size:.92rem}
   .hidden{display:none!important}
   footer{margin-top:50px;color:var(--muted);font-size:.85rem}
@@ -107,6 +114,9 @@
       <tr><td>3</td><td>Glue and scripting, plus sync</td><td>Go, PHP, Python, Perl</td><td>7 to 9 weekends</td></tr>
       <tr><td>4</td><td>Standalone daily tools</td><td>C++, Rust, Zig</td><td>5 to 7 weekends</td></tr>
       <tr><td>5</td><td>Cross-language features: shared C library, Zig/Rust FFI, WASM plugins, live updates, conformance tests</td><td>All of them</td><td>12 to 16 weekends</td></tr>
+      <tr><td>6</td><td>Distributed stash: Maelstrom challenges, Raft from scratch, a sharded cluster, a chaos lab</td><td>Go, Rust, Python</td><td>15 to 21 weekends</td></tr>
+      <tr><td>7</td><td>Networking deep dive: your own TCP over UDP, discovery and NAT traversal, an io_uring load balancer, eBPF</td><td>Zig, C, Go, C++, Rust</td><td>11 to 14 weekends</td></tr>
+      <tr><td>8</td><td>Tack, your own language: interpreter, compiler to WebAssembly, editor tooling</td><td>Go, Rust, TypeScript</td><td>11 to 16 weekends</td></tr>
     </tbody>
   </table>
 
@@ -115,7 +125,7 @@
   <table>
     <thead><tr><th></th><th>C</th><th>C++</th></tr></thead>
     <tbody>
-      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier), libstash (C ABI client library), the WASM secret-redactor plugin</td><td>Redis clone, terminal UI for stash, live updates in the TUI</td></tr>
+      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier), libstash (C ABI client library), the WASM secret-redactor plugin, mDNS responder, eBPF kernel programs</td><td>Redis clone, terminal UI for stash, live updates in the TUI, io_uring load balancer</td></tr>
       <tr><td><b>Kind of program</b></td><td>Run-once command-line tools that read files and exit</td><td>Long-running, event-driven programs that talk to a socket</td></tr>
       <tr><td><b>What it trains</b></td><td>Raw bytes, syscalls, manual memory, defensive parsing, fuzzing</td><td>RAII, move semantics, classes and templates, variants, event loops</td></tr>
       <tr><td><b>Tooling focus</b></td><td>Valgrind, ASan, libFuzzer or AFL++, Makefile</td><td>CMake, clang-tidy, sanitizers, unit-test framework</td></tr>
@@ -124,7 +134,7 @@
 
   <div id="phases"></div>
 
-  <footer>Tip: keep one git repo per project, write the README first (scope and "done when"), and commit at every ticked box. Reference books: Beej's Guide, The Linux Programming Interface, Crafting Interpreters, Database Internals, the Tokio tutorial.</footer>
+  <footer>Tip: keep one git repo per project, write the README first (scope and "done when"), and commit at every ticked box. Each project lists its own references (books, official docs, specs and papers). The core shelf: The Linux Programming Interface, Designing Data-Intensive Applications, Database Internals, TCP/IP Illustrated, Engineering a Compiler, and the Raft paper.</footer>
 </div>
 
 <script>
@@ -134,7 +144,10 @@ const PHASES = [
   {id:"p2", name:"Phase 2: Clients and front end", tag:"flagship"},
   {id:"p3", name:"Phase 3: Glue and scripting", tag:"flagship"},
   {id:"p4", name:"Phase 4: Standalone daily tools", tag:"daily use"},
-  {id:"p5", name:"Phase 5: Cross-language features", tag:"polyglot"}
+  {id:"p5", name:"Phase 5: Cross-language features", tag:"polyglot"},
+  {id:"p6", name:"Phase 6: Distributed stash", tag:"distributed"},
+  {id:"p7", name:"Phase 7: Networking deep dive", tag:"networking"},
+  {id:"p8", name:"Phase 8: Tack, your own language", tag:"language"}
 ];
 
 const PROJECTS = [
@@ -376,9 +389,426 @@ const PROJECTS = [
     {h:"M3: Runner and CI", items:["Python runner prints a language by suite matrix","GitHub Actions matrix builds and runs everything","Found and fixed at least one real disagreement between implementations"]}
   ],
   stretch:["Differential fuzzing: random inputs, compare every implementation","Timing column in the matrix","Publish the kit as its own repo"],
-  done:"One command shows a green matrix across nine languages, and CI blocks any change that breaks one of them."}
+  done:"One command shows a green matrix across nine languages, and CI blocks any change that breaks one of them."},
+
+/* ---------------- PHASE 6 ---------------- */
+{ id:"maelstrom", phase:"p6", title:"Distributed systems warm-up with Maelstrom", langs:["Go"], time:"2 to 3 weekends",
+  summary:"Maelstrom is a workbench from the Jepsen project. It runs your program as a cluster of nodes, injects network partitions and checks the results. Work through the classic challenges: unique IDs, broadcast with gossip, a grow-only counter, a replicated log and transactions. You see how distributed systems fail before you build your own.",
+  learn:["Message passing as the only shared state","Gossip and anti-entropy; batching to cut message count","CRDTs: a grow-only counter, and why merges must be commutative and idempotent","Consistency models: what linearizable, sequential and eventual really mean","Reading Maelstrom and Elle output to find your own bugs"],
+  scope:["Echo and unique ID generation with no coordination","Broadcast that survives partitions, with message-count and latency targets","Grow-only counter on top of a sequentially consistent KV store","Kafka-style replicated log and a totally-available transaction workload"],
+  deliverables:[
+    {h:"M1: Setup", items:["Maelstrom installed and the echo workload passing","Small Go node library: handlers, RPC with timeouts, message IDs"]},
+    {h:"M2: Gossip", items:["Unique IDs pass with partitions enabled","Broadcast passes under partitions","Broadcast meets the efficiency targets (messages per op, median and max latency); the trade-off you chose is written down"]},
+    {h:"M3: State", items:["Grow-only counter passes with partitions","Kafka-style log passes the checker","Totally-available transactions pass read-uncommitted, then read-committed"]},
+    {h:"M4: Write-up", items:["One paragraph per challenge: the first bug Maelstrom caught and how you fixed it"]}
+  ],
+  stretch:["Redo two challenges in Rust and compare","Port the node library to Python and see where it slows down"],
+  done:"Every workload passes with partitions on, and you can explain from Maelstrom's output why your first broadcast was wrong." },
+
+{ id:"stash-raft", phase:"p6", title:"Raft consensus from scratch", langs:["Rust"], time:"5 to 7 weekends",
+  summary:"Implement Raft as a Rust library: leader election, log replication, persistence, snapshots and membership changes. Test it in a deterministic simulator where you control time, message delivery, drops and crashes. Then check it with Maelstrom's linearizable key-value workload. This is the core of every replicated database.",
+  learn:["The Raft paper in detail: terms, votes, log matching, commit rules","Why each rule exists, learned by breaking it in the simulator","Deterministic simulation testing: seeded randomness, simulated clock and network","Durability: what must be fsynced before replying","Snapshots with InstallSnapshot, and single-server membership changes","Linearizable reads with ReadIndex and leader leases"],
+  scope:["A library crate with no I/O: feed it messages and ticks, get back messages and committed entries","Simulator that runs thousands of seeded, randomized scenarios","Adapter that runs it under Maelstrom's lin-kv workload","Durable storage on top of the stash append-only log"],
+  deliverables:[
+    {h:"M1: Election", items:["Followers, candidates, leaders, terms and RequestVote","Randomized election timeouts; never two leaders in one term across 10,000 simulated runs","A leader is elected within a bounded time after a partition heals"]},
+    {h:"M2: Replication", items:["AppendEntries with the consistency check and fast log backtracking","Commit rule: only entries from the current term commit by counting replicas","Simulator checks every invariant at every step: election safety, log matching, leader completeness, state machine safety"]},
+    {h:"M3: Persistence and snapshots", items:["Term, vote and log persisted before replying; crash-restart scenarios pass","Snapshots and InstallSnapshot; old log entries trimmed","The paper's Figure 8 scenario reproduced as a test"]},
+    {h:"M4: Real-world features", items:["Single-server membership changes","ReadIndex linearizable reads","Passes Maelstrom lin-kv with partitions and crashes","Write-up: three bugs the simulator found and the rule each one broke"]}
+  ],
+  stretch:["Pre-vote and check-quorum to stop disruptive servers","Pipelining and batching; measure throughput","Leader leases with a clock-drift bound"],
+  done:"Millions of simulated steps with random drops, partitions and crashes never break an invariant, and Maelstrom reports your store as linearizable." },
+
+{ id:"stash-cluster", phase:"p6", title:"stash cluster: replicated and sharded", langs:["Rust","Go"], time:"5 to 7 weekends",
+  summary:"Turn the single daemon into a cluster of 3 to 5 nodes. Each shard of items is its own Raft group (multi-Raft), nodes find each other with SWIM-style gossip, and the Go gateway routes each request to the right shard leader. This is how CockroachDB, TiKV and etcd put the pieces together.",
+  learn:["Sharding with consistent hashing or key ranges, and moving a shard while it is live","Multi-Raft: many Raft groups in one process, batched heartbeats","Membership and failure detection with SWIM gossip","Request routing, leader hints and retries","Scatter-gather search across shards and merging ranked results","Rolling upgrades and versioned wire messages"],
+  scope:["3 to 5 nodes; each item belongs to one shard; each shard has 3 replicas","Writes go through the shard's Raft leader; reads are linearizable by default","Search fans out to every shard and merges the top results","Adding or removing a node rebalances shards automatically"],
+  deliverables:[
+    {h:"M1: Replicated daemon", items:["Daemon writes go through stash-raft before they are acknowledged","Three-node cluster in Docker Compose; kill the leader and writes continue","Followers redirect clients to the leader"]},
+    {h:"M2: Membership", items:["SWIM gossip: join, suspect, dead, with incarnation numbers","Cluster view endpoint and a CLI command to show it","Five nodes, partition one: it is marked dead, then rejoins cleanly"]},
+    {h:"M3: Sharding", items:["Shard map stored in its own Raft group","Gateway (Go) routes by shard and caches leader hints","Scatter-gather search whose merged ranking matches a single-node build"]},
+    {h:"M4: Rebalancing", items:["Add a node: a shard moves by snapshot transfer with no lost writes","Remove a node gracefully","Rolling restart of every node under load with zero failed requests"]}
+  ],
+  stretch:["Follower reads with bounded staleness","Cross-shard transactions with two-phase commit on top of Raft","Placement rules: always keep one replica on the laptop"],
+  done:"A five-node cluster keeps accepting writes while you kill, partition and add nodes, and merged search results always match a single-node rebuild." },
+
+{ id:"cluster-lab", phase:"p6", title:"Cluster lab: deploy, trace and break it", langs:["Python","Go"], time:"3 to 4 weekends",
+  summary:"The operations side of distributed systems. Deploy the cluster to several machines or VMs, trace one request across every service with OpenTelemetry, then attack it with partitions, packet loss, clock skew and paused processes. A Python harness records every client operation, and a linearizability checker you write yourself decides whether the cluster told the truth.",
+  learn:["Provisioning several hosts (VMs, Raspberry Pis or cloud) with Ansible or plain SSH scripts","Distributed tracing across Rust, Go and TypeScript with OpenTelemetry","Prometheus and Grafana for Raft health (term changes, commit lag, elections)","Fault injection with tc netem, iptables, toxiproxy and libfaketime","Linearizability checking with the WGL algorithm (as used by Porcupine and Knossos)"],
+  scope:["One command deploys the cluster to 3 to 5 hosts","One trace of a search shows the gateway, router, shards and Raft","A nemesis script runs a random fault schedule while clients run","Checker reads the history and reports linearizable, or the smallest failing window"],
+  deliverables:[
+    {h:"M1: Deploy", items:["Idempotent deploy to at least three real or virtual hosts","Certificates, config and systemd units generated per node"]},
+    {h:"M2: Observe", items:["OpenTelemetry tracing with one trace ID across every service","Grafana dashboard for Raft health and request latency","Alert on repeated elections or growing commit lag"]},
+    {h:"M3: Break it", items:["Nemesis: partitions, loss, latency, clock skew, process pauses (SIGSTOP)","Go client harness records invoke and complete events with timestamps","Linearizability checker in Python, tested on known-good and known-bad histories"]},
+    {h:"M4: Report", items:["20 nemesis schedules run; every history is linearizable","Jepsen-style write-up of every real bug found"]}
+  ],
+  stretch:["Rewrite the checker's hot loop in Rust with PyO3 and compare","Simulate losing a whole site with three regions","Run the same harness against etcd to calibrate it"],
+  done:"Twenty random fault schedules pass your checker, and you can open one trace and explain every hop of a slow request." },
+
+/* ---------------- PHASE 7 ---------------- */
+{ id:"reliable-udp", phase:"p7", title:"Reliable transport over UDP", langs:["Zig"], time:"3 to 4 weekends",
+  summary:"Build your own small TCP on top of UDP: handshake, sequence numbers, sliding window, retransmission timers, selective acknowledgements and congestion control. Then run stash-sync over it on a lossy link and compare with real TCP. Rebuilding TCP is the best way to learn what it does for you.",
+  learn:["Packet formats, sequence-number wraparound, checksums","Sliding windows, flow control and selective ACK","RTT estimation (Jacobson/Karels) and retransmission timeout backoff","Congestion control: slow start and AIMD (Reno), then a look at CUBIC and BBR","Simulating bad networks with tc netem; reading packets in Wireshark","Zig packed structs, std.posix sockets and an event loop"],
+  scope:["Reliable, ordered byte stream over UDP between two hosts","Connection setup, teardown and keepalive","Pluggable congestion control (Reno first)","A Wireshark Lua dissector for your packet format"],
+  deliverables:[
+    {h:"M1: Packets", items:["Header format documented; encoder and decoder with tests","Handshake and teardown state machine","Wireshark dissector shows your fields"]},
+    {h:"M2: Reliability", items:["Sliding window with cumulative ACKs and retransmission","Selective ACK and fast retransmit","A 1 GB file arrives intact with 5% loss and reordering under netem"]},
+    {h:"M3: Congestion control", items:["RTT estimation and RTO backoff","Reno slow start and congestion avoidance; cwnd plotted from logs","Two flows share a bottleneck fairly"]},
+    {h:"M4: Compare", items:["Throughput vs TCP at 0%, 1% and 5% loss with 100 ms latency","stash-sync can use it as an optional transport","Write-up: where yours lost to TCP and why"]}
+  ],
+  stretch:["BBR's basic model","Forward error correction for small messages","Encryption with the Noise protocol framework"],
+  done:"Files and sync traffic arrive intact over a link you made deliberately terrible, and you can explain your cwnd graph." },
+
+{ id:"net-discovery", phase:"p7", title:"LAN discovery and NAT traversal", langs:["C","Go"], time:"3 weekends",
+  summary:"Let stash nodes find each other with no configuration and connect across home routers. Write an mDNS / DNS-SD responder in C, building the DNS wire format by hand. Then write a small Go rendezvous server for public-address discovery (STUN-style), UDP hole punching, and a relay fallback when punching fails.",
+  learn:["DNS message format, name compression, record types (A, AAAA, SRV, TXT, PTR)","Multicast sockets on IPv4 and IPv6","How NAT types behave, and why hole punching works (and when it does not)","Reflexive address discovery (STUN-style) and relaying (TURN-style)","Writing and fuzzing a safe parser for hostile packets in C"],
+  scope:["stash nodes advertise _stash._tcp on the LAN and discover peers automatically","Rendezvous server tells each peer the other's public address","UDP hole punching between the laptop and home PC on different networks","Relay fallback with a bandwidth cap"],
+  deliverables:[
+    {h:"M1: DNS by hand (C)", items:["DNS message parser and builder with name compression, with tests","Parser fuzzed for an hour with no crash","Answers dig queries correctly"]},
+    {h:"M2: mDNS / DNS-SD (C)", items:["Responder advertises _stash._tcp with SRV and TXT records","Browser lists every stash node on the LAN","Visible in avahi-browse or dns-sd"]},
+    {h:"M3: Traversal (Go)", items:["Rendezvous server with authenticated registration","Hole punching works between two different networks (for example home and a phone hotspot)","Relay used automatically when punching fails","stash-sync connects to discovered peers"]}
+  ],
+  stretch:["IPv6-first path selection","ICE-style candidate gathering and prioritization","WebRTC data channels so the web UI can reach a peer directly"],
+  done:"A new laptop finds your stash on the LAN with zero config, and syncs from a café through your rendezvous server." },
+
+{ id:"load-balancer", phase:"p7", title:"Event-driven load balancer with io_uring", langs:["C++"], time:"3 to 4 weekends",
+  summary:"A layer 4 and layer 7 load balancer in front of the stash cluster. It health-checks nodes, routes RESP and HTTP requests to the right shard leader, drains connections during deploys, and is built on io_uring with C++20 coroutines. The Redis clone was the warm-up for this long-running, high-throughput C++ program.",
+  learn:["io_uring submission and completion queues (liburing)","C++20 coroutines as an async model on top of io_uring","Zero-copy proxying (splice), connection pooling, keepalive","Balancing algorithms: round robin, least connections, power of two choices, consistent hashing","Health checks, outlier ejection, graceful drain","Benchmarking with wrk and redis-benchmark; flame graphs with perf"],
+  scope:["L4 TCP proxy, plus an L7 mode that understands RESP and HTTP/1.1","Routes STASH commands to shard leaders using the cluster's shard map","Active and passive health checks","Hot config reload and zero-downtime restart (socket handoff)"],
+  deliverables:[
+    {h:"M1: L4 proxy", items:["io_uring accept, read and write loop with coroutines","Round robin and least connections","Benchmark against HAProxy in TCP mode; record the gap"]},
+    {h:"M2: L7 routing", items:["RESP and HTTP/1.1 parsing in the proxy","Shard-aware routing with leader hints from the cluster","Connection pooling to backends"]},
+    {h:"M3: Resilience", items:["Health checks and outlier ejection","Graceful drain and hot reload without dropping a connection","Socket-handoff restart during a load test with zero errors"]},
+    {h:"M4: Profile", items:["perf flame graph; fix the top hotspot","Clean under ASan, UBSan and TSan","Write-up: epoll (Redis clone) vs io_uring, measured"]}
+  ],
+  stretch:["TLS termination with kTLS","HTTP/2","Per-client token-bucket rate limiting"],
+  done:"The cluster stays behind your balancer through a rolling restart under load with zero failed requests, and you can show the flame graph that made it faster." },
+
+{ id:"ebpf-observe", phase:"p7", title:"eBPF network observer and firewall", langs:["C","Rust"], time:"2 to 3 weekends",
+  summary:"Write eBPF programs in C that run inside the Linux kernel, and a Rust user-space tool (aya) that loads them. Measure per-connection latency and RESP commands per client without changing the daemon, then add an XDP filter that drops abusive traffic before it reaches the network stack.",
+  learn:["eBPF programs, the verifier, maps and ring buffers","kprobes, tracepoints and socket filters","XDP packet processing and why it is fast","CO-RE and BTF for portable programs","Rust user space with aya, streaming events to a terminal view"],
+  scope:["Per-connection TCP RTT and retransmits for the stash ports","RESP command counts per client IP, parsed in the kernel","XDP per-IP rate limiter whose limits the tool updates live","Live top-style terminal view"],
+  deliverables:[
+    {h:"M1: First probes", items:["aya project builds and loads a tracepoint program","TCP connect and close events streamed to user space through a ring buffer"]},
+    {h:"M2: Measure", items:["RTT and retransmit histograms per connection","RESP command counts per client from a socket filter","Terminal view of top clients and slowest connections"]},
+    {h:"M3: Protect", items:["XDP per-IP rate limiter with limits updated from user space","Benchmark: packets per second dropped at XDP vs iptables","Programs pass the verifier on two kernel versions (CO-RE)"]}
+  ],
+  stretch:["Trace Raft message latency between cluster nodes","Export to Prometheus","Rewrite the kernel side in Rust with aya-ebpf and compare"],
+  done:"You can watch every slow connection to the cluster live without touching its code, and a flood from one IP is dropped at XDP while other clients are unaffected." },
+
+/* ---------------- PHASE 8 ---------------- */
+{ id:"tack-interp", phase:"p8", title:"Tack: design the language and a tree-walking interpreter", langs:["Go"], time:"4 to 6 weekends",
+  summary:"Tack is a small scripting language for automating stash, with rules like 'when a note tagged law is added, tag it review and make a flashcard'. Write the spec first, then a tree-walking interpreter in Go with a REPL. The interpreter is the reference implementation: what it does defines what the language means.",
+  learn:["Language design: syntax, scoping, values, errors, a written spec","Lexing and Pratt (precedence-climbing) parsing","AST design and a tree-walking evaluator","Closures, environments and first-class functions","A static resolver pass, and good runtime error messages","Exposing host functions (stash queries) to scripts safely"],
+  scope:["Values: numbers, strings, bools, nil, lists, maps, functions","let, if/else, while, for-in, functions, closures, return","Built-ins and a stash module: find, add, tag, now","Event hooks: on add(item) { ... }","REPL and script runner, with step and memory limits"],
+  deliverables:[
+    {h:"M1: Spec and lexer", items:["Short spec: grammar in EBNF, values, scoping rules, error behaviour","Lexer with line and column positions","Golden tests: source in, tokens out"]},
+    {h:"M2: Parser", items:["Pratt parser with correct precedence and associativity","Statements, blocks and functions","Parse errors with a caret under the problem; recovers to report several errors at once"]},
+    {h:"M3: Evaluator", items:["Tree-walking evaluator for every expression and statement","Closures that capture correctly (the classic counter test)","Resolver pass that catches undefined variables before running","Runtime errors with a stack trace of Tack functions"]},
+    {h:"M4: Make it useful", items:["REPL with history and multi-line input","stash module wired to the daemon (through libstash or RESP)","Daemon runs Tack hooks on add, with step and time limits","20 example scripts that double as the shared test suite"]}
+  ],
+  stretch:["Records with methods","Pattern matching on maps and lists","A bytecode VM in Go and a comparison with tree walking"],
+  done:"Rules you wrote in Tack run in the daemon every day, and every broken example script produces a readable error." },
+
+{ id:"tack-compiler", phase:"p8", title:"Tack compiler: type checker and WebAssembly backend", langs:["Rust","WASM"], time:"5 to 7 weekends",
+  summary:"Compile Tack ahead of time to WebAssembly, so scripts run fast and sandboxed in the daemon's plugin host and in the browser. Add a type checker with inference, lower the AST to an intermediate representation, optimize it, and emit the .wasm binary yourself. The interpreter's test suite tells you whether the compiler is right.",
+  learn:["Type checking with Hindley-Milner style inference (unification) and clear type errors","Lowering an AST to an IR with basic blocks","Classic optimizations: constant folding, dead code elimination, inlining small functions","The WebAssembly binary format, stack machine and linear memory","Runtime support in linear memory: allocator, strings, lists, a simple garbage collector","Differential testing against a reference implementation"],
+  scope:["Same language as the interpreter, plus optional type annotations","tackc script.tack -o script.wasm","Output runs in the daemon's plugin host and in the browser","Every example program prints the same output as the interpreter"],
+  deliverables:[
+    {h:"M1: Front end in Rust", items:["Lexer and parser in Rust, passing the same golden tests as the Go version","Type checker with inference; errors point at both conflicting places"]},
+    {h:"M2: IR and code generation", items:["Lowering to an IR with basic blocks","Hand-written WASM binary emitter (no wat2wasm): functions, locals, control flow","Numbers, booleans and functions compile and run in wasmtime"]},
+    {h:"M3: Runtime", items:["Strings, lists and maps in linear memory with a bump allocator","Mark-and-sweep GC with a stress test","Host imports for the stash module that match the plugin host interface"]},
+    {h:"M4: Prove it", items:["Differential test: every example script gives identical output in the interpreter and compiler","Constant folding and dead code elimination, measured on the examples","Benchmark compiled vs interpreted on three programs and write up the speedup"]}
+  ],
+  stretch:["Native backend with Cranelift","Closures without heap allocation where escape analysis allows","Use the WASM GC proposal instead of your own collector"],
+  done:"tackc compiles every example to WASM that matches the interpreter's output exactly, runs it as a stash plugin, and is clearly faster." },
+
+{ id:"tack-tooling", phase:"p8", title:"Tack tooling: language server, formatter and playground", langs:["TypeScript","WASM"], time:"2 to 3 weekends",
+  summary:"A language is only pleasant to use with good tools. Write a Language Server Protocol server and VS Code extension in TypeScript (diagnostics, go to definition, hover types, completion), a formatter, and a browser playground that runs the compiler, built to WASM, entirely client-side.",
+  learn:["The Language Server Protocol: JSON-RPC, documents, incremental sync","Error-tolerant parsing so tools work on half-written code","Pretty-printing algorithms (Wadler-style) for a formatter","Packaging a VS Code extension with a TextMate grammar","Shipping a Rust compiler to the browser as WASM"],
+  scope:["Highlighting, diagnostics, hover, go to definition, completion for the stash module","tack fmt with stable output","Playground page: edit, compile, run, and see output and types"],
+  deliverables:[
+    {h:"M1: Editor basics", items:["TextMate grammar and a packaged VS Code extension","LSP server publishes diagnostics from the parser and type checker"]},
+    {h:"M2: Smarts", items:["Hover shows inferred types","Go to definition and find references","Completion for variables in scope and the stash module"]},
+    {h:"M3: Formatter and playground", items:["Formatter with an idempotence test (formatting twice changes nothing)","Playground runs the compiler as WASM in a Web Worker","Share a script by URL"]}
+  ],
+  stretch:["Rename symbol","Debugger for the interpreter through the Debug Adapter Protocol","Neovim setup for the same server"],
+  done:"You write Tack in VS Code with errors and types as you type, and anyone can try it in the playground without installing anything." }
+
 
 ];
+
+/* ---------- references: books, official docs, specs and papers only ---------- */
+const B = "Book", D = "Docs", S = "Spec", P = "Paper";
+const REFS = {
+  "redis-clone": [
+    [B, "The Linux Programming Interface", "Michael Kerrisk", "https://man7.org/tlpi/"],
+    [B, "Unix Network Programming, Volume 1", "W. Richard Stevens, Bill Fenner, Andrew M. Rudoff"],
+    [B, "Beej's Guide to Network Programming", "Brian Hall", "https://beej.us/guide/bgnet/"],
+    [B, "Effective Modern C++", "Scott Meyers"],
+    [S, "RESP protocol specification", "Redis", "https://redis.io/docs/latest/develop/reference/protocol-spec/"],
+    [D, "Redis command reference", "Redis", "https://redis.io/docs/latest/commands/"],
+    [D, "Redis persistence (AOF and RDB)", "Redis", "https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"],
+    [D, "epoll(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/epoll.7.html"],
+    [D, "cppreference.com", "", "https://en.cppreference.com/"]
+  ],
+  "c-warm": [
+    [B, "The C Programming Language, 2nd ed.", "Brian W. Kernighan, Dennis M. Ritchie"],
+    [B, "Modern C", "Jens Gustedt"],
+    [D, "nftw(3) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man3/nftw.3.html"],
+    [D, "stat(2) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man2/stat.2.html"],
+    [D, "mmap(2) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man2/mmap.2.html"],
+    [D, "Valgrind user manual", "Valgrind", "https://valgrind.org/docs/manual/manual.html"],
+    [D, "AddressSanitizer", "Clang", "https://clang.llvm.org/docs/AddressSanitizer.html"],
+    [S, "FIPS 180-4: Secure Hash Standard", "NIST", "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf"]
+  ],
+  "stash-core": [
+    [B, "The Rust Programming Language", "Steve Klabnik, Carol Nichols", "https://doc.rust-lang.org/book/"],
+    [B, "Rust for Rustaceans", "Jon Gjengset"],
+    [B, "Database Internals", "Alex Petrov"],
+    [B, "Designing Data-Intensive Applications (ch. 3: storage and retrieval)", "Martin Kleppmann"],
+    [B, "Introduction to Information Retrieval", "Manning, Raghavan, Schütze", "https://nlp.stanford.edu/IR-book/"],
+    [P, "The Probabilistic Relevance Framework: BM25 and Beyond", "Robertson, Zaragoza (2009)"],
+    [P, "Bitcask: A Log-Structured Hash Table for Fast Key/Value Data", "Sheehy, Smith (2010)"],
+    [D, "Tokio API documentation", "Tokio", "https://docs.rs/tokio/latest/tokio/"],
+    [D, "tracing crate documentation", "Tokio", "https://docs.rs/tracing/latest/tracing/"],
+    [D, "Rust API Guidelines", "Rust project", "https://rust-lang.github.io/api-guidelines/"]
+  ],
+  "stash-fsck": [
+    [B, "Effective C, 2nd ed.", "Robert C. Seacord"],
+    [D, "SEI CERT C Coding Standard", "Carnegie Mellon SEI", "https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard"],
+    [S, "Catalogue of parametrised CRC algorithms", "Greg Cook", "https://reveng.sourceforge.io/crc-catalogue/"],
+    [P, "A Painless Guide to CRC Error Detection Algorithms", "Ross N. Williams (1993)"],
+    [D, "libFuzzer", "LLVM", "https://llvm.org/docs/LibFuzzer.html"],
+    [D, "AFL++ documentation", "AFL++", "https://github.com/AFLplusplus/AFLplusplus/tree/stable/docs"],
+    [D, "UndefinedBehaviorSanitizer", "Clang", "https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"]
+  ],
+  "zig-cli": [
+    [D, "Zig language reference", "Zig", "https://ziglang.org/documentation/master/"],
+    [D, "Zig standard library reference", "Zig", "https://ziglang.org/documentation/master/std/"],
+    [D, "Zig build system", "Zig", "https://ziglang.org/learn/build-system/"],
+    [S, "RESP protocol specification", "Redis", "https://redis.io/docs/latest/develop/reference/protocol-spec/"]
+  ],
+  "web-ui": [
+    [D, "MDN Web Docs", "Mozilla", "https://developer.mozilla.org/"],
+    [D, "TypeScript Handbook", "Microsoft", "https://www.typescriptlang.org/docs/handbook/intro.html"],
+    [D, "Chrome extensions (Manifest V3)", "Google", "https://developer.chrome.com/docs/extensions/"],
+    [D, "Service Worker API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"],
+    [S, "Web Content Accessibility Guidelines (WCAG) 2.2", "W3C", "https://www.w3.org/TR/WCAG22/"],
+    [D, "ARIA Authoring Practices Guide", "W3C WAI", "https://www.w3.org/WAI/ARIA/apg/"],
+    [D, "Playwright documentation", "Microsoft", "https://playwright.dev/docs/intro"]
+  ],
+  "wasm-search": [
+    [S, "WebAssembly core specification", "W3C", "https://webassembly.github.io/spec/core/"],
+    [D, "WebAssembly on MDN", "Mozilla", "https://developer.mozilla.org/en-US/docs/WebAssembly"],
+    [D, "wasm-bindgen guide", "Rust and WebAssembly WG", "https://rustwasm.github.io/docs/wasm-bindgen/"],
+    [D, "Emscripten documentation", "Emscripten", "https://emscripten.org/docs/"],
+    [D, "Binaryen (wasm-opt)", "WebAssembly", "https://github.com/WebAssembly/binaryen"],
+    [D, "Web Workers API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"]
+  ],
+  "php-import": [
+    [D, "PHP manual", "PHP", "https://www.php.net/manual/en/"],
+    [D, "PDO", "PHP manual", "https://www.php.net/manual/en/book.pdo.php"],
+    [D, "PHP: The Right Way", "", "https://phptherightway.com/"],
+    [S, "PHP Standards Recommendations (PSR)", "PHP-FIG", "https://www.php-fig.org/psr/"],
+    [D, "OWASP Top 10", "OWASP", "https://owasp.org/www-project-top-ten/"],
+    [D, "OWASP Cheat Sheet Series", "OWASP", "https://cheatsheetseries.owasp.org/"],
+    [S, "RFC 2104: HMAC", "IETF", "https://www.rfc-editor.org/rfc/rfc2104"],
+    [D, "PHPStan user guide", "PHPStan", "https://phpstan.org/user-guide/getting-started"]
+  ],
+  "py-tools": [
+    [B, "Fluent Python, 2nd ed.", "Luciano Ramalho"],
+    [D, "Python documentation", "Python", "https://docs.python.org/3/"],
+    [D, "Python Packaging User Guide", "PyPA", "https://packaging.python.org/"],
+    [D, "pytest documentation", "pytest", "https://docs.pytest.org/"],
+    [S, "SuperMemo SM-2 algorithm", "Piotr Woźniak", "https://super-memory.com/english/ol/sm2.htm"],
+    [D, "systemd.timer(5)", "systemd", "https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html"]
+  ],
+  "perl-text": [
+    [B, "Programming Perl, 4th ed.", "Tom Christiansen, brian d foy, Larry Wall, Jon Orwant"],
+    [B, "Mastering Regular Expressions, 3rd ed.", "Jeffrey E. F. Friedl"],
+    [B, "Modern Perl", "chromatic", "https://modernperlbooks.com/"],
+    [D, "perlre", "perldoc", "https://perldoc.perl.org/perlre"],
+    [D, "perlrun (command-line switches)", "perldoc", "https://perldoc.perl.org/perlrun"],
+    [D, "Test::More", "MetaCPAN", "https://metacpan.org/pod/Test::More"]
+  ],
+  "stash-sync": [
+    [B, "The Go Programming Language", "Alan Donovan, Brian Kernighan"],
+    [B, "Concurrency in Go", "Katherine Cox-Buday"],
+    [B, "Designing Data-Intensive Applications (ch. 5: replication)", "Martin Kleppmann"],
+    [S, "The Go Programming Language Specification", "Go", "https://go.dev/ref/spec"],
+    [D, "Effective Go", "Go", "https://go.dev/doc/effective_go"],
+    [D, "crypto/tls package", "Go", "https://pkg.go.dev/crypto/tls"],
+    [P, "Time, Clocks, and the Ordering of Events in a Distributed System", "Leslie Lamport (1978)"],
+    [P, "Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases", "Kulkarni et al. (2014)"]
+  ],
+  "stash-tui": [
+    [B, "A Tour of C++, 3rd ed.", "Bjarne Stroustrup"],
+    [D, "C++ Core Guidelines", "Stroustrup, Sutter", "https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines"],
+    [D, "termios(3) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man3/termios.3.html"],
+    [S, "XTerm control sequences", "Thomas Dickey", "https://invisible-island.net/xterm/ctlseqs/ctlseqs.html"],
+    [S, "UAX #11: East Asian Width", "Unicode", "https://www.unicode.org/reports/tr11/"],
+    [D, "CMake reference documentation", "Kitware", "https://cmake.org/cmake/help/latest/"],
+    [D, "clang-tidy", "LLVM", "https://clang.llvm.org/extra/clang-tidy/"]
+  ],
+  "uptime-monitor": [
+    [B, "Asynchronous Programming in Rust", "Rust project", "https://rust-lang.github.io/async-book/"],
+    [B, "Site Reliability Engineering: Monitoring Distributed Systems", "Google", "https://sre.google/sre-book/monitoring-distributed-systems/"],
+    [D, "reqwest documentation", "", "https://docs.rs/reqwest/latest/reqwest/"],
+    [D, "Serde", "", "https://serde.rs/"],
+    [S, "Prometheus exposition formats", "Prometheus", "https://prometheus.io/docs/instrumenting/exposition_formats/"]
+  ],
+  "zig-timer": [
+    [D, "Zig language reference", "Zig", "https://ziglang.org/documentation/master/"],
+    [D, "Zig standard library reference", "Zig", "https://ziglang.org/documentation/master/std/"],
+    [D, "signal(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/signal.7.html"],
+    [D, "clock_gettime(2) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man2/clock_gettime.2.html"]
+  ],
+  "libstash": [
+    [B, "C Interfaces and Implementations", "David R. Hanson"],
+    [P, "How To Write Shared Libraries", "Ulrich Drepper", "https://www.akkadia.org/drepper/dsohowto.pdf"],
+    [D, "ctypes", "Python", "https://docs.python.org/3/library/ctypes.html"],
+    [D, "CFFI documentation", "", "https://cffi.readthedocs.io/"],
+    [D, "Zig language reference: C interop", "Zig", "https://ziglang.org/documentation/master/#C"],
+    [D, "cgo", "Go", "https://pkg.go.dev/cmd/cgo"],
+    [D, "FFI::Platypus", "MetaCPAN", "https://metacpan.org/pod/FFI::Platypus"],
+    [D, "Foreign Function Interface", "PHP manual", "https://www.php.net/manual/en/book.ffi.php"]
+  ],
+  "stash-ql": [
+    [B, "Crafting Interpreters (part I: scanning and parsing)", "Robert Nystrom", "https://craftinginterpreters.com/"],
+    [P, "Top Down Operator Precedence", "Vaughan Pratt (1973)"],
+    [D, "The Rustonomicon: FFI", "Rust project", "https://doc.rust-lang.org/nomicon/ffi.html"],
+    [D, "Cargo build scripts", "Rust project", "https://doc.rust-lang.org/cargo/reference/build-scripts.html"],
+    [D, "Zig language reference: exporting a C library", "Zig", "https://ziglang.org/documentation/master/#Exporting-a-C-Library"],
+    [D, "Proptest book", "", "https://proptest-rs.github.io/proptest/"]
+  ],
+  "wasm-plugins": [
+    [D, "Wasmtime documentation", "Bytecode Alliance", "https://docs.wasmtime.dev/"],
+    [D, "The WebAssembly Component Model", "Bytecode Alliance", "https://component-model.bytecodealliance.org/"],
+    [S, "WASI", "WebAssembly CG", "https://wasi.dev/"],
+    [S, "WebAssembly core specification", "W3C", "https://webassembly.github.io/spec/core/"],
+    [D, "TinyGo documentation", "TinyGo", "https://tinygo.org/docs/"]
+  ],
+  "live-updates": [
+    [S, "Server-sent events (HTML Living Standard)", "WHATWG", "https://html.spec.whatwg.org/multipage/server-sent-events.html"],
+    [S, "RESP3 specification", "Redis", "https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md"],
+    [D, "tokio::sync::broadcast", "Tokio", "https://docs.rs/tokio/latest/tokio/sync/broadcast/"],
+    [D, "EventSource", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/EventSource"],
+    [D, "net/http package", "Go", "https://pkg.go.dev/net/http"]
+  ],
+  "conformance": [
+    [P, "Differential Testing for Software", "William M. McKeeman (1998)"],
+    [S, "JSON Schema specification", "", "https://json-schema.org/specification"],
+    [S, "Test Anything Protocol, version 14", "", "https://testanything.org/tap-version-14-specification.html"],
+    [D, "GitHub Actions documentation", "GitHub", "https://docs.github.com/en/actions"],
+    [D, "pytest documentation", "pytest", "https://docs.pytest.org/"]
+  ],
+  "maelstrom": [
+    [B, "Designing Data-Intensive Applications (ch. 5, 8, 9)", "Martin Kleppmann"],
+    [B, "Distributed Systems, 4th ed.", "Maarten van Steen, Andrew S. Tanenbaum", "https://www.distributed-systems.net/"],
+    [D, "Maelstrom documentation", "Jepsen", "https://github.com/jepsen-io/maelstrom/tree/main/doc"],
+    [S, "Gossip Glomers challenge specifications", "Fly.io", "https://fly.io/dist-sys/"],
+    [D, "Consistency models", "Jepsen", "https://jepsen.io/consistency"],
+    [P, "A comprehensive study of Convergent and Commutative Replicated Data Types", "Shapiro et al. (2011)"],
+    [P, "Linearizability: A Correctness Condition for Concurrent Objects", "Herlihy, Wing (1990)"]
+  ],
+  "stash-raft": [
+    [P, "In Search of an Understandable Consensus Algorithm (extended version)", "Ongaro, Ousterhout (2014)", "https://raft.github.io/raft.pdf"],
+    [P, "Consensus: Bridging Theory and Practice (PhD thesis)", "Diego Ongaro (2014)"],
+    [S, "Raft TLA+ specification", "Diego Ongaro", "https://github.com/ongardie/raft.tla"],
+    [D, "The Raft consensus algorithm (site)", "", "https://raft.github.io/"],
+    [P, "Paxos Made Simple", "Leslie Lamport (2001)"],
+    [P, "FoundationDB: A Distributed Unbundled Transactional Key Value Store", "Zhou et al. (SIGMOD 2021)"]
+  ],
+  "stash-cluster": [
+    [B, "Designing Data-Intensive Applications (ch. 6: partitioning)", "Martin Kleppmann"],
+    [P, "SWIM: Scalable Weakly-consistent Infection-style Process Group Membership Protocol", "Das, Gupta, Motivala (2002)"],
+    [P, "Consistent Hashing and Random Trees", "Karger et al. (1997)"],
+    [P, "Dynamo: Amazon's Highly Available Key-value Store", "DeCandia et al. (2007)"],
+    [P, "Spanner: Google's Globally-Distributed Database", "Corbett et al. (2012)"],
+    [P, "CockroachDB: The Resilient Geo-Distributed SQL Database", "Taft et al. (SIGMOD 2020)"]
+  ],
+  "cluster-lab": [
+    [B, "Site Reliability Engineering", "Google", "https://sre.google/sre-book/table-of-contents/"],
+    [D, "OpenTelemetry documentation", "CNCF", "https://opentelemetry.io/docs/"],
+    [D, "Prometheus documentation", "Prometheus", "https://prometheus.io/docs/introduction/overview/"],
+    [D, "Grafana documentation", "Grafana Labs", "https://grafana.com/docs/grafana/latest/"],
+    [D, "Ansible documentation", "Red Hat", "https://docs.ansible.com/"],
+    [D, "tc-netem(8) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man8/tc-netem.8.html"],
+    [P, "Testing and Verifying Concurrent Objects", "Wing, Gong (1993)"],
+    [P, "Testing for Linearizability", "Gavin Lowe (2017)"],
+    [D, "Jepsen analyses", "Jepsen", "https://jepsen.io/analyses"],
+    [D, "Principles of Chaos Engineering", "", "https://principlesofchaos.org/"]
+  ],
+  "reliable-udp": [
+    [B, "TCP/IP Illustrated, Volume 1, 2nd ed.", "Kevin R. Fall, W. Richard Stevens"],
+    [B, "Computer Networks: A Systems Approach", "Larry Peterson, Bruce Davie", "https://book.systemsapproach.org/"],
+    [S, "RFC 9293: Transmission Control Protocol", "IETF", "https://www.rfc-editor.org/rfc/rfc9293"],
+    [S, "RFC 6298: Computing TCP's Retransmission Timer", "IETF", "https://www.rfc-editor.org/rfc/rfc6298"],
+    [S, "RFC 5681: TCP Congestion Control", "IETF", "https://www.rfc-editor.org/rfc/rfc5681"],
+    [S, "RFC 2018: TCP Selective Acknowledgment Options", "IETF", "https://www.rfc-editor.org/rfc/rfc2018"],
+    [S, "RFC 9438: CUBIC for Fast and Long-Distance Networks", "IETF", "https://www.rfc-editor.org/rfc/rfc9438"],
+    [P, "Congestion Avoidance and Control", "Van Jacobson (1988)"],
+    [P, "BBR: Congestion-Based Congestion Control", "Cardwell et al. (ACM Queue, 2016)"],
+    [D, "Wireshark Lua API reference", "Wireshark", "https://www.wireshark.org/docs/wsdg_html_chunked/wsluarm.html"]
+  ],
+  "net-discovery": [
+    [S, "RFC 1035: Domain Names, Implementation and Specification", "IETF", "https://www.rfc-editor.org/rfc/rfc1035"],
+    [S, "RFC 6762: Multicast DNS", "IETF", "https://www.rfc-editor.org/rfc/rfc6762"],
+    [S, "RFC 6763: DNS-Based Service Discovery", "IETF", "https://www.rfc-editor.org/rfc/rfc6763"],
+    [S, "RFC 2782: DNS SRV records", "IETF", "https://www.rfc-editor.org/rfc/rfc2782"],
+    [S, "RFC 8489: STUN", "IETF", "https://www.rfc-editor.org/rfc/rfc8489"],
+    [S, "RFC 8656: TURN", "IETF", "https://www.rfc-editor.org/rfc/rfc8656"],
+    [S, "RFC 8445: ICE", "IETF", "https://www.rfc-editor.org/rfc/rfc8445"],
+    [S, "RFC 4787: NAT Behavioral Requirements for Unicast UDP", "IETF", "https://www.rfc-editor.org/rfc/rfc4787"],
+    [P, "Peer-to-Peer Communication Across Network Address Translators", "Ford, Srisuresh, Kegel (USENIX 2005)", "https://bford.info/pub/net/p2pnat/"],
+    [D, "ip(7) man page (multicast options)", "Linux man-pages", "https://man7.org/linux/man-pages/man7/ip.7.html"]
+  ],
+  "load-balancer": [
+    [B, "Systems Performance, 2nd ed.", "Brendan Gregg"],
+    [P, "Efficient IO with io_uring", "Jens Axboe", "https://kernel.dk/io_uring.pdf"],
+    [D, "io_uring(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/io_uring.7.html"],
+    [D, "Coroutines (C++20)", "cppreference", "https://en.cppreference.com/w/cpp/language/coroutines"],
+    [S, "RFC 9112: HTTP/1.1", "IETF", "https://www.rfc-editor.org/rfc/rfc9112"],
+    [P, "The Power of Two Choices in Randomized Load Balancing", "Michael Mitzenmacher (2001)"],
+    [P, "Maglev: A Fast and Reliable Software Network Load Balancer", "Eisenbud et al. (NSDI 2016)"],
+    [D, "Flame graphs", "Brendan Gregg", "https://www.brendangregg.com/flamegraphs.html"],
+    [D, "HAProxy configuration manual", "HAProxy", "https://docs.haproxy.org/"]
+  ],
+  "ebpf-observe": [
+    [B, "Learning eBPF", "Liz Rice"],
+    [B, "BPF Performance Tools", "Brendan Gregg"],
+    [D, "BPF documentation", "Linux kernel", "https://docs.kernel.org/bpf/"],
+    [D, "What is eBPF?", "ebpf.io", "https://ebpf.io/what-is-ebpf/"],
+    [D, "Aya book", "Aya", "https://aya-rs.dev/book/"],
+    [D, "bpf-helpers(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/bpf-helpers.7.html"],
+    [P, "The eXpress Data Path", "Høiland-Jørgensen et al. (CoNEXT 2018)"]
+  ],
+  "tack-interp": [
+    [B, "Crafting Interpreters", "Robert Nystrom", "https://craftinginterpreters.com/"],
+    [B, "Programming Language Pragmatics, 4th ed.", "Michael L. Scott"],
+    [B, "Essentials of Programming Languages, 3rd ed.", "Daniel P. Friedman, Mitchell Wand"],
+    [B, "Structure and Interpretation of Computer Programs (ch. 4)", "Abelson, Sussman"],
+    [P, "Top Down Operator Precedence", "Vaughan Pratt (1973)"],
+    [S, "The Go Programming Language Specification", "Go", "https://go.dev/ref/spec"]
+  ],
+  "tack-compiler": [
+    [B, "Engineering a Compiler, 3rd ed.", "Keith D. Cooper, Linda Torczon"],
+    [B, "Types and Programming Languages", "Benjamin C. Pierce"],
+    [B, "Modern Compiler Implementation in ML", "Andrew W. Appel"],
+    [B, "The Garbage Collection Handbook, 2nd ed.", "Jones, Hosking, Moss"],
+    [P, "Principal type-schemes for functional programs", "Damas, Milner (1982)"],
+    [S, "WebAssembly binary format", "W3C", "https://webassembly.github.io/spec/core/binary/index.html"],
+    [D, "Cranelift", "Bytecode Alliance", "https://cranelift.dev/"]
+  ],
+  "tack-tooling": [
+    [S, "Language Server Protocol 3.17", "Microsoft", "https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/"],
+    [S, "JSON-RPC 2.0", "", "https://www.jsonrpc.org/specification"],
+    [S, "Debug Adapter Protocol", "Microsoft", "https://microsoft.github.io/debug-adapter-protocol/"],
+    [D, "VS Code Extension API", "Microsoft", "https://code.visualstudio.com/api"],
+    [D, "TextMate language grammars", "MacroMates", "https://macromates.com/manual/en/language_grammars"],
+    [P, "A prettier printer", "Philip Wadler", "https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf"]
+  ]
+};
 
 /* ---------- rendering ---------- */
 const KEY = "systems-roadmap-v4";
@@ -425,7 +855,11 @@ function render(){
           return `<label class="chk ${state[id]?'done':''}"><input type="checkbox" data-id="${id}" ${state[id]?'checked':''}><span>${esc(it)}</span></label>`;
         }).join("") + `</div>`;
       });
-      html += `<h3>Stretch goals</h3><ul class="plain">${p.stretch.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      html += `<h3>Stretch goals</h3><ul class="plain">${p.stretch.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+      const refs = REFS[p.id] || [];
+      if(refs.length) html += `<h3>References</h3><ul class="refs">${refs.map(([k, t, a, u]) =>
+        `<li><span class="rk rk-${k.toLowerCase()}">${k}</span><span>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : `<i>${esc(t)}</i>`}${a ? ` <span class="ra">· ${esc(a)}</span>` : ""}</span></li>`).join("")}</ul>`;
+      html += `
         <div class="done-box"><b>Done when:</b> ${esc(p.done)}</div></div>`;
       d.innerHTML = html;
       sec.appendChild(d);
@@ -511,13 +945,27 @@ const ARCH = {
       {id:"php-import", label:"Import + share", sub:"PHP · bookmarks, share links", project:"php-import"},
       {id:"py-tools", label:"Backup + flashcards", sub:"Python · export, SM-2 cards", project:"py-tools"},
       {id:"perl-text", label:"Cleanup scripts", sub:"Perl · migrate old notes", project:"perl-text"}]},
+    cluster: {title:"Distributed stash", cols:2, nodes:[
+      {id:"maelstrom", label:"Maelstrom lab", sub:"Go · gossip, CRDTs, partitions", project:"maelstrom"},
+      {id:"stash-raft", label:"Raft core", sub:"Rust · election, replication, snapshots", project:"stash-raft"},
+      {id:"cluster-lab", label:"Cluster lab", sub:"Python + Go · deploy, trace, break", project:"cluster-lab"},
+      {id:"stash-cluster", label:"Sharded cluster", sub:"Rust + Go · multi-Raft, SWIM gossip", project:"stash-cluster"}]},
+    network: {title:"Networking deep dive", cols:2, nodes:[
+      {id:"load-balancer", label:"Load balancer", sub:"C++ · io_uring, shard-aware", project:"load-balancer"},
+      {id:"ebpf-observe", label:"eBPF observer", sub:"C + Rust · XDP rate limiting", project:"ebpf-observe"},
+      {id:"reliable-udp", label:"Reliable UDP", sub:"Zig · your own TCP", project:"reliable-udp"},
+      {id:"net-discovery", label:"Discovery + NAT", sub:"C + Go · mDNS, hole punching", project:"net-discovery"}]},
+    language: {title:"Tack · your own language", cols:3, nodes:[
+      {id:"tack-interp", label:"Interpreter", sub:"Go · tree-walking, REPL", project:"tack-interp"},
+      {id:"tack-compiler", label:"Compiler", sub:"Rust · type checker, emits WASM", project:"tack-compiler"},
+      {id:"tack-tooling", label:"Tooling", sub:"TS · LSP, formatter, playground", project:"tack-tooling"}]},
     standalone: {title:"Standalone daily tools", cols:3, nodes:[
       {id:"c-warm", label:"Dupe finder", sub:"C · cleans up Downloads", project:"c-warm"},
       {id:"uptime-monitor", label:"Uptime monitor", sub:"Rust · checks and phone alerts", project:"uptime-monitor"},
       {id:"zig-timer", label:"Focus timer", sub:"Zig · pomodoro and time log", project:"zig-timer"}]}
   },
-  wide: [[["browser",.5],["gateway",.5]], [["foundation",.21],["daemon",.55],["integrity",.24]], [["clients",1]], [["standalone",1]]],
-  narrow: [[["browser",1]], [["gateway",1]], [["daemon",1]], [["foundation",.5],["integrity",.5]], [["clients",1]], [["standalone",1]]],
+  wide: [[["browser",.5],["gateway",.5]], [["foundation",.21],["daemon",.55],["integrity",.24]], [["cluster",.485],["network",.515]], [["clients",1]], [["language",.5],["standalone",.5]]],
+  narrow: [[["browser",1]], [["gateway",1]], [["daemon",1]], [["foundation",.5],["integrity",.5]], [["clients",1]], [["cluster",1]], [["network",1]], [["language",1]], [["standalone",1]]],
   edges: [
     {a:"web-ui", b:"daemon", label:"HTTP JSON"},
     {a:"wasm-search", b:"idx", label:"same BM25 core", dash:true, wideOnly:true},
@@ -525,8 +973,11 @@ const ARCH = {
     {a:"stash-sync", b:"peer", both:true},
     {a:"redis-clone", b:"daemon", dash:true},
     {a:"stash-fsck", b:"log", wideOnly:true},
-    {a:"clients", b:"daemon", label:"RESP / HTTP"},
-    {a:"conformance", b:"clients", label:"same test vectors", dash:true},
+    {a:"clients", b:"daemon", label:"RESP / HTTP", gap:["cluster","network"]},
+    {a:"daemon", b:"stash-raft", label:"replicates the log", wideOnly:true},
+    {a:"load-balancer", b:"daemon", label:"fronts the cluster", wideOnly:true},
+    {a:"maelstrom", b:"stash-raft", dash:true}, {a:"stash-raft", b:"stash-cluster"}, {a:"cluster-lab", b:"stash-cluster", dash:true},
+    {a:"tack-interp", b:"tack-compiler", dash:true}, {a:"tack-compiler", b:"tack-tooling"},
     {a:"net", b:"resp"}, {a:"resp", b:"router"}, {a:"router", b:"query", dir:"v"}, {a:"query", b:"idx"},
     {a:"router", b:"log"}, {a:"log", b:"watch"}
   ]
@@ -628,9 +1079,12 @@ function layoutArch(W){
     if(yo >= 24){ ay = by = Math.max(A.y, B.y) + yo / 2; } else { ay = cy(A); by = cy(B); }
     return { e, vert: false, ax: right ? A.x + A.w : A.x, ay, bx: right ? B.x : B.x + B.w, by, side: e.b + (right ? "l" : "r"), B };
   });
+  // an edge pinned to the gap between two groups it has to pass
+  if(!narrow) edges.forEach(g => { if(g.vert && g.e.gap){
+    const [l, r] = g.e.gap.map(id => rects[id]); g.ax = g.bx = (l.x + l.w + r.x) / 2; g.fixed = true; } });
   // spread arrows that would land on top of each other
   const bySide = {};
-  edges.forEach(g => (bySide[g.side] = bySide[g.side] || []).push(g));
+  edges.forEach(g => { if(!g.fixed) (bySide[g.side] = bySide[g.side] || []).push(g); });
   Object.values(bySide).forEach(list => {
     if(list.length < 2 || !list[0].vert) return;
     list.sort((p, q) => p.ax - q.ax);
@@ -639,7 +1093,7 @@ function layoutArch(W){
   });
   // same for edges leaving one box from the same side
   const bySrc = {};
-  edges.forEach(g => { if(g.vert) (bySrc[g.src] = bySrc[g.src] || []).push(g); });
+  edges.forEach(g => { if(g.vert && !g.fixed) (bySrc[g.src] = bySrc[g.src] || []).push(g); });
   Object.values(bySrc).forEach(list => {
     if(list.length < 2) return;
     list.sort((p, q) => p.bx - q.bx);
@@ -652,7 +1106,9 @@ function layoutArch(W){
   });
   edges.forEach(g => {
     if(g.vert){ const d = (g.by - g.ay) / 2; g.c = [g.ax, g.ay + d, g.bx, g.by - d];
-      g.lx = g.ax; g.ly = g.ay + Math.sign(g.by - g.ay) * ROWGAP / 2; }
+      // label sits in the gap just outside the source's group, not over its title
+      const S = rects[g.e.a].group ? rects[rects[g.e.a].group] : rects[g.e.a], down = g.by > g.ay;
+      g.lx = g.ax; g.ly = down ? S.y + S.h + ROWGAP / 2 : S.y - ROWGAP / 2; }
     else { const d = (g.bx - g.ax) / 2; g.c = [g.ax + d, g.ay, g.bx - d, g.by]; }
   });
   return { H: y - ROWGAP, rects, nodes, groups, edges };
@@ -713,7 +1169,13 @@ function drawArch(){
     if(g.e.both) arrowHead(ctx, g.ax, g.ay, g.c[0], g.c[1], col);
   }
 
-  // keep the core title readable where lines pass behind it
+  // keep group titles readable where lines pass behind them
+  ctx.font = F_TITLE;
+  for(const g of L.groups){ if(g.g.core) continue;
+    const t = g.g.title.toUpperCase(), tw = ctx.measureText(t).width;
+    ctx.fillStyle = C.bg; ctx.fillRect(g.x + 10, g.y + 8, tw + 8, 16);
+    ctx.fillStyle = C.chip; ctx.fillRect(g.x + 10, g.y + 8, tw + 8, 16);
+    ctx.fillStyle = C.muted; ctx.fillText(t, g.x + 14, g.y + 12); }
   const core = L.rects.daemon;
   ctx.fillStyle = C.soft; ctx.fillRect(core.x + 10, core.y + 7, core.titleW + 8, 20);
   ctx.font = F_CORE; ctx.fillStyle = C.fg; ctx.globalAlpha = matchesFilter("stash-core") ? 1 : .45;
