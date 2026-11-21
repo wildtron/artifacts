@@ -8,10 +8,12 @@
   :root{
     --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6a63; --card:#ffffff; --line:#e4e2da;
     --accent:#c4501b; --accent-soft:#fbe9df; --ok:#2f7d4f; --chip:#efede5;
+    --ph-p0:#7a5ea8; --ph-p1:#c4501b; --ph-p2:#2b6cb0; --ph-p3:#2f7d4f; --ph-p4:#a07a12; --ph-p5:#b03a72;
   }
   @media (prefers-color-scheme: dark){
     :root{ --bg:#161614; --fg:#ecebe5; --muted:#a09f96; --card:#1f1f1c; --line:#33322d;
-      --accent:#ee7a45; --accent-soft:#33241b; --ok:#5cc489; --chip:#2a2a26; }
+      --accent:#ee7a45; --accent-soft:#33241b; --ok:#5cc489; --chip:#2a2a26;
+      --ph-p0:#a98fd6; --ph-p1:#ee7a45; --ph-p2:#6aa6e8; --ph-p3:#5cc489; --ph-p4:#d9b24a; --ph-p5:#e07aaa; }
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -36,7 +38,14 @@
   th{background:var(--chip);font-weight:600}
   tr:last-child td{border-bottom:none}
   .arch{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
-  .arch pre{margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.35}
+  .arch canvas{display:block;width:100%}
+  .arch-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:.8rem;color:var(--muted)}
+  .arch-legend span{display:inline-flex;align-items:center;gap:6px}
+  .arch-legend .sw{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .arch-legend .ln{width:22px;height:0;border-top:2px solid var(--muted);display:inline-block}
+  .arch-legend .ln.dash{border-top-style:dashed}
+  .arch-cap{margin:8px 0 0;font-size:.85rem;color:var(--muted);min-height:1.3em}
+  details.proj{scroll-margin-top:120px}
   .phase{margin-top:36px}
   .phase>h2{display:flex;align-items:baseline;gap:10px}
   .phase .tag{font-size:.75rem;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 9px;border-radius:99px}
@@ -81,22 +90,11 @@
   </div>
 
   <h2>The shape of the system</h2>
-  <div class="arch"><pre>
- Browser (TS / HTML / CSS)  ──  Extension: clip page ──┐
-   │  offline search: WASM (C++ or Rust)               │ HTTP / RESP
-   ▼                                                   ▼
- ┌───────────────────────  stash daemon (Rust)  ───────────────────────┐
- │  network layer  →  RESP parser  →  command router                    │
- │  storage: append-only log + snapshots     index: inverted index      │
- └───────────────────────────────────────────────────────────────────────┘
-   ▲            ▲                 ▲                       ▲
- Zig CLI     PHP import        Python export/backup     Perl cleanup/migration
- (stash add/find)  endpoint     + flashcards             scripts
-
- Standalone daily tools:  C dupe-finder · C++ terminal UI · Rust uptime monitor · Zig timer
- Integrity tool:          C stash-fsck (reads the daemon's log directly and verifies it)
- Sync + gateway:          Go agent (laptop <-> home PC replication, TLS and token auth in front of the daemon)
-  </pre></div>
+  <div class="arch">
+    <canvas id="archCanvas" role="img" aria-label="System diagram: browser, sync gateway, foundation, the stash daemon, integrity tool, clients and standalone tools, grouped by role"><ul id="archFallback"></ul></canvas>
+    <div class="arch-legend" id="archLegend"></div>
+    <p class="arch-cap" id="archCap">Hover a box to see its details, or click it to jump to that project.</p>
+  </div>
 
   <h2>Suggested pacing</h2>
   <p class="sub">Estimates assume about 6 to 8 focused hours a week alongside work and law school. One "weekend" is roughly one 4 to 6 hour block. They are guesses, so adjust as you learn how fast you move.</p>
@@ -108,6 +106,7 @@
       <tr><td>2</td><td>Clients and front end</td><td>Zig, TS/HTML/CSS, WASM</td><td>6 to 8 weekends</td></tr>
       <tr><td>3</td><td>Glue and scripting, plus sync</td><td>Go, PHP, Python, Perl</td><td>7 to 9 weekends</td></tr>
       <tr><td>4</td><td>Standalone daily tools</td><td>C++, Rust, Zig</td><td>5 to 7 weekends</td></tr>
+      <tr><td>5</td><td>Cross-language features: shared C library, Zig/Rust FFI, WASM plugins, live updates, conformance tests</td><td>All of them</td><td>12 to 16 weekends</td></tr>
     </tbody>
   </table>
 
@@ -116,7 +115,7 @@
   <table>
     <thead><tr><th></th><th>C</th><th>C++</th></tr></thead>
     <tbody>
-      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier)</td><td>Redis clone, terminal UI for stash</td></tr>
+      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier), libstash (C ABI client library), the WASM secret-redactor plugin</td><td>Redis clone, terminal UI for stash, live updates in the TUI</td></tr>
       <tr><td><b>Kind of program</b></td><td>Run-once command-line tools that read files and exit</td><td>Long-running, event-driven programs that talk to a socket</td></tr>
       <tr><td><b>What it trains</b></td><td>Raw bytes, syscalls, manual memory, defensive parsing, fuzzing</td><td>RAII, move semantics, classes and templates, variants, event loops</td></tr>
       <tr><td><b>Tooling focus</b></td><td>Valgrind, ASan, libFuzzer or AFL++, Makefile</td><td>CMake, clang-tidy, sanitizers, unit-test framework</td></tr>
@@ -134,7 +133,8 @@ const PHASES = [
   {id:"p1", name:"Phase 1: Stash core", tag:"flagship"},
   {id:"p2", name:"Phase 2: Clients and front end", tag:"flagship"},
   {id:"p3", name:"Phase 3: Glue and scripting", tag:"flagship"},
-  {id:"p4", name:"Phase 4: Standalone daily tools", tag:"daily use"}
+  {id:"p4", name:"Phase 4: Standalone daily tools", tag:"daily use"},
+  {id:"p5", name:"Phase 5: Cross-language features", tag:"polyglot"}
 ];
 
 const PROJECTS = [
@@ -314,7 +314,70 @@ const PROJECTS = [
     {h:"M2: Log and report", items:["Session log file with a documented format","Weekly and monthly report grouped by task","Unit tests for parsing and aggregation"]}
   ],
   stretch:["Pause and resume","Sync sessions to stash","Compare minutes tracked vs your target weekly hours"],
-  done:"You track every work block for two weeks and the report matches reality."}
+  done:"You track every work block for two weeks and the report matches reality."},
+
+/* ---------------- PHASE 5 ---------------- */
+{ id:"libstash", phase:"p5", title:"libstash: one C library, five language bindings", langs:["C","Python","Zig","Go","Perl","PHP"], time:"3 to 4 weekends",
+  summary:"A small client library with a stable C ABI (connect, add, find, get, free) and thin bindings to it from Python, Zig, Go, Perl and PHP. Every other language can call a C ABI, so this is the fastest way to see how each one handles foreign memory, strings, errors and callbacks.",
+  learn:["Designing a stable C ABI: opaque handles, out-parameters, error codes, versioning","Who frees what: ownership rules across a language boundary","Python ctypes or cffi, Zig @cImport, Go cgo, Perl FFI::Platypus, PHP FFI","Shared vs static libraries, symbol visibility, soname","Callbacks from C into a garbage-collected language"],
+  scope:["libstash.so / stash.dll with a single public header","Functions: stash_connect, stash_add, stash_find (iterator), stash_get, stash_free, stash_last_error","Bindings that feel native in each language (exceptions in Python, error unions in Zig, error values in Go)","The same 10-line example program in every language"],
+  deliverables:[
+    {h:"M1: The C library", items:["Public header with opaque handle types and documented ownership for every pointer","No globals; two handles are safe to use from two threads","Builds as a shared and a static library; only public symbols exported","Unit tests, and clean under ASan and Valgrind"]},
+    {h:"M2: First two bindings", items:["Python binding (ctypes or cffi) with a context manager and exceptions","Zig binding via @cImport with a Zig-style wrapper (allocator in, error union out)","The example program prints identical output in both"]},
+    {h:"M3: Three more", items:["Go binding with cgo; Go never keeps a C pointer after a call returns","Perl binding with FFI::Platypus","PHP binding with the FFI extension","Write-up: what each language made easiest and hardest"]},
+    {h:"M4: Callbacks and safety", items:["stash_find_each(handle, query, callback, userdata) used from at least two languages","Reply parser fuzzed for an hour with no crashes","ABI check: add a function to the library and the old bindings keep working without a rebuild"]}
+  ],
+  stretch:["Generate bindings from the header automatically (cffi API mode, Zig translate-c)","Add a Rust binding and compare it with a native Rust client","Node.js binding with N-API"],
+  done:"The same example program works in all five languages against the live daemon, and you can explain who owns every byte the header hands out." },
+
+{ id:"stash-ql", phase:"p5", title:"Query language in Zig, linked into the Rust daemon", langs:["Zig","Rust"], time:"2 to 3 weekends",
+  summary:"A small filter language for search (tag:docker -tag:old after:2026-01 \"exact phrase\" OR kind:bookmark). Write the lexer and parser in Zig, export them through a C ABI, and call them from the Rust daemon over FFI. You learn to write a real parser and to make two modern systems languages share memory safely.",
+  learn:["Lexing and recursive-descent parsing, operator precedence","An AST stored in a flat array, which is easy to pass across FFI","Zig export fn, extern struct, and building a static library for another toolchain","Rust FFI: extern \"C\", unsafe blocks, a safe wrapper over raw pointers, linking from build.rs","Good error messages with spans (column number and a caret)"],
+  scope:["Terms, phrases, tag:, kind:, before:/after:, AND/OR/NOT, parentheses","Parser returns a flat AST or an error with its position","Daemon uses it for STASH.FIND; plain words keep working as before","The browser's WASM search can use the same parser"],
+  deliverables:[
+    {h:"M1: Parser in Zig", items:["Grammar written in EBNF in the README","Lexer and recursive-descent parser with zig test coverage for every rule","Errors report the column and what was expected"]},
+    {h:"M2: Across the boundary", items:["C ABI: parse(text, len) returns a handle, accessors read nodes, free releases it","Safe Rust wrapper with all unsafe code in one module","cargo build runs the Zig build and links the library"]},
+    {h:"M3: Wired in", items:["Query evaluator in Rust over the inverted index","STASH.FIND accepts the language; old plain queries behave the same","Random-query fuzzing through the Rust wrapper finds no crash or leak"]}
+  ],
+  stretch:["Compile the same Zig parser to WASM for the browser","Autocomplete in the web UI driven by parser errors","Rewrite the parser in Rust and compare size and speed"],
+  done:"stash find 'tag:law -tag:old after:2026-06' returns the right items, and fuzzing the parser through Rust finds nothing." },
+
+{ id:"wasm-plugins", phase:"p5", title:"WASM plugins for the daemon", langs:["Rust","WASM","Zig","C","Go"], time:"3 to 4 weekends",
+  summary:"Let the daemon run small plugins compiled to WebAssembly: auto-tag a note when it is added, redact secrets before saving, fetch a page title for a bookmark. The host is Rust with wasmtime, and you write one plugin each in Zig, C and Go (TinyGo). It is the cleanest way to compare how each language compiles to the same sandboxed target.",
+  learn:["Embedding a WASM runtime (wasmtime) with fuel and memory limits","WIT interfaces and the component model, or a hand-made ABI over linear memory","Compiling Zig, C (clang --target=wasm32-wasi) and TinyGo to WASM","Sandboxing: what a plugin can and cannot reach","Versioning a plugin interface"],
+  scope:["Hooks: on_add(item) -> item, on_find(query) -> query","Plugins listed in the config, loaded at startup, reloaded when the file changes","Per-call fuel and memory limits; a misbehaving plugin is disabled, never fatal","Three plugins: auto-tagger (Zig), secret redactor (C), title fetcher using a host function (Go)"],
+  deliverables:[
+    {h:"M1: Host", items:["wasmtime embedded; loads a .wasm and calls an exported function","Interface written in WIT (or a documented memory ABI)","An infinite-loop plugin is stopped by the fuel limit and logged"]},
+    {h:"M2: Three guests", items:["Zig auto-tagger","C secret redactor (API keys, passwords)","TinyGo plugin that calls a host function","Each guest has tests in its own language"]},
+    {h:"M3: Operations", items:["Hot reload when a .wasm file changes","STASH.PLUGINS lists loaded plugins with call counts and errors","Benchmark: cost per add with 0, 1 and 3 plugins"]}
+  ],
+  stretch:["Rust and AssemblyScript guests for comparison","Run the same plugins client-side in the web UI","Signed plugins"],
+  done:"A note containing an API key is saved redacted and auto-tagged by plugins written in three languages, and a deliberately broken plugin cannot crash the daemon." },
+
+{ id:"live-updates", phase:"p5", title:"Live updates everywhere", langs:["Rust","Go","TypeScript","C++"], time:"2 to 3 weekends",
+  summary:"Add a note from the CLI and the web UI and terminal UI update instantly. The daemon publishes a change stream (STASH.WATCH over RESP), the Go gateway turns it into Server-Sent Events, the web UI subscribes, and the C++ TUI listens on a second socket. One feature, four languages, four concurrency models.",
+  learn:["Rust: tokio broadcast channels and handling slow consumers","Go: fan-out to many HTTP clients, flushing, cancelling on disconnect","TypeScript: EventSource, reconnection and resuming from the last event id","C++: a second socket in the event loop, merging pushed events into UI state","Backpressure: what happens when a subscriber cannot keep up"],
+  scope:["STASH.WATCH [cursor] pushes add/update/delete events (RESP3 push)","Gateway /events endpoint (SSE) with auth","Web UI and TUI update lists live and show when they are offline","Resume from the last seen event after a reconnect: no gaps, no duplicates"],
+  deliverables:[
+    {h:"M1: Daemon stream", items:["Broadcast channel fed by the write path","STASH.WATCH with a cursor; a lagging subscriber gets a resync event instead of unbounded memory","Integration test with redis-cli in subscribe mode"]},
+    {h:"M2: Gateway and web", items:["Go SSE endpoint; a client disconnect cancels the upstream watch","Web UI applies events to its list; reconnects with Last-Event-ID","Kill the gateway mid-stream: the UI recovers with no missing items"]},
+    {h:"M3: Terminal UI", items:["TUI subscribes on a second connection inside its event loop","Results refresh without losing selection or scroll position","Load test: 1,000 adds per second with three subscribers stays under 50 MB in total"]}
+  ],
+  stretch:["WebSocket instead of SSE, and compare","Phone notifications through the uptime monitor's notifier","Live collaborative editing (pair with the CRDT stretch goal in stash-sync)"],
+  done:"A note added from the CLI appears in the open web UI and TUI within 100 ms, and restarting any piece never loses or duplicates an event." },
+
+{ id:"conformance", phase:"p5", title:"Polyglot conformance kit", langs:["Python","C","C++","Rust","Zig","Go","TypeScript","Perl","PHP"], time:"2 weekends",
+  summary:"One folder of language-neutral test vectors (JSON) for the RESP codec, BM25 ranking and the query language, plus a runner that checks every implementation against them. Writing a small adapter in each language makes you learn its test framework, JSON library and process I/O, and it catches your clients drifting apart.",
+  learn:["Language-neutral test vectors with a versioned format","Each language's test runner: cargo test, zig test, go test, pytest, Test::More, PHPUnit, Catch2, node:test","Orchestrating subprocesses and parsing their output in Python","Golden files and approving changes on purpose","A CI matrix across languages (GitHub Actions)"],
+  scope:["vectors/resp, vectors/bm25 and vectors/query directories","One small adapter per implementation: reads a vector on stdin, prints its result","Python runner that runs every adapter and prints a pass/fail matrix","CI job that fails on any mismatch"],
+  deliverables:[
+    {h:"M1: Vectors", items:["At least 40 RESP cases, including split and malformed input","Ranking cases with a hand-checked expected order","README that describes the format and how to add a case"]},
+    {h:"M2: Adapters", items:["Adapters for Rust, C++, Zig and C","Adapters for Go, TypeScript, Python, Perl and PHP","Each adapter also runs inside its language's own test runner"]},
+    {h:"M3: Runner and CI", items:["Python runner prints a language by suite matrix","GitHub Actions matrix builds and runs everything","Found and fixed at least one real disagreement between implementations"]}
+  ],
+  stretch:["Differential fuzzing: random inputs, compare every implementation","Timing column in the matrix","Publish the kit as its own repo"],
+  done:"One command shows a green matrix across nine languages, and CI blocks any change that breaks one of them."}
+
 ];
 
 /* ---------- rendering ---------- */
@@ -390,6 +453,7 @@ function updateStats(){
   });
   document.getElementById("overallBar").style.width = (total ? 100*done/total : 0) + "%";
   document.getElementById("overallText").textContent = done + " / " + total + " deliverables";
+  drawArch();
 }
 
 function applyFilter(){
@@ -401,6 +465,7 @@ function applyFilter(){
     s.classList.toggle("hidden", !s.querySelector("details.proj:not(.hidden)"));
   });
   document.querySelectorAll("#chips .chip").forEach(c => c.classList.toggle("on", c.dataset.l === (activeLang||"")));
+  drawArch();
 }
 
 const chips = document.getElementById("chips");
@@ -415,6 +480,340 @@ document.getElementById("collapse").onclick = () => document.querySelectorAll("d
 document.getElementById("reset").onclick = () => {
   if(confirm("Clear all ticked deliverables?")){ state = {}; save(); render(); }
 };
+
+/* ---------- system diagram (canvas) ---------- */
+const ARCH = {
+  groups: {
+    browser: {title:"Browser", nodes:[
+      {id:"web-ui", label:"Web UI + extension", sub:"TS/HTML/CSS · search page and page clipper", project:"web-ui"},
+      {id:"wasm-search", label:"WASM offline search", sub:"C++ or Rust · runs in a Web Worker", project:"wasm-search"}]},
+    gateway: {title:"Sync + gateway", nodes:[
+      {id:"stash-sync", label:"stash-sync agent", sub:"Go · TLS gateway and replication", project:"stash-sync"},
+      {id:"peer", label:"Peer stash", sub:"the daemon on your other device", ghost:true}]},
+    foundation: {title:"Foundation", nodes:[
+      {id:"redis-clone", label:"Redis clone", sub:"C++ · RESP and epoll groundwork", project:"redis-clone"}]},
+    daemon: {title:"stash daemon · Rust", core:true, project:"stash-core", cols:3, gap:22, nodes:[
+      {id:"net", label:"Network layer", sub:"tokio TCP + HTTP", at:[0,0], at2:[0,0]},
+      {id:"resp", label:"RESP parser", sub:"stash-proto", at:[0,1], at2:[0,1]},
+      {id:"router", label:"Command router", sub:"STASH.* commands", at:[0,2], at2:[1,1]},
+      {id:"query", label:"Query parser", sub:"Zig via C ABI · filter syntax", project:"stash-ql", at:[1,1], at2:[1,0]},
+      {id:"idx", label:"Inverted index", sub:"BM25 ranking, prefix search", at:[1,0], at2:[2,0]},
+      {id:"log", label:"Append-only log", sub:"+ snapshots, compaction", at:[1,2], at2:[2,1]},
+      {id:"plugins", label:"Plugin host", sub:"wasmtime · guests in Zig, C, Go", project:"wasm-plugins", at:[2,0,2], at2:[3,0]},
+      {id:"watch", label:"Change stream", sub:"STASH.WATCH pub/sub", project:"live-updates", at:[2,2], at2:[3,1]}]},
+    integrity: {title:"Integrity + testing", nodes:[
+      {id:"stash-fsck", label:"stash-fsck", sub:"C · verifies the log on disk", project:"stash-fsck"},
+      {id:"conformance", label:"Conformance kit", sub:"Python runner · tests every language", project:"conformance"}]},
+    clients: {title:"Clients and scripts", cols:6, nodes:[
+      {id:"libstash", label:"libstash", sub:"C ABI · bindings in 5 languages", project:"libstash"},
+      {id:"zig-cli", label:"stash CLI", sub:"Zig · stash add / find", project:"zig-cli"},
+      {id:"stash-tui", label:"Terminal UI", sub:"C++ · keyboard-driven browser", project:"stash-tui"},
+      {id:"php-import", label:"Import + share", sub:"PHP · bookmarks, share links", project:"php-import"},
+      {id:"py-tools", label:"Backup + flashcards", sub:"Python · export, SM-2 cards", project:"py-tools"},
+      {id:"perl-text", label:"Cleanup scripts", sub:"Perl · migrate old notes", project:"perl-text"}]},
+    standalone: {title:"Standalone daily tools", cols:3, nodes:[
+      {id:"c-warm", label:"Dupe finder", sub:"C · cleans up Downloads", project:"c-warm"},
+      {id:"uptime-monitor", label:"Uptime monitor", sub:"Rust · checks and phone alerts", project:"uptime-monitor"},
+      {id:"zig-timer", label:"Focus timer", sub:"Zig · pomodoro and time log", project:"zig-timer"}]}
+  },
+  wide: [[["browser",.5],["gateway",.5]], [["foundation",.21],["daemon",.55],["integrity",.24]], [["clients",1]], [["standalone",1]]],
+  narrow: [[["browser",1]], [["gateway",1]], [["daemon",1]], [["foundation",.5],["integrity",.5]], [["clients",1]], [["standalone",1]]],
+  edges: [
+    {a:"web-ui", b:"daemon", label:"HTTP JSON"},
+    {a:"wasm-search", b:"idx", label:"same BM25 core", dash:true, wideOnly:true},
+    {a:"stash-sync", b:"daemon", label:"proxy + change feed"},
+    {a:"stash-sync", b:"peer", both:true},
+    {a:"redis-clone", b:"daemon", dash:true},
+    {a:"stash-fsck", b:"log", wideOnly:true},
+    {a:"clients", b:"daemon", label:"RESP / HTTP"},
+    {a:"conformance", b:"clients", label:"same test vectors", dash:true},
+    {a:"net", b:"resp"}, {a:"resp", b:"router"}, {a:"router", b:"query", dir:"v"}, {a:"query", b:"idx"},
+    {a:"router", b:"log"}, {a:"log", b:"watch"}
+  ]
+};
+const FONT = "system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+const F_LABEL = "600 13px " + FONT, F_SUB = "11.5px " + FONT, F_TITLE = "600 11px " + FONT, F_CORE = "650 13.5px " + FONT, F_EDGE = "11px " + FONT;
+const arch = { canvas:null, ctx:null, W:0, L:null, hover:null };
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function projStat(pid){
+  const p = PROJECTS.find(x => x.id === pid); if(!p) return null;
+  const ids = projectItems(p);
+  return { p, done: ids.filter(i => state[i]).length, total: ids.length };
+}
+function wrapText(ctx, text, maxW, maxLines){
+  if(!text) return [];
+  const words = text.split(" "), lines = [];
+  let cur = "";
+  for(const w of words){
+    const t = cur ? cur + " " + w : w;
+    if(ctx.measureText(t).width <= maxW || !cur) cur = t; else { lines.push(cur); cur = w; }
+  }
+  if(cur) lines.push(cur);
+  if(maxLines && lines.length > maxLines){
+    const keep = lines.slice(0, maxLines);
+    let last = keep[maxLines-1] + " " + lines.slice(maxLines).join(" ");
+    while(last.length > 1 && ctx.measureText(last + "…").width > maxW) last = last.slice(0, -1);
+    keep[maxLines-1] = last.trimEnd() + "…";
+    return keep;
+  }
+  return lines;
+}
+
+function layoutArch(W){
+  const ctx = arch.ctx, narrow = W < 680;
+  const rows = narrow ? ARCH.narrow : ARCH.wide;
+  const PAD = 14, TITLE = 32, GAP = 14, ROWGAP = narrow ? 36 : 44;
+  const rects = {}, nodes = [], groups = [];
+  let y = 0;
+  for(const row of rows){
+    const avail = W - GAP * (row.length - 1);
+    let x = 0, rowH = 0; const placed = [];
+    for(const [gid, f] of row){
+      const g = ARCH.groups[gid], gw = avail * f, innerW = gw - 2 * PAD, ng = g.gap || 10;
+      const maxCols = g.cols || g.nodes.length;
+      const cols = Math.max(1, Math.min(maxCols, Math.floor((innerW + ng) / (125 + ng))));
+      const atKey = g.nodes[0].at && cols === maxCols ? "at" : g.nodes[0].at2 && cols === 2 ? "at2" : null;
+      const cw = (innerW - ng * (cols - 1)) / cols;
+      let k = 0;
+      const cells = g.nodes.map(n => {
+        let r, c, span = 1;
+        if(atKey){ [r, c, span = 1] = n[atKey]; } else { r = Math.floor(k / cols); c = k % cols; k++; }
+        const w = cw * span + ng * (span - 1);
+        ctx.font = F_LABEL; const lines = wrapText(ctx, n.label, w - 24, 2);
+        ctx.font = F_SUB; const subl = wrapText(ctx, n.sub, w - 24, 2);
+        const h = 10 + lines.length * 16 + 2 + subl.length * 14 + (n.project ? 14 : 6);
+        return { n, r, c, w, h, lines, subl };
+      });
+      const nr = Math.max(...cells.map(c => c.r)) + 1;
+      const rh = Array.from({length: nr}, (_, r) => Math.max(...cells.filter(c => c.r === r).map(c => c.h)));
+      const gh = TITLE + rh.reduce((s, v) => s + v, 0) + ng * (nr - 1) + PAD;
+      placed.push({ gid, g, x, gw, cells, rh, ng, cw });
+      rowH = Math.max(rowH, gh);
+      x += gw + GAP;
+    }
+    for(const pg of placed){
+      const gr = { id: pg.gid, x: pg.x, y, w: pg.gw, h: rowH, g: pg.g };
+      rects[pg.gid] = gr; groups.push(gr);
+      for(const c of pg.cells){
+        const top = y + TITLE + pg.rh.slice(0, c.r).reduce((s, v) => s + v, 0) + c.r * pg.ng;
+        const nd = { id: c.n.id, x: pg.x + PAD + c.c * (pg.cw + pg.ng), y: top, w: c.w, h: pg.rh[c.r],
+                     n: c.n, lines: c.lines, subl: c.subl, group: pg.gid, project: c.n.project || pg.g.project };
+        rects[nd.id] = nd; nodes.push(nd);
+      }
+    }
+    y += rowH + ROWGAP;
+  }
+  // edge geometry
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const edges = ARCH.edges.filter(e => !(narrow && e.wideOnly)).map(e => {
+    const A = rects[e.a], B = rects[e.b];
+    const xo = Math.min(A.x + A.w, B.x + B.w) - Math.max(A.x, B.x);
+    const yo = Math.min(A.y + A.h, B.y + B.h) - Math.max(A.y, B.y);
+    const cx = R => R.x + R.w / 2, cy = R => R.y + R.h / 2;
+    const vgap = Math.max(B.y - (A.y + A.h), A.y - (B.y + B.h)), hgap = Math.max(B.x - (A.x + A.w), A.x - (B.x + B.w));
+    if(vgap > 0 && (hgap <= 0 || vgap > hgap + 30 || e.dir === "v")){
+      const down = A.y + A.h <= B.y;
+      let ax, bx;
+      if(xo >= 30){ ax = bx = Math.max(A.x, B.x) + xo / 2; }
+      else {
+        ax = cx(A); bx = cx(B);
+        if(B.w > 1.5 * A.w) bx = clamp(ax, B.x + 24, B.x + B.w - 24);
+        else if(A.w > 1.5 * B.w) ax = clamp(bx, A.x + 24, A.x + A.w - 24);
+      }
+      return { e, vert: true, ax, ay: down ? A.y + A.h : A.y, bx, by: down ? B.y : B.y + B.h, side: e.b + (down ? "t" : "b"), src: e.a + (down ? "b" : "t"), A, B };
+    }
+    const right = A.x + A.w <= B.x;
+    let ay, by;
+    if(yo >= 24){ ay = by = Math.max(A.y, B.y) + yo / 2; } else { ay = cy(A); by = cy(B); }
+    return { e, vert: false, ax: right ? A.x + A.w : A.x, ay, bx: right ? B.x : B.x + B.w, by, side: e.b + (right ? "l" : "r"), B };
+  });
+  // spread arrows that would land on top of each other
+  const bySide = {};
+  edges.forEach(g => (bySide[g.side] = bySide[g.side] || []).push(g));
+  Object.values(bySide).forEach(list => {
+    if(list.length < 2 || !list[0].vert) return;
+    list.sort((p, q) => p.ax - q.ax);
+    const crowded = list.some((g, i) => i && Math.abs(g.bx - list[i-1].bx) < 60);
+    if(crowded){ const B = list[0].B; list.forEach((g, i) => g.bx = B.x + B.w * (i + 1) / (list.length + 1)); }
+  });
+  // same for edges leaving one box from the same side
+  const bySrc = {};
+  edges.forEach(g => { if(g.vert) (bySrc[g.src] = bySrc[g.src] || []).push(g); });
+  Object.values(bySrc).forEach(list => {
+    if(list.length < 2) return;
+    list.sort((p, q) => p.bx - q.bx);
+    const A = list[0].A;
+    list.forEach((g, i) => {
+      const straight = Math.abs(g.ax - g.bx) < 1;
+      g.ax = A.x + A.w * (i + 1) / (list.length + 1);
+      if(straight && g.ax > g.B.x + 10 && g.ax < g.B.x + g.B.w - 10) g.bx = g.ax;
+    });
+  });
+  edges.forEach(g => {
+    if(g.vert){ const d = (g.by - g.ay) / 2; g.c = [g.ax, g.ay + d, g.bx, g.by - d];
+      g.lx = g.ax; g.ly = g.ay + Math.sign(g.by - g.ay) * ROWGAP / 2; }
+    else { const d = (g.bx - g.ax) / 2; g.c = [g.ax + d, g.ay, g.bx - d, g.by]; }
+  });
+  return { H: y - ROWGAP, rects, nodes, groups, edges };
+}
+
+function rr(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function arrowHead(ctx, x, y, fx, fy, color){
+  const a = Math.atan2(y - fy, x - fx), s = 7;
+  ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y);
+  ctx.lineTo(x - s * Math.cos(a - .45), y - s * Math.sin(a - .45));
+  ctx.lineTo(x - s * Math.cos(a + .45), y - s * Math.sin(a + .45)); ctx.closePath(); ctx.fill();
+}
+const matchesFilter = pid => { if(!activeLang) return true; const p = PROJECTS.find(x => x.id === pid); return !!p && p.langs.includes(activeLang); };
+
+function drawArch(){
+  if(!arch.ctx || !arch.L) return;
+  const { ctx, L } = arch;
+  const C = { fg:cssv("--fg"), muted:cssv("--muted"), card:cssv("--card"), line:cssv("--line"), accent:cssv("--accent"),
+              soft:cssv("--accent-soft"), chip:cssv("--chip"), ok:cssv("--ok"), bg:cssv("--bg") };
+  const dpr = window.devicePixelRatio || 1;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, arch.W, L.H);
+  ctx.textBaseline = "top";
+  const hv = arch.hover;
+  const touches = (g) => hv && [g.e.a, g.e.b].some(id => id === hv.id || id === hv.group);
+
+  // groups
+  for(const g of L.groups){
+    const core = g.g.core;
+    ctx.globalAlpha = (core && !matchesFilter(g.g.project)) ? .45 : 1;
+    rr(ctx, g.x + .5, g.y + .5, g.w - 1, g.h - 1, 14);
+    ctx.fillStyle = core ? C.soft : C.chip; ctx.fill();
+    ctx.lineWidth = core ? 1.5 : 1; ctx.strokeStyle = core ? cssv("--ph-p1") : C.line;
+    ctx.setLineDash(core ? [] : [5, 4]); ctx.stroke(); ctx.setLineDash([]);
+    if(core){
+      ctx.font = F_CORE; g.titleW = ctx.measureText(g.g.title).width;
+      ctx.fillStyle = C.fg; ctx.fillText(g.g.title, g.x + 14, g.y + 11);
+      const st = projStat(g.g.project);
+      if(st){ ctx.font = F_SUB; ctx.fillStyle = C.muted; ctx.textAlign = "right";
+        ctx.fillText(st.done + " / " + st.total, g.x + g.w - 14, g.y + 12); ctx.textAlign = "left"; }
+    } else {
+      ctx.font = F_TITLE; ctx.fillStyle = C.muted; ctx.fillText(g.g.title.toUpperCase(), g.x + 14, g.y + 12);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // edges
+  for(const g of L.edges){
+    const hot = touches(g), col = hot ? C.accent : C.muted;
+    ctx.strokeStyle = col; ctx.lineWidth = hot ? 2 : 1.3; ctx.setLineDash(g.e.dash ? [5, 4] : []);
+    ctx.beginPath(); ctx.moveTo(g.ax, g.ay); ctx.bezierCurveTo(g.c[0], g.c[1], g.c[2], g.c[3], g.bx, g.by); ctx.stroke();
+    ctx.setLineDash([]);
+    arrowHead(ctx, g.bx, g.by, g.c[2], g.c[3], col);
+    if(g.e.both) arrowHead(ctx, g.ax, g.ay, g.c[0], g.c[1], col);
+  }
+
+  // keep the core title readable where lines pass behind it
+  const core = L.rects.daemon;
+  ctx.fillStyle = C.soft; ctx.fillRect(core.x + 10, core.y + 7, core.titleW + 8, 20);
+  ctx.font = F_CORE; ctx.fillStyle = C.fg; ctx.globalAlpha = matchesFilter("stash-core") ? 1 : .45;
+  ctx.fillText(ARCH.groups.daemon.title, core.x + 14, core.y + 11); ctx.globalAlpha = 1;
+
+  // nodes
+  for(const nd of L.nodes){
+    const n = nd.n, isHover = hv && hv.id === nd.id, inner = ARCH.groups[nd.group].core;
+    ctx.globalAlpha = (n.ghost ? !!activeLang : !matchesFilter(nd.project)) ? .3 : 1;
+    rr(ctx, nd.x, nd.y, nd.w, nd.h, 9);
+    if(!n.ghost){ ctx.fillStyle = C.card; ctx.fill(); }
+    ctx.lineWidth = isHover ? 2 : 1; ctx.strokeStyle = isHover ? C.accent : C.line;
+    ctx.setLineDash(n.ghost ? [4, 3] : []); ctx.stroke(); ctx.setLineDash([]);
+    if(n.project){
+      const p = PROJECTS.find(x => x.id === n.project);
+      ctx.save(); rr(ctx, nd.x, nd.y, nd.w, nd.h, 9); ctx.clip();
+      ctx.fillStyle = cssv("--ph-" + p.phase); ctx.fillRect(nd.x, nd.y, 4, nd.h); ctx.restore();
+    }
+    const tx = nd.x + 12;
+    let ty = nd.y + 10;
+    ctx.font = F_LABEL; ctx.fillStyle = n.ghost ? C.muted : C.fg;
+    nd.lines.forEach(l => { ctx.fillText(l, tx, ty); ty += 16; });
+    ty += 2; ctx.font = F_SUB; ctx.fillStyle = C.muted;
+    nd.subl.forEach(l => { ctx.fillText(l, tx, ty); ty += 14; });
+    if(n.project){
+      const st = projStat(n.project), bw = nd.w - 24, by = nd.y + nd.h - 9;
+      rr(ctx, tx, by, bw, 3, 1.5); ctx.fillStyle = C.chip; ctx.fill();
+      if(st.done){ rr(ctx, tx, by, Math.max(3, bw * st.done / st.total), 3, 1.5); ctx.fillStyle = C.ok; ctx.fill(); }
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // edge labels last, so they sit on top
+  ctx.font = F_EDGE;
+  for(const g of L.edges){
+    if(!g.e.label || !g.vert) continue;
+    const w = ctx.measureText(g.e.label).width + 14, h = 18;
+    rr(ctx, g.lx - w / 2, g.ly - h / 2, w, h, 9);
+    ctx.fillStyle = C.card; ctx.fill(); ctx.strokeStyle = touches(g) ? C.accent : C.line; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = touches(g) ? C.accent : C.muted; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(g.e.label, g.lx, g.ly + .5); ctx.textAlign = "left"; ctx.textBaseline = "top";
+  }
+}
+
+function sizeArch(){
+  const cv = arch.canvas, W = Math.floor(cv.clientWidth);
+  if(!W) return;
+  arch.W = W; arch.L = layoutArch(W);
+  const dpr = window.devicePixelRatio || 1;
+  cv.style.height = arch.L.H + "px";
+  cv.width = Math.round(W * dpr); cv.height = Math.round(arch.L.H * dpr);
+  drawArch();
+}
+function hitArch(ev){
+  const r = arch.canvas.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+  for(const nd of arch.L.nodes) if(x >= nd.x && x <= nd.x + nd.w && y >= nd.y && y <= nd.y + nd.h) return nd;
+  const core = arch.L.rects.daemon;
+  if(x >= core.x && x <= core.x + core.w && y >= core.y && y <= core.y + core.h) return { id:"daemon", group:"daemon", project:"stash-core" };
+  return null;
+}
+function openProject(pid){
+  if(!pid) return;
+  if(!matchesFilter(pid)){ activeLang = null; applyFilter(); }
+  const d = document.querySelector(`details.proj[data-id="${pid}"]`);
+  if(d){ d.open = true; d.scrollIntoView({ behavior:"smooth", block:"start" }); }
+}
+const ARCH_HINT = "Hover a box to see its details, or click it to jump to that project.";
+function initArch(){
+  arch.canvas = document.getElementById("archCanvas");
+  arch.ctx = arch.canvas.getContext("2d");
+  const cap = document.getElementById("archCap");
+  // accessible fallback: one button per project in the diagram
+  const fb = document.getElementById("archFallback");
+  Object.values(ARCH.groups).forEach(g => {
+    const pids = [g.project, ...g.nodes.map(n => n.project)].filter(Boolean);
+    pids.forEach(pid => { const li = document.createElement("li"), b = document.createElement("button");
+      b.textContent = g.title + ": " + PROJECTS.find(p => p.id === pid).title; b.onclick = () => openProject(pid);
+      li.appendChild(b); fb.appendChild(li); });
+  });
+  const lg = document.getElementById("archLegend");
+  lg.innerHTML = PHASES.map(ph => `<span><i class="sw" style="background:var(--ph-${ph.id})"></i>${esc(ph.name.split(":")[0])}</span>`).join("")
+    + `<span><i class="ln"></i>talks to</span><span><i class="ln dash"></i>shares code / groundwork</span>`;
+  arch.canvas.addEventListener("mousemove", ev => {
+    const h = hitArch(ev);
+    if((h && h.id) !== (arch.hover && arch.hover.id)){
+      arch.hover = h; drawArch();
+      arch.canvas.style.cursor = h && h.project ? "pointer" : "default";
+      const st = h && h.project && projStat(h.project);
+      cap.textContent = st ? `${st.p.title} · ${st.p.langs.join(", ")} · ${st.p.time} · ${st.done} / ${st.total} done. Click to open.`
+        : h && h.n && h.n.ghost ? "Another copy of the stash daemon, kept in step by stash-sync." : ARCH_HINT;
+    }
+  });
+  arch.canvas.addEventListener("mouseleave", () => { arch.hover = null; cap.textContent = ARCH_HINT; drawArch(); });
+  arch.canvas.addEventListener("click", ev => { const h = hitArch(ev); if(h) openProject(h.project); });
+  let lastW = 0;
+  new ResizeObserver(() => { const w = Math.floor(arch.canvas.clientWidth); if(w !== lastW){ lastW = w; sizeArch(); } }).observe(arch.canvas);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawArch);
+  sizeArch();
+}
+initArch();
 render();
 </script>
 </body>
