@@ -1,0 +1,789 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Enterprise Engineering Habits</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: sticky contents rail + one reading column; interactive canvases sit in framed "bench" panels. Matches the sibling pages in this repo. */
+:root{--bg:#fbfaf8;--fg:#1f2328;--muted:#5b6370;--line:#e3e0da;--accent:#2563eb;--code:#f3f1ec;--side:#f4f2ee;--danger:#c2410c;--danger-soft:#fde7dc;--ok:#15803d;--ok-soft:#dcf2e3;--warn:#a16207;--node:#ffffff;
+--font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181c;--fg:#e6e6e6;--muted:#9aa3ad;--line:#2d3138;--accent:#7aa7ff;--code:#22252b;--side:#1c1f24;--danger:#fb923c;--danger-soft:#3a2418;--ok:#4ade80;--ok-soft:#173022;--warn:#facc15;--node:#20242a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16181c;--fg:#e6e6e6;--muted:#9aa3ad;--line:#2d3138;--accent:#7aa7ff;--code:#22252b;--side:#1c1f24;--danger:#fb923c;--danger-soft:#3a2418;--ok:#4ade80;--ok-soft:#173022;--warn:#facc15;--node:#20242a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 var(--font)}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);border-right:1px solid var(--line);padding:24px 20px}
+nav h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+nav ul{list-style:none;margin:0;padding:0}nav li{margin:2px 0}
+nav a{display:block;padding:6px 10px;border-radius:6px;color:var(--fg);text-decoration:none;font-size:14px}
+nav a:hover,nav a:focus-visible{background:var(--line)}
+main{max-width:920px;min-width:0;padding:40px 48px 80px}
+h1{font-size:34px;line-height:1.2;margin:0 0 4px;text-wrap:balance}h1+p{color:var(--muted);margin-top:0}
+h2{font-size:24px;margin:56px 0 12px;padding-top:16px;border-top:1px solid var(--line);text-wrap:balance}
+h3{font-size:19px;margin:32px 0 8px}h4{font-size:13px;margin:22px 0 6px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+a{color:var(--accent)}a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tbl{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--side);font-weight:600}
+code{font:13px/1.5 var(--mono);background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--line);font-size:13px}pre code{padding:0;background:none}
+.file{font:12px var(--mono);color:var(--muted);margin:14px 0 -10px}
+.habit-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.tag{font:600 11px var(--font);letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.split>div{min-width:0;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.split h5{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.split p{margin:0}
+.incident{border-left:3px solid var(--danger);background:var(--side);padding:10px 14px;margin:14px 0;border-radius:0 8px 8px 0}
+.incident strong{color:var(--danger)}
+.check{border-left:3px solid var(--ok);background:var(--side);padding:10px 14px;margin:14px 0;border-radius:0 8px 8px 0}
+.check strong{color:var(--ok)}
+.bench{border:1px solid var(--line);border-radius:10px;margin:20px 0;background:var(--side)}
+.bench-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.bench-top .label{font-weight:600;font-size:14px;margin-right:auto}
+.bench canvas{display:block;width:100%;cursor:pointer;touch-action:manipulation}
+.readout{padding:10px 14px;border-top:1px solid var(--line);font-size:14px;min-height:64px}
+.readout b{color:var(--fg)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button,.btn{font:inherit;font-size:13px;padding:6px 10px;border:0;background:var(--bg);color:var(--fg);cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.btn{border:1px solid var(--line);border-radius:7px}
+.btn:hover,.seg button:hover{filter:brightness(.95)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px 0}
+.chips button{font:inherit;font-size:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--danger);color:var(--danger)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);padding:0 14px 10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+ul.todo{list-style:none;padding:0}ul.todo li{padding:6px 0;border-bottom:1px solid var(--line)}
+ul.todo label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}ul.todo input{margin-top:5px}
+.muted{color:var(--muted)}
+.refs li{margin:4px 0}
+@media (max-width:860px){.layout{grid-template-columns:1fr}nav{position:static;height:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}main{padding-block:24px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}.split{grid-template-columns:1fr}h1{font-size:28px}}
+@media print{nav,.bench-top,.chips{display:none}.layout{display:block}main{max-width:none;padding:0}pre,table,figure,.bench{break-inside:avoid}a{color:inherit}}
+</style></head><body><div class="layout">
+<nav aria-label="Contents"><h2>Contents</h2><ul>
+<li><a href="#start">Start here</a></li>
+<li><a href="#h1">1. Everything is code, and code is reviewed</a></li>
+<li><a href="#h2">2. The checker is not the changer</a></li>
+<li><a href="#h3">3. Least privilege at every layer</a></li>
+<li><a href="#h4">4. Default deny, before it exists</a></li>
+<li><a href="#h5">5. Write the threat model down</a></li>
+<li><a href="#h6">6. Stage gates</a></li>
+<li><a href="#h7">7. Runbooks before you need them</a></li>
+<li><a href="#h8">8. Post-mortems without blame</a></li>
+<li><a href="#h9">9. Verify, then write it down</a></li>
+<li><a href="#h10">10. Boring, open, replaceable</a></li>
+<li><a href="#map">Map to the standards</a></li>
+<li><a href="#plan">A 30-day plan</a></li>
+<li><a href="#refs">Reference shelf</a></li>
+</ul></nav>
+<main>
+<h1 id="top">Enterprise Engineering Habits</h1>
+<p>Ten habits big teams use, scaled down so one person can run them on a homelab or a $6 server. Updated November 23, 2026.</p>
+
+<h2 id="start">Start here</h2>
+<p>This page builds on the <a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Enterprise-Engineering-Habits" target="_blank" rel="noopener">Enterprise engineering habits</a> page of the Clouds Against Humanity wiki (Apache-2.0). That project builds a small cloud lab with OpenTofu, Spacelift, DigitalOcean, Doppler and Twingate. The original names ten habits and says what each is for. This version adds four things to each habit:</p>
+<ul>
+<li><b>A real incident</b> where skipping the habit cost a company money, data or its existence.</li>
+<li><b>Working configs</b> you can copy: git hooks, CI workflows, nftables, systemd, SQL roles, restic and OpenTofu.</li>
+<li><b>A check you can run</b> that fails if the habit is not really in place.</li>
+<li><b>Links to the sources</b>, plus the control IDs auditors use, so you can talk to a security team in their own words.</li>
+</ul>
+<p>It can look like a lot of ceremony for two small machines. That is the point. The habits are cheap when the system is small, and you will reach for them by reflex when it grows.</p>
+<h3>If you only do three</h3>
+<ol>
+<li><b>Keep configs in git, with messages that say why.</b> (<a href="#h1">Habit 1</a>)</li>
+<li><b>Default deny.</b> Nothing listens unless it has to. (<a href="#h4">Habit 4</a>)</li>
+<li><b>Write down how to rebuild your most important box, then rebuild it from the document.</b> (<a href="#h7">Habit 7</a>)</li>
+</ol>
+<p>Everything else is these three at a larger scale.</p>
+
+<!-- ============ 1 ============ -->
+<h2 id="h1">1. Everything is code, and code is reviewed</h2>
+<p>Nothing changes outside the repo. Every change, even one written by the only person on the project, goes through a pull request with checks and a description.</p>
+<div class="split"><div><h5>What it is for</h5><p>Six months later, <code>git log</code> and the PR answer "why is this firewall rule here?" Without that record the rule is either feared or deleted. At 2am, "what changed?" takes one command, not an hour of guessing.</p></div>
+<div><h5>At home</h5><p>Put compose files, <code>/etc</code>, router exports and Home Assistant YAML in git. One line per commit saying <i>why</i>, not <i>what</i>. The diff already says what.</p></div></div>
+<div class="incident"><strong>Knight Capital, 1 August 2012.</strong> A new release was copied by hand to eight servers. One was missed. It still ran old code behind a reused flag, and in 45 minutes it sent millions of unwanted orders. The firm lost about $440 million and was sold months later. The SEC order says there was no written deploy procedure and no second person checking the deploy. One reviewed, automated deploy would have caught it.</div>
+<h4>Implementation</h4>
+<p class="file">~/.gitmessage (then run <code>git config --global commit.template ~/.gitmessage</code>)</p>
+<pre><code># Why (one line): what problem does this solve?
+
+# What did you check, and how?
+
+# Not verified:
+</code></pre>
+<p class="file">.github/pull_request_template.md</p>
+<pre><code>## Why
+## Change
+## Testing
+&lt;!-- What you ran and what you saw. "Applied and checked `ss -tlnp`", not "tested". --&gt;
+## Not verified
+&lt;!-- Say what you did not check. An empty section means you checked everything. --&gt;
+## Rollback
+&lt;!-- A real step, e.g. "revert this PR and re-run the pipeline". "Restore from backup if needed" is not a step. --&gt;
+</code></pre>
+<p class="file">Branch protection: require a PR and one green check called "CI green"</p>
+<pre><code>gh api -X PUT repos/OWNER/REPO/branches/main/protection --input - &lt;&lt;'EOF'
+{
+  "required_status_checks": { "strict": true, "contexts": ["CI green"] },
+  "enforce_admins": true,
+  "required_pull_request_reviews": { "required_approving_review_count": 0 },
+  "restrictions": null
+}
+EOF</code></pre>
+<p>For a server's <code>/etc</code>, <a href="https://etckeeper.branchable.com/" target="_blank" rel="noopener">etckeeper</a> commits it to git for you, and commits again before and after every <code>apt</code> run:</p>
+<pre><code>sudo apt install etckeeper        # creates /etc/.git and the first commit
+sudo etckeeper vcs log --oneline   # who changed what, and when</code></pre>
+<div class="check"><strong>Check yourself.</strong> Pick any line in a config you run. Can you find, in under a minute, the commit that added it and the reason? Try <code>git log -S 'the line' --oneline</code>. Then try to push straight to <code>main</code>. It should be refused.</div>
+
+<!-- ============ 2 ============ -->
+<h2 id="h2">2. The thing that checks is not the thing that changes</h2>
+<p>The system that tests a change must not hold the keys to apply it. In the original project, GitHub Actions runs the tests and holds <b>no</b> cloud credentials. Spacelift applies changes and holds the write token. A human reads the plan and confirms it in between. A compromised tester can only block a change. It cannot make one.</p>
+<p>Here the separation is between <i>systems</i>, not people. With one writer there is no human separation of duties, and the wiki says so. Separate systems still shrink what one bad dependency or one stolen token can do.</p>
+<div class="split"><div><h5>What it is for</h5><p>CI runs code you did not write: every test framework, every package install script. If CI also holds the admin token, every one of those can reach production.</p></div>
+<div><h5>At home</h5><p>The job that <i>verifies</i> your backups must not be able to <i>delete</i> them. Ransomware that gets your NAS should hit an append-only backup target it cannot wipe.</p></div></div>
+<div class="incident"><strong>Code Spaces, June 2014.</strong> An attacker got into the company's AWS console and demanded money. When staff fought back, the attacker deleted servers, data and the backups, which lived in the same account under the same keys. The company shut down within days. One set of credentials could both run and destroy everything.</div>
+<div class="incident"><strong>tj-actions/changed-files, March 2025 (CVE-2025-30066).</strong> A popular GitHub Action was changed to dump CI secrets into public build logs. Over 23,000 repos used it. Repos that kept cloud keys out of CI, or pinned the action by commit SHA, were not affected.</div>
+
+<div class="bench" id="pipe-bench">
+<div class="bench-top"><span class="label">Try it: compromise one step of the pipeline</span>
+<div class="seg" role="group" aria-label="Pipeline design"><button id="pipe-sep" aria-pressed="true">Separated duties</button><button id="pipe-flat" aria-pressed="false">CI also deploys</button></div></div>
+<div class="chips" id="pipe-chips" aria-label="Pick a step to compromise"></div>
+<canvas id="pipe" aria-label="Pipeline diagram. Pick a step to see what an attacker reaches from it."></canvas>
+<div class="legend"><span><i style="background:var(--danger)"></i>Attacker controls</span><span><i style="background:var(--accent)"></i>Holds credentials</span><span><i style="border:1px dashed var(--muted)"></i>Skipped in this design</span></div>
+<div class="readout" id="pipe-out" aria-live="polite"></div>
+</div>
+
+<h4>Implementation</h4>
+<p class="file">.github/workflows/ci.yml: checks only, no cloud secrets anywhere</p>
+<pre><code>name: CI
+on: [pull_request, push]
+permissions: {}                 # start with nothing, add per job
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      # Pin by full commit SHA, keep the version in a comment. A tag like @v4 can be moved.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with: { persist-credentials: false }
+      - run: tofu fmt -check -recursive
+      - run: tofu init -backend=false &amp;&amp; tofu validate
+      - run: gitleaks detect --redact
+  ci-green:                     # the single required check
+    needs: [checks]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.checks.result }}" = success</code></pre>
+<p>Applying happens elsewhere: a deploy service such as Spacelift, Atlantis or env0, or a separate GitHub <a href="https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment" target="_blank" rel="noopener">environment</a> with required reviewers, whose secrets only that one job can read.</p>
+<p class="file">Homelab: an append-only backup target with restic's rest-server</p>
+<pre><code># On the backup box. Clients can add snapshots but never delete or rewrite them.
+rest-server --path /srv/restic --append-only --private-repos
+
+# On the NAS (the thing being backed up): it can only append.
+restic -r rest:https://nas:SECRET@backup:8000/nas/ backup /srv/data
+
+# Pruning runs ON the backup box, with local access, on its own schedule.
+restic -r /srv/restic/nas forget --keep-daily 7 --keep-weekly 4 --prune</code></pre>
+<div class="check"><strong>Check yourself.</strong> From the NAS, run <code>restic forget --keep-last 1</code> against the backup repo. It must fail. Then <code>grep -ri secret .github/workflows</code>. Any cloud key that shows up there is a key CI can leak.</div>
+
+<!-- ============ 3 ============ -->
+<h2 id="h3">3. Least privilege, at every layer</h2>
+<p>Each credential and each process gets the smallest scope that still works. In the original project: the Doppler token reads one environment and cannot write, the first stage gets only the DigitalOcean token, a Twingate resource allows one host and one port, and CI starts with no permissions.</p>
+<div class="split"><div><h5>What it is for</h5><p>You can't predict which part gets compromised. Least privilege decides how far it spreads: the <i>blast radius</i>. Ask of every part: if this is taken over, what can it reach?</p></div>
+<div><h5>At home</h5><p>Dashboards get read-only tokens. The backup user can read the backup folder and nothing else. IoT gear sits on its own VLAN. Services run as their own users, not root.</p></div></div>
+<div class="incident"><strong>Capital One, 2019.</strong> A misconfigured web firewall on AWS could be tricked into fetching the server's own role credentials (SSRF to the metadata service). That role could list and read hundreds of S3 buckets it never needed. About 106 million people's records were taken. A role scoped to the few buckets the firewall used would have exposed nothing.</div>
+
+<div class="bench" id="blast-bench">
+<div class="bench-top"><span class="label">Try it: blast radius on a homelab</span>
+<div class="seg" role="group" aria-label="Access design"><button id="blast-broad" aria-pressed="true">Shared admin creds, flat LAN</button><button id="blast-least" aria-pressed="false">Least privilege + VLANs</button></div></div>
+<div class="chips" id="blast-chips" aria-label="Pick a system to compromise"></div>
+<canvas id="blast" aria-label="Network graph. Pick a system to see everything an attacker reaches from it."></canvas>
+<div class="legend"><span><i style="background:var(--danger)"></i>Compromised or reachable</span><span><i style="background:var(--muted)"></i>Control path</span></div>
+<div class="readout" id="blast-out" aria-live="polite"></div>
+</div>
+
+<h4>Implementation</h4>
+<p class="file">/etc/systemd/system/myapp.service.d/harden.conf: a service that can't touch the rest of the box</p>
+<pre><code>[Service]
+DynamicUser=yes            # a throwaway user, created at start
+NoNewPrivileges=yes
+ProtectSystem=strict       # the whole filesystem is read-only...
+ReadWritePaths=/var/lib/myapp   # ...except this
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallFilter=@system-service</code></pre>
+<pre><code>systemctl daemon-reload &amp;&amp; systemctl restart myapp
+systemd-analyze security myapp   # scores exposure; aim for "OK" or better</code></pre>
+<p class="file">PostgreSQL: a read-only role for dashboards</p>
+<pre><code>CREATE ROLE grafana_ro LOGIN PASSWORD 'change-me';
+GRANT CONNECT ON DATABASE metrics TO grafana_ro;
+GRANT USAGE ON SCHEMA public TO grafana_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO grafana_ro;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO grafana_ro;</code></pre>
+<p class="file">~/.ssh/authorized_keys on the backup host: this key can run one command and nothing else</p>
+<pre><code>restrict,command="/usr/local/bin/receive-backup" ssh-ed25519 AAAA... nas-backup</code></pre>
+<div class="check"><strong>Check yourself.</strong> Log in as the dashboard role and run <code>DELETE FROM some_table;</code>. It must fail with "permission denied". SSH with the backup key and ask for a shell. You must get the backup command, not a prompt.</div>
+
+<!-- ============ 4 ============ -->
+<h2 id="h4">4. Default deny, and attach protection before the thing exists</h2>
+<p>Allow only what you need. Everything else is dropped. In the original project the cloud firewall has <b>zero</b> inbound rules and attaches by tag when the server is created, so there is never a window where a new server is open. Connectors dial out; nothing dials in.</p>
+<div class="split"><div><h5>What it is for</h5><p>"Allow what you need" fails safe: a new service is closed until you open it. "Block what you don't want" fails open: every service you forget about is reachable. Internet scanners find a new open port within minutes.</p></div>
+<div><h5>At home</h5><p>A Pi running one service should not have five other ports listening. Run <code>ss -tulpn</code> and justify every line.</p></div></div>
+<div class="incident"><strong>Exposed databases, 2017 onward.</strong> Tens of thousands of MongoDB and Elasticsearch servers were left reachable with no password and no firewall. Attackers wiped them and left ransom notes. Most owners never meant them to be public. The software listened on all interfaces by default, and nothing blocked it.</div>
+
+<div class="bench" id="scan-bench">
+<div class="bench-top"><span class="label">Try it: scan a Raspberry Pi from the internet</span>
+<div class="seg" role="group" aria-label="Firewall policy"><button id="scan-block" aria-pressed="true">Block what you don't want</button><button id="scan-allow" aria-pressed="false">Allow what you need</button></div>
+<button class="btn" id="scan-add">Install another service</button><button class="btn" id="scan-run">Scan</button><button class="btn" id="scan-reset">Reset</button></div>
+<canvas id="scan" aria-label="Grid of listening ports. Scan to see which ones are reachable from the internet."></canvas>
+<div class="legend"><span><i style="background:var(--ok)"></i>Needed and allowed</span><span><i style="background:var(--danger)"></i>Exposed by accident</span><span><i style="background:var(--line)"></i>Blocked</span><span>Click a port to change its rule</span></div>
+<div class="readout" id="scan-out" aria-live="polite"></div>
+</div>
+
+<h4>Implementation</h4>
+<p class="file">/etc/nftables.conf: drop by default, then allow the few things you need</p>
+<pre><code>#!/usr/sbin/nft -f
+flush ruleset
+table inet filter {
+  chain input {
+    type filter hook input priority 0; policy drop;
+    ct state established,related accept
+    ct state invalid drop
+    iif lo accept
+    meta l4proto { icmp, ipv6-icmp } accept
+    ip saddr 192.168.1.0/24 tcp dport 22 accept     # SSH from the LAN only
+    tcp dport 443 accept                            # the one public service
+  }
+  chain forward { type filter hook forward priority 0; policy drop; }
+  chain output  { type filter hook output priority 0; policy accept; }
+}</code></pre>
+<pre><code>sudo nft -c -f /etc/nftables.conf   # syntax check first
+sudo systemctl enable --now nftables</code></pre>
+<p><b>Docker caveat.</b> Ports published with <code>-p 8080:80</code> go through Docker's own NAT rules and skip your host input chain. Bind to localhost or the LAN address: <code>-p 127.0.0.1:8080:80</code>, and put a reverse proxy in front.</p>
+<p class="file">Cloud: the firewall exists before the server, and attaches by tag (OpenTofu, DigitalOcean)</p>
+<pre><code>resource "digitalocean_firewall" "deny_in" {
+  name = "baseline-deny-inbound"
+  tags = ["managed"]            # any droplet created with this tag is covered from boot
+  # No inbound_rule blocks at all: nothing gets in.
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "443"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+
+resource "digitalocean_droplet" "connector" {
+  name   = "access-tor1-connector-a"
+  region = "tor1"
+  size   = "s-1vcpu-1gb"
+  image  = "ubuntu-24-04-x64"
+  tags   = ["managed"]
+}</code></pre>
+<div class="check"><strong>Check yourself.</strong> From a machine <i>outside</i> your network (a phone hotspot works), run <code>nmap -Pn -p- your.public.ip</code>. Every open port it lists should match a line in your firewall config that you can explain.</div>
+
+<!-- ============ 5 ============ -->
+<h2 id="h5">5. Write the threat model down, including what you accept</h2>
+<p>List what you are protecting, what could go wrong, what stops it, and what you chose not to fix and why. The original project's threat model has seven assets, fourteen threats and a section of accepted risks, such as "connector tokens are readable from the metadata endpoint; accepted for now."</p>
+<div class="split"><div><h5>What it is for</h5><p>A trade-off that is not written down looks like a mistake to the next reader, or to you in a year. A written model also tells you when it is out of date: any new component with credentials means a new row.</p></div>
+<div><h5>At home</h5><p>Write the three worst things that could happen to your lab and what stops each one. If the answer is "nothing", that is next weekend's project.</p></div></div>
+<p>The <a href="https://www.threatmodelingmanifesto.org/" target="_blank" rel="noopener">Threat Modeling Manifesto</a> boils the whole method down to four questions: <i>What are we working on? What can go wrong? What are we going to do about it? Did we do a good enough job?</i></p>
+<h4>Implementation: a filled-in homelab threat model</h4>
+<p class="file">THREATS.md</p>
+<div class="tbl"><table>
+<tr><th>#</th><th>What could go wrong</th><th>Asset</th><th>What stops it</th><th>Left over / accepted</th></tr>
+<tr><td>T1</td><td>Ransomware on the NAS encrypts all files</td><td>Family photos</td><td>Append-only restic target; weekly offline USB copy</td><td>Up to 7 days of loss if both fail. Accepted.</td></tr>
+<tr><td>T2</td><td>Smart camera with old firmware is taken over</td><td>LAN</td><td>IoT VLAN, no route to LAN, no internet except the vendor's cloud</td><td>Camera feed itself can leak. Accepted: it points at the driveway.</td></tr>
+<tr><td>T3</td><td>Laptop stolen, SSH key copied</td><td>All servers</td><td>Key in a hardware token (<code>ed25519-sk</code>); disk encryption</td><td>None known.</td></tr>
+<tr><td>T4</td><td>Exposed admin page found by scanners</td><td>Router, Grafana</td><td>Default-deny firewall; admin only over VPN or ZTNA</td><td>Reverse proxy on 443 is public. Patched weekly.</td></tr>
+<tr><td>T5</td><td>Cloud bill runs away</td><td>Money</td><td>Billing alerts at $10 and $25; cost check in CI</td><td>Alerts are not a hard cap. Accepted.</td></tr>
+</table></div>
+<p>For bigger systems, walk each part through <b>STRIDE</b> (Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege). The <a href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP Threat Modeling Cheat Sheet</a> shows how.</p>
+<div class="check"><strong>Check yourself.</strong> Name the last thing you added to your lab. Is it in the table? Does anything in it hold a password or token? If yes and it has no row, the model is out of date.</div>
+
+<!-- ============ 6 ============ -->
+<h2 id="h6">6. Stage gates: small steps, each approved and costed</h2>
+<p>Build in numbered stages. Each one gets a design, a cost, an approval and an operator guide before it exists. In the original project, stage 1 did not start until stage 0 was built and checked. When the author rebuilt the cloud account, stage 0 found four surprises against the real API: a token missing a scope, a server size not offered in that region, a default VPC that could not be deleted, and a duplicate run. All four turned up where nothing was billing yet.</p>
+<div class="split"><div><h5>What it is for</h5><p>When one thing changes and something breaks, you know the cause. When five things change at once, you don't. Small stages also cap what a mistake can cost.</p></div>
+<div><h5>At home</h5><p>Change one thing, check it, then change the next. Don't upgrade the OS, Docker and Home Assistant in one evening.</p></div></div>
+<div class="incident"><strong>CrowdStrike, 19 July 2024.</strong> A content update for the Falcon sensor went to every Windows host at once, with no staged rollout. About 8.5 million machines crashed into a boot loop. Airlines, hospitals and banks stopped work. The company's own review promised staged deployment with canary rings afterward.</div>
+<h4>Implementation: plan, read, then apply exactly that plan</h4>
+<pre><code>tofu plan -out=stage1.tfplan
+tofu show stage1.tfplan            # a human reads this
+tofu apply stage1.tfplan           # applies only what was shown, nothing newer</code></pre>
+<p class="file">scripts/destroy-guard.sh: fail the gate if the plan deletes anything not on an allowlist</p>
+<pre><code>#!/usr/bin/env bash
+set -euo pipefail
+plan=${1:?usage: destroy-guard.sh plan.tfplan}
+allow=${2:-destroy_allowlist.txt}
+deletes=$(tofu show -json "$plan" \
+  | jq -r '.resource_changes[] | select(.change.actions | index("delete")) | .address')
+bad=$(comm -23 &lt;(sort -u &lt;&lt;&lt;"$deletes" | sed '/^$/d') &lt;(sort -u "$allow" 2&gt;/dev/null || true))
+if [[ -n "$bad" ]]; then
+  echo "Refusing: plan deletes or replaces resources not on the allowlist:"; echo "$bad"; exit 1
+fi
+echo "OK: no unexpected deletes."</code></pre>
+<p>Before you design around a size or region, ask the API what this account can actually use: <code>doctl compute size list</code> and <code>doctl compute region list</code>. New accounts often don't get everything an old one had.</p>
+<div class="check"><strong>Check yourself.</strong> Add a resource rename to a test branch, so the plan wants to destroy and recreate it. The guard must exit 1 and name the resource.</div>
+
+<!-- ============ 7 ============ -->
+<h2 id="h7">7. Runbooks: how to run it, written before you need it</h2>
+<p>Each stage has an operator guide covering bootstrap, checks, what failure looks like, how to rotate every secret, and how to tear it down. Rotation only happens if its steps were written down on a calm day.</p>
+<div class="split"><div><h5>What it is for</h5><p>Under stress, people skip steps and guess. A runbook turns a stressful job into reading and typing. It also lets someone else do it, which is how you get to take a holiday.</p></div>
+<div><h5>At home</h5><p>Write down how to rebuild your most important box from nothing. Then test it on a spare SD card or a VM. The first test always finds a missing step.</p></div></div>
+<div class="incident"><strong>Facebook, 4 October 2021.</strong> A maintenance command took the backbone offline. A bug in the audit tool failed to stop it. Engineers then could not reach the data centres remotely, and the badge systems depended on the same network, so recovery took about six hours. A recovery path that relies on the thing that is down is not a recovery path.</div>
+<h4>Implementation: one runbook step, in a format that works at 2am</h4>
+<p class="file">runbooks/rebuild-pihole.md</p>
+<pre><code>## Rebuild Pi-hole from nothing          (last tested: 2026-11-02, took 25 min)
+
+Needs: spare SD card, this repo, the restic password from the safe.
+
+1. Run:     flash Raspberry Pi OS Lite; boot; ssh pi@raspberrypi.local
+   Expect:  a shell prompt
+   If not:  check the card in another reader; reflash
+   Undo:    nothing to undo
+
+2. Run:     git clone https://git.home/lab &amp;&amp; cd lab/pihole &amp;&amp; docker compose up -d
+   Expect:  `docker compose ps` shows pihole "healthy" within 2 min
+   If not:  `docker compose logs pihole | tail -50`; port 53 is often taken by systemd-resolved
+   Undo:    docker compose down
+
+3. Run:     restic restore latest --target / --include /srv/pihole
+   Expect:  dig @127.0.0.1 ads.example.com returns 0.0.0.0
+   If not:  restore went to the wrong path; check `restic ls latest | grep pihole`
+   Undo:    rm -rf /srv/pihole; repeat step 3
+
+4. Run:     point the router's DHCP DNS at the new Pi
+   Expect:  a laptop on Wi-Fi gets the Pi as its DNS server
+   Undo:    set router DNS back to 1.1.1.1</code></pre>
+<p>Keep the runbook in two places, and make sure one of them works when the lab is down: a printed copy, or a git clone on your laptop. A wiki hosted <i>on</i> the lab will be down when you need it.</p>
+<div class="check"><strong>Check yourself.</strong> Hand the runbook to someone else, or follow it yourself on a blank VM without looking anything up. Every time you have to improvise, add a line. Write the date of the test at the top.</div>
+
+<!-- ============ 8 ============ -->
+<h2 id="h8">8. Post-mortems without blame</h2>
+<p>After something breaks, write down the symptom, the real cause, the fix and the general lesson. Don't write down whose fault it was. The system let it happen. Fix the system.</p>
+<div class="split"><div><h5>What it is for</h5><p>If people get punished for mistakes, they hide them, and the same gap breaks things again. If mistakes are safe to report, you learn about the gap the first time.</p></div>
+<div><h5>At home</h5><p>After a 2am fix, write three lines in <code>LESSONS.md</code> before bed. Tomorrow you won't remember the error message that mattered.</p></div></div>
+<div class="incident"><strong>AWS S3, 28 February 2017.</strong> An engineer ran a playbook command with a typo and removed far more servers than intended. S3 in us-east-1 went down for about four hours, and much of the internet with it. The public review did not blame the engineer. It changed the tool so it removes capacity slowly and refuses to go below a safe minimum. That fix protects every future operator.</div>
+<h4>Implementation</h4>
+<p class="file">LESSONS.md: a real entry from the original wiki, rewritten in this format</p>
+<pre><code>## 2026-10-09: install "succeeded" but the connector never ran
+Symptom:  `curl ... | bash` exited 0. The service was not running.
+Cause:    The script read stdin, which was the pipe itself, and stopped early.
+          The exit code came from the last command, not from the install.
+Fix:      cloud-init writes the config itself, pins the apt key fingerprint,
+          and only reports success if `systemctl is-active` says active.
+Lesson:   Check the end state, not the exit code.</code></pre>
+<p>For a bigger incident, add a timeline, what went well, and action items with an owner and a due date each. An action item with no owner does not happen.</p>
+<div class="check"><strong>Check yourself.</strong> Read your last three lessons. Does any line name a person as the cause? Rewrite it as the missing guard: "nothing stopped a typo from removing 100 servers", not "Sam made a typo".</div>
+
+<!-- ============ 9 ============ -->
+<h2 id="h9">9. Verify, then write down that you verified</h2>
+<p>Every claim carries how and when it was checked: "masking was checked on the first real run", "backup pricing confirmed on 2026-10-11". A command that ran is not a thing that works.</p>
+<div class="split"><div><h5>What it is for</h5><p>Unverified claims go stale without anyone noticing. A date tells the reader how much to trust a claim and when to check it again.</p></div>
+<div><h5>At home</h5><p>Do the check that proves it works, not just that the command ran. For backups that means a restore. Write down the date.</p></div></div>
+<div class="incident"><strong>GitLab.com, 31 January 2017.</strong> An engineer deleted the main production database by mistake while fighting a replication problem. GitLab had five backup and replication methods. None of them worked when needed: one had been failing silently because of a version mismatch, and its failure emails were being rejected. About six hours of data was lost. GitLab live-streamed the recovery and published a blameless review.</div>
+<h4>Implementation: prove the end state</h4>
+<p class="file">scripts/verify-backup.sh: restore a random file and compare it to the original</p>
+<pre><code>#!/usr/bin/env bash
+set -euo pipefail
+repo=${RESTIC_REPOSITORY:?set RESTIC_REPOSITORY}
+src=/srv/data
+file=$(find "$src" -type f -size -50M | shuf -n1)
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+restic -r "$repo" restore latest --target "$tmp" --include "$file"
+if cmp -s "$file" "$tmp$file"; then
+  echo "$(date -I) restore OK: $file" | tee -a /var/log/backup-verified.log
+else
+  echo "RESTORE MISMATCH: $file" &gt;&amp;2; exit 1
+fi
+restic -r "$repo" check --read-data-subset=5%   # also read back 5% of the stored data</code></pre>
+<p class="file">An install only counts if the service is really up</p>
+<pre><code>systemctl is-active --quiet myapp || { echo "myapp is not running"; exit 1; }
+curl -fsS --max-time 5 http://127.0.0.1:8080/healthz &gt;/dev/null || { echo "health check failed"; exit 1; }</code></pre>
+<p>Then alert on the <i>absence</i> of success, not only on errors. A job that silently stops running sends no error. With Prometheus and the node exporter's textfile collector, write a timestamp on each good run and alert when it gets old:</p>
+<pre><code>echo "backup_last_success_seconds $(date +%s)" &gt; /var/lib/node_exporter/backup.prom
+# alert rule:  time() - backup_last_success_seconds &gt; 36 * 3600</code></pre>
+<div class="check"><strong>Check yourself.</strong> When did you last restore a file from backup on purpose? If you can't give a date, you don't know your backups work.</div>
+
+<!-- ============ 10 ============ -->
+<h2 id="h10">10. Default to the boring, open, replaceable choice</h2>
+<p>Pick tools with open licenses, plain formats and a way out. The original project picks OpenTofu over Terraform for license reasons, DigitalOcean over AWS for a one-page price list, and Twingate while naming self-hosted options. Every vendor is a trust decision.</p>
+<div class="split"><div><h5>What it is for</h5><p>Licenses change, prices rise, companies get bought, products get shut down. If leaving takes a weekend, those are annoyances. If it takes a rewrite, you are stuck.</p></div>
+<div><h5>At home</h5><p>Before adopting a tool, ask what leaving it would take. Can you export the data in a standard format? Is the config in a file you own?</p></div></div>
+<div class="incident"><strong>License changes, 2023–2024.</strong> HashiCorp moved Terraform and Vault to the Business Source License in August 2023; the community forked them as <a href="https://opentofu.org/" target="_blank" rel="noopener">OpenTofu</a> and OpenBao under the Linux Foundation. Redis changed its license in March 2024; the fork <a href="https://valkey.io/" target="_blank" rel="noopener">Valkey</a> appeared within weeks. Teams on open formats switched in days. Teams that had built on closed features had to stay or rewrite.</div>
+<h4>Implementation: an exit check before you adopt anything</h4>
+<div class="tbl"><table>
+<tr><th>Question</th><th>Good answer</th><th>Warning sign</th></tr>
+<tr><td>Where does my data live, and can I export it?</td><td>Standard format (SQL dump, Markdown, OCI image, JSON)</td><td>Export only through support, or as a vendor-only file</td></tr>
+<tr><td>Is the config code I keep in git?</td><td>Yes, a provider or a plain file</td><td>Only clickable in a web console</td></tr>
+<tr><td>Does it use open protocols?</td><td>SSH, WireGuard, S3 API, OIDC, SMTP</td><td>Own client, own protocol</td></tr>
+<tr><td>Is there a self-hosted or second vendor?</td><td>Yes, named and tried once</td><td>"We'll figure it out"</td></tr>
+<tr><td>What happens if the vendor is down?</td><td>Existing setup keeps working</td><td>Nothing starts without their cloud</td></tr>
+</table></div>
+<p>Write the answers in a short decision record next to the code:</p>
+<p class="file">docs/decisions/0004-ztna.md</p>
+<pre><code># 0004: Use Twingate for remote access
+Status:   accepted, 2026-10-01
+Why:      outbound-only connectors (zero inbound ports); access as code via provider
+Exit:     Headscale, NetBird or OpenZiti; resources are already defined in code,
+          so moving means rewriting one module (~1 day, estimated)
+Revisit:  if pricing changes or the free tier drops below 5 users</code></pre>
+<div class="check"><strong>Check yourself.</strong> Pick your most-used lab service. Write the three commands to move it to a different host or vendor. If you can't, that is your biggest lock-in.</div>
+
+<!-- ============ MAP ============ -->
+<h2 id="map">Map to the standards</h2>
+<p>At work, these habits have formal names. Use these IDs to search the standards and to talk to auditors. They are pointers, not quotes, so check the current text before relying on one.</p>
+<div class="tbl"><table>
+<tr><th>Habit</th><th>Enterprise name</th><th>NIST SP 800-53 r5</th><th>ISO/IEC 27001:2022 Annex A</th></tr>
+<tr><td>1. Code + review</td><td>Change management (ITIL 4: change enablement)</td><td>CM-2, CM-3</td><td>8.9, 8.32</td></tr>
+<tr><td>2. Checker ≠ changer</td><td>Separation of duties</td><td>AC-5</td><td>5.3</td></tr>
+<tr><td>3. Least privilege</td><td>Least privilege, privileged access management</td><td>AC-6</td><td>5.15, 8.2</td></tr>
+<tr><td>4. Default deny</td><td>Boundary protection, network segmentation</td><td>SC-7, SC-7(5)</td><td>8.20, 8.22</td></tr>
+<tr><td>5. Threat model</td><td>Risk assessment, threat modeling</td><td>RA-3, SA-11(2)</td><td>Clause 6.1.2</td></tr>
+<tr><td>6. Stage gates</td><td>Impact analysis, staged release</td><td>CM-3, CM-4</td><td>8.32</td></tr>
+<tr><td>7. Runbooks</td><td>Documented procedures, contingency planning</td><td>CP-2, CP-4</td><td>5.37</td></tr>
+<tr><td>8. Post-mortems</td><td>Post-incident review, problem management</td><td>IR-4</td><td>5.27</td></tr>
+<tr><td>9. Verify</td><td>Continuous monitoring, backup testing</td><td>CA-7, CP-9(1)</td><td>8.13</td></tr>
+<tr><td>10. Replaceable</td><td>Supplier and cloud-service risk</td><td>SA-9, SR-2</td><td>5.19, 5.23</td></tr>
+</table></div>
+<p>SOC 2 auditors look for the same thing in change management: they pick sample changes and ask you to show each one was requested, reviewed by someone other than the author, tested, approved and recorded. A merged PR with a green check and a review covers most of that by itself. A ticket written after the change is the classic finding.</p>
+<h3>Measuring it: the DORA metrics</h3>
+<p>The <a href="https://dora.dev/" target="_blank" rel="noopener">DORA</a> research program tracks how often you deploy, how long a change takes to reach production, how often a change fails, and how fast you recover. In a homelab, the one worth tracking is <b>change failure rate</b>: changes that needed a fix or rollback, divided by all changes. Three bad changes out of twenty is 15%. If that number climbs, make your stages smaller.</p>
+
+<!-- ============ PLAN ============ -->
+<h2 id="plan">A 30-day plan</h2>
+<p>One small step a few times a week. Ticks are saved in this browser only.</p>
+<ul class="todo" id="todo">
+<li><label><input type="checkbox" id="t1"> <span><b>Day 1.</b> <code>git init</code> your lab configs. Set up the commit template from habit 1.</span></label></li>
+<li><label><input type="checkbox" id="t2"> <span><b>Day 2.</b> Run <code>ss -tulpn</code> on every box. Write one line per listening port saying why.</span></label></li>
+<li><label><input type="checkbox" id="t3"> <span><b>Day 4.</b> Turn on the default-deny nftables config. Scan from outside.</span></label></li>
+<li><label><input type="checkbox" id="t4"> <span><b>Day 7.</b> Write <code>THREATS.md</code> with your three worst outcomes.</span></label></li>
+<li><label><input type="checkbox" id="t5"> <span><b>Day 10.</b> Make backups append-only. Prove the NAS can't delete them.</span></label></li>
+<li><label><input type="checkbox" id="t6"> <span><b>Day 14.</b> Restore one file on purpose. Write the date down.</span></label></li>
+<li><label><input type="checkbox" id="t7"> <span><b>Day 17.</b> Swap admin tokens on dashboards for read-only ones.</span></label></li>
+<li><label><input type="checkbox" id="t8"> <span><b>Day 21.</b> Write the rebuild runbook for your most important box.</span></label></li>
+<li><label><input type="checkbox" id="t9"> <span><b>Day 25.</b> Test that runbook on a blank VM or spare card. Fix every gap.</span></label></li>
+<li><label><input type="checkbox" id="t10"> <span><b>Day 30.</b> Start <code>LESSONS.md</code> with what this month taught you.</span></label></li>
+</ul>
+
+<!-- ============ REFS ============ -->
+<h2 id="refs">Reference shelf</h2>
+<h3>The source project</h3>
+<ul class="refs">
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Enterprise-Engineering-Habits" target="_blank" rel="noopener">Enterprise engineering habits</a>, the page this one builds on.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Enterprise-Change-Management-for-Beginners" target="_blank" rel="noopener">Enterprise change management for beginners</a>: RFCs, CABs, change windows, and what the project uses instead.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Threat-Model" target="_blank" rel="noopener">Threat model</a>: seven assets, fourteen threats, written accepted risks.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Lessons-Learned" target="_blank" rel="noopener">Lessons learned</a>, including "A rebuilt account".</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Plan-for-Failure-Blast-Radius-and-Assuming-Breach" target="_blank" rel="noopener">Plan for failure: blast radius and assuming breach</a>.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Why-ZTNA-Not-a-VPN" target="_blank" rel="noopener">Why ZTNA and not a VPN</a>.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Working-in-a-Company-Tickets-Change-On-Call-and-Documentation" target="_blank" rel="noopener">Working in a company: tickets, change, on-call and documentation</a>.</li>
+<li><a href="https://github.com/ChiefGyk3D/Clouds-Against-Humanity/wiki/Teardown-Checklist" target="_blank" rel="noopener">Teardown checklist</a>: destroy order, what survives, and revoking tokens last.</li>
+</ul>
+<h3>Books and guides</h3>
+<ul class="refs">
+<li>Google, <a href="https://sre.google/sre-book/postmortem-culture/" target="_blank" rel="noopener"><i>Site Reliability Engineering</i>, "Postmortem Culture: Learning from Failure"</a>. The whole book is free online.</li>
+<li>John Allspaw, <a href="https://www.etsy.com/codeascraft/blameless-postmortems" target="_blank" rel="noopener">"Blameless PostMortems and a Just Culture"</a>, Etsy Code as Craft, 2012.</li>
+<li>Atlassian, <a href="https://www.atlassian.com/incident-management/handbook/postmortems" target="_blank" rel="noopener">Incident handbook: postmortems</a>, with templates.</li>
+<li><a href="https://www.threatmodelingmanifesto.org/" target="_blank" rel="noopener">Threat Modeling Manifesto</a> and the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP Threat Modeling Cheat Sheet</a>.</li>
+<li>Adam Shostack, <i>Threat Modeling: Designing for Security</i> (Wiley, 2014).</li>
+<li>Forsgren, Humble and Kim, <i>Accelerate</i> (IT Revolution, 2018), the research behind <a href="https://dora.dev/" target="_blank" rel="noopener">DORA</a>.</li>
+<li>NIST <a href="https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final" target="_blank" rel="noopener">SP 800-53 Rev. 5</a> (controls) and <a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener">SP 800-207</a> (zero trust architecture).</li>
+</ul>
+<h3>Tool docs used above</h3>
+<ul class="refs">
+<li>GitHub, <a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions" target="_blank" rel="noopener">Security hardening for GitHub Actions</a> (pinning by SHA, token permissions).</li>
+<li><a href="https://wiki.nftables.org/" target="_blank" rel="noopener">nftables wiki</a>.</li>
+<li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html" target="_blank" rel="noopener">systemd.exec(5)</a>, the sandboxing options in habit 3.</li>
+<li><a href="https://restic.readthedocs.io/" target="_blank" rel="noopener">restic</a> and <a href="https://github.com/restic/rest-server" target="_blank" rel="noopener">rest-server</a> (the <code>--append-only</code> mode).</li>
+<li><a href="https://opentofu.org/docs/" target="_blank" rel="noopener">OpenTofu docs</a>, and the <a href="https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs/resources/firewall" target="_blank" rel="noopener">DigitalOcean firewall resource</a>.</li>
+<li><a href="https://etckeeper.branchable.com/" target="_blank" rel="noopener">etckeeper</a> and <a href="https://github.com/gitleaks/gitleaks" target="_blank" rel="noopener">Gitleaks</a>.</li>
+</ul>
+<h3>The incidents</h3>
+<ul class="refs">
+<li>Knight Capital: <a href="https://www.sec.gov/litigation/admin/2013/34-70694.pdf" target="_blank" rel="noopener">SEC order 34-70694</a> (2013).</li>
+<li>AWS S3: <a href="https://aws.amazon.com/message/41926/" target="_blank" rel="noopener">Summary of the Amazon S3 service disruption</a> (2017).</li>
+<li>GitLab: <a href="https://about.gitlab.com/blog/2017/02/10/postmortem-of-database-outage-of-january-31/" target="_blank" rel="noopener">Postmortem of database outage of January 31</a> (2017).</li>
+<li>Facebook: <a href="https://engineering.fb.com/2021/10/05/networking-traffic/outage-details/" target="_blank" rel="noopener">More details about the October 4 outage</a> (2021).</li>
+<li>CrowdStrike: <a href="https://www.crowdstrike.com/en-us/blog/falcon-content-update-preliminary-post-incident-report/" target="_blank" rel="noopener">Preliminary post-incident review</a> (2024).</li>
+<li>tj-actions/changed-files: <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-30066" target="_blank" rel="noopener">CVE-2025-30066</a> (2025).</li>
+</ul>
+<p class="muted">Incident figures are from the public reports linked above. Configs were written for current Debian/Ubuntu, nftables, systemd 252+, PostgreSQL 15+ and OpenTofu 1.8+. Test them on a spare box before using them on one you depend on.</p>
+</main></div>
+
+<script>
+(() => {
+const root = document.documentElement;
+const tok = n => getComputedStyle(root).getPropertyValue(n).trim();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const benches = [];
+
+// Shared canvas plumbing: HiDPI sizing, resize, theme redraw, pointer hit-testing.
+function mount(id, spec) {
+  const cv = document.getElementById(id), ctx = cv.getContext('2d');
+  const b = { cv, ctx, spec, w: 0, h: 0, hover: null };
+  b.draw = () => {
+    const w = cv.parentElement.clientWidth, h = spec.height(w), d = devicePixelRatio || 1;
+    if (w !== b.w || h !== b.h) { cv.width = w * d; cv.height = h * d; cv.style.height = h + 'px'; b.w = w; b.h = h; }
+    ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, w, h);
+    spec.draw(ctx, w, h, b);
+  };
+  const pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointermove', e => { const hit = spec.hit(...pos(e), b); cv.style.cursor = hit != null ? 'pointer' : 'default'; if (hit !== b.hover) { b.hover = hit; b.draw(); } });
+  cv.addEventListener('pointerleave', () => { b.hover = null; b.draw(); });
+  cv.addEventListener('click', e => { const hit = spec.hit(...pos(e), b); if (hit != null) spec.click(hit); });
+  new ResizeObserver(b.draw).observe(cv.parentElement);
+  benches.push(b);
+  return b;
+}
+const redrawAll = () => benches.forEach(b => b.draw());
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redrawAll);
+new MutationObserver(redrawAll).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+function rrect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+function arrow(ctx, x1, y1, x2, y2, color, dashed) {
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash(dashed ? [4, 4] : []);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+  const a = Math.atan2(y2 - y1, x2 - x1), s = 7;
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - s * Math.cos(a - .45), y2 - s * Math.sin(a - .45)); ctx.lineTo(x2 - s * Math.cos(a + .45), y2 - s * Math.sin(a + .45)); ctx.fill();
+}
+function wrap(ctx, text, maxW) { const out = []; let line = ''; for (const word of text.split(' ')) { const t = line ? line + ' ' + word : word; if (ctx.measureText(t).width > maxW && line) { out.push(line); line = word; } else line = t; } out.push(line); return out; }
+function chips(el, items, onPick) { el.innerHTML = ''; items.forEach(([k, label]) => { const b = document.createElement('button'); b.textContent = label; b.dataset.k = k; b.setAttribute('aria-pressed', 'false'); b.onclick = () => onPick(k); el.append(b); }); }
+function pressChips(el, k) { el.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === k)); }
+function seg(btns, active) { btns.forEach(b => b.setAttribute('aria-pressed', b === active)); }
+const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+/* ---------- 1. Pipeline ---------- */
+{
+  const N = [
+    ['dev', 'Your laptop', 'Can push to a branch'],
+    ['pr', 'Pull request', 'Why / Change / Testing / Not verified'],
+    ['ci', 'CI checks', 'Reads code. No cloud keys.'],
+    ['merge', 'Merge to main', 'Needs PR + green CI'],
+    ['plan', 'Plan', 'Read-only cloud token'],
+    ['human', 'Human confirm', 'Reads the plan'],
+    ['apply', 'Apply', 'Write token, deploy service only'],
+    ['cloud', 'Cloud', 'Servers, network, data'],
+  ];
+  const creds = { sep: ['plan', 'apply'], flat: ['ci', 'dev'] };
+  const skipped = { sep: [], flat: ['plan', 'human', 'apply'] };
+  // What an attacker who owns each step reaches, and why.
+  const R = {
+    sep: {
+      dev: [['dev', 'pr'], 'They can open a pull request. They can\'t merge without green checks, and nothing applies without your confirm.'],
+      pr: [['pr'], 'A malicious PR description or diff is just text. Review is what it has to get past.'],
+      ci: [['ci', 'merge'], 'They can fake a green check or block merges. CI holds no cloud credentials, so the cloud is still behind the plan and your confirm.'],
+      merge: [['merge', 'plan'], 'They can start a plan. A plan changes nothing; it only shows what would change.'],
+      plan: [['plan'], 'They get a read-only token. They can read the setup, not change it. Bad, but contained.'],
+      human: [['human', 'apply', 'cloud'], 'A tricked human is the last gate. That is why plans must be small and readable: a 400-line plan gets skimmed.'],
+      apply: [['apply', 'cloud'], 'This is the crown jewel. It runs only after a confirmed plan and nothing on the internet can call it.'],
+      cloud: [['cloud'], 'Already the target. Default deny and least privilege (habits 3 and 4) limit what happens next.'],
+    },
+    flat: {
+      dev: [['dev', 'pr', 'ci', 'merge', 'cloud'], 'Your laptop keeps an admin token for "quick fixes". Stealing the laptop means owning the cloud directly.'],
+      pr: [['pr', 'ci', 'merge', 'cloud'], 'A PR runs tests in CI. CI holds the admin token. Any test or install script in that PR can read it and use it.'],
+      ci: [['ci', 'merge', 'cloud'], 'One bad dependency or a moved Action tag (tj-actions, 2025) reads the admin token and changes production with no one watching.'],
+      merge: [['merge', 'cloud'], 'Merge deploys straight away. No plan, no confirm.'],
+      plan: [[], 'Skipped in this design.'], human: [[], 'Skipped in this design.'], apply: [[], 'Skipped in this design: CI applies.'],
+      cloud: [['cloud'], 'Already the target.'],
+    },
+  };
+  let mode = 'sep', pick = 'ci';
+  const chipEl = document.getElementById('pipe-chips'), out = document.getElementById('pipe-out');
+  const boxes = [];
+  const flatEdges = [['dev', 'pr'], ['pr', 'ci'], ['ci', 'merge'], ['merge', 'cloud']];
+  const sepEdges = N.slice(1).map((n, i) => [N[i][0], n[0]]);
+  const b = mount('pipe', {
+    height: w => w < 640 ? 8 * 52 + 20 : 230,
+    hit: (x, y) => { const h = boxes.find(o => x >= o.x && x <= o.x + o.w && y >= o.y && y <= o.y + o.h); return h && !skipped[mode].includes(h.id) ? h.id : null; },
+    click: k => set(mode, k),
+    draw(ctx, w, h, b) {
+      boxes.length = 0;
+      const narrow = w < 640, fg = tok('--fg'), muted = tok('--muted'), line = tok('--line'), danger = tok('--danger');
+      ctx.font = '600 13px ' + tok('--font'); ctx.textBaseline = 'top';
+      N.forEach(([id], i) => {
+        let x, y, bw, bh;
+        if (narrow) { bw = Math.min(w - 32, 360); bh = 40; x = (w - bw) / 2; y = 10 + i * 52; }
+        else { const cols = 4, gap = 18; bw = (w - 32 - gap * (cols - 1)) / cols; bh = 78; const r = i < 4 ? 0 : 1, c = r ? 7 - i : i; x = 16 + c * (bw + gap); y = 24 + r * 118; }
+        boxes.push({ id, x, y, w: bw, h: bh });
+      });
+      const at = id => boxes.find(o => o.id === id);
+      const reach = R[mode][pick][0];
+      const edges = mode === 'sep' ? sepEdges : flatEdges;
+      edges.forEach(([a, c]) => {
+        const A = at(a), C = at(c); let x1, y1, x2, y2;
+        if (narrow) { x1 = x2 = A.x + A.w / 2; y1 = A.y + A.h; y2 = C.y; if (C.y < A.y) { y1 = A.y; y2 = C.y + C.h; } if (Math.abs(N.findIndex(n => n[0] === a) - N.findIndex(n => n[0] === c)) > 1) { x1 = A.x + A.w; x2 = C.x + C.w; y1 = A.y + A.h / 2; y2 = C.y + C.h / 2; ctx.strokeStyle = reach.includes(c) && reach.includes(a) ? danger : muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 + 14, y1); ctx.lineTo(x2 + 14, y2); ctx.stroke(); arrow(ctx, x2 + 14, y2, x2 + 2, y2, ctx.strokeStyle); return; } }
+        else if (Math.abs(A.y - C.y) < 5) { const right = C.x > A.x; x1 = right ? A.x + A.w : A.x; x2 = right ? C.x : C.x + C.w; y1 = y2 = A.y + A.h / 2; }
+        else { x1 = A.x + A.w / 2; x2 = C.x + C.w / 2; y1 = A.y + A.h; y2 = C.y; if (x1 !== x2) { const col = reach.includes(c) && reach.includes(a) ? danger : muted; ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1, y1 + 14); ctx.lineTo(x2, y1 + 14); ctx.stroke(); arrow(ctx, x2, y1 + 14, x2, y2 - 2, col); return; } }
+        arrow(ctx, x1, y1, x2 - Math.sign(x2 - x1) * 2, y2 - (narrow ? 2 : 0), reach.includes(c) && reach.includes(a) ? danger : muted);
+      });
+      boxes.forEach(o => {
+        const skip = skipped[mode].includes(o.id), hot = reach.includes(o.id), node = N.find(n => n[0] === o.id);
+        rrect(ctx, o.x, o.y, o.w, o.h, 8);
+        ctx.fillStyle = hot ? tok('--danger-soft') : tok('--node'); if (!skip) ctx.fill();
+        ctx.lineWidth = o.id === pick ? 3 : (b.hover === o.id ? 2 : 1.2);
+        ctx.strokeStyle = hot ? danger : creds[mode].includes(o.id) ? tok('--accent') : line;
+        ctx.setLineDash(skip ? [5, 4] : []); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = skip ? muted : fg; ctx.font = '600 13px ' + tok('--font');
+        ctx.fillText(node[1], o.x + 10, o.y + (narrow ? 5 : 10));
+        ctx.font = '12px ' + tok('--font'); ctx.fillStyle = muted;
+        const sub = skip ? 'skipped' : node[2];
+        if (narrow) ctx.fillText(sub, o.x + 10, o.y + 22);
+        else wrap(ctx, sub, o.w - 20).slice(0, 3).forEach((l, i) => ctx.fillText(l, o.x + 10, o.y + 30 + i * 15));
+      });
+    },
+  });
+  function set(m, k) {
+    mode = m; pick = skipped[m].includes(k) ? 'ci' : k;
+    seg([document.getElementById('pipe-sep'), document.getElementById('pipe-flat')], document.getElementById(m === 'sep' ? 'pipe-sep' : 'pipe-flat'));
+    chips(chipEl, N.filter(n => !skipped[m].includes(n[0])).map(n => [n[0], n[1]]), k2 => set(mode, k2)); pressChips(chipEl, pick);
+    const [reach, why] = R[m][pick];
+    out.innerHTML = `<b>${esc(N.find(n => n[0] === pick)[1])} compromised.</b> ${reach.includes('cloud') ? '<span style="color:var(--danger)">Reaches the cloud.</span>' : '<span style="color:var(--ok)">Cloud not reachable.</span>'} ${esc(why)}`;
+    b.draw();
+  }
+  document.getElementById('pipe-sep').onclick = () => set('sep', pick);
+  document.getElementById('pipe-flat').onclick = () => set('flat', pick);
+  set('sep', 'ci');
+}
+
+/* ---------- 3. Blast radius ---------- */
+{
+  const N = {
+    laptop: ['Admin laptop', .1, .16], nas: ['NAS', .37, .16], backup: ['Backup server', .63, .16], verifier: ['Backup verifier', .9, .16],
+    router: ['Router', .1, .5], dash: ['Dashboards', .37, .5], ci: ['CI runner', .63, .5], secrets: ['Secrets store', .9, .5],
+    cam: ['IoT camera', .1, .84], ha: ['Home automation', .37, .84], cloud: ['Cloud account', .76, .84],
+  };
+  const E = {
+    broad: [['cam', 'router', 'default router password on a flat LAN'], ['cam', 'ha', 'same network, open API'], ['router', 'nas', 'flat LAN'], ['router', 'dash', 'flat LAN'], ['router', 'ha', 'flat LAN'], ['router', 'cam', 'flat LAN'],
+      ['ha', 'nas', 'NAS admin password in HA config'], ['ha', 'cam', 'controls it'], ['dash', 'nas', 'admin API token'], ['dash', 'ha', 'admin token'],
+      ['nas', 'backup', 'same root password'], ['backup', 'nas', 'backup agent runs as root'], ['verifier', 'backup', 'full credentials, can delete'],
+      ['ci', 'secrets', 'reads every secret'], ['ci', 'cloud', 'admin token in CI'], ['secrets', 'cloud', 'admin token'], ['dash', 'ci', 'shared admin password'],
+      ['laptop', 'router', 'admin'], ['laptop', 'nas', 'admin'], ['laptop', 'ci', 'admin'], ['laptop', 'secrets', 'admin']],
+    least: [['router', 'cam', 'routes its traffic'], ['router', 'ha', 'routes its traffic'], ['ha', 'cam', 'controls it (its job)'],
+      ['secrets', 'cloud', 'one deploy token, one project'], ['laptop', 'router', 'admin, with a hardware key'], ['laptop', 'nas', 'admin, with a hardware key'], ['laptop', 'secrets', 'admin, with a hardware key']],
+  };
+  const notes = {
+    broad: 'One weak device leads to everything, because every system trusts every other one and they share passwords.',
+    least: 'Read-only dashboards, append-only backups, an isolated IoT VLAN and a CI runner with no secrets. Most systems now reach nothing past themselves.',
+  };
+  let mode = 'broad', pick = 'cam';
+  const chipEl = document.getElementById('blast-chips'), out = document.getElementById('blast-out');
+  const reachOf = (start, m) => { const seen = new Set([start]), q = [start]; while (q.length) { const n = q.shift(); E[m].forEach(([a, c]) => { if (a === n && !seen.has(c)) { seen.add(c); q.push(c); } }); } return seen; };
+  const P = (k, w, h) => [66 + (N[k][1] - .1) / .8 * (w - 132), 40 + (h - 80) * (N[k][2] - .16) / .68];
+  const R_ = w => Math.max(24, Math.min(34, w / 26));
+  const b = mount('blast', {
+    height: w => w < 640 ? 420 : 400,
+    hit: (x, y, b) => { const r = R_(b.w); for (const k in N) { const [px, py] = P(k, b.w, b.h); if (Math.hypot(x - px, y - py) < r + 6) return k; } return null; },
+    click: k => set(mode, k),
+    draw(ctx, w, h, b) {
+      const reach = reachOf(pick, mode), r = R_(w), danger = tok('--danger'), muted = tok('--muted');
+      E[mode].forEach(([a, c]) => {
+        const [x1, y1] = P(a, w, h), [x2, y2] = P(c, w, h), ang = Math.atan2(y2 - y1, x2 - x1);
+        const bend = E[mode].some(([p, q]) => p === c && q === a) ? 8 : 0, nx = -Math.sin(ang) * bend, ny = Math.cos(ang) * bend;
+        const hot = reach.has(a) && reach.has(c);
+        ctx.globalAlpha = hot ? 1 : .55;
+        arrow(ctx, x1 + Math.cos(ang) * r + nx, y1 + Math.sin(ang) * r + ny, x2 - Math.cos(ang) * (r + 3) + nx, y2 - Math.sin(ang) * (r + 3) + ny, hot ? danger : muted);
+        ctx.globalAlpha = 1;
+      });
+      for (const k in N) {
+        const [x, y] = P(k, w, h), hot = reach.has(k);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = hot ? tok('--danger-soft') : tok('--node'); ctx.fill();
+        ctx.lineWidth = k === pick ? 3.5 : b.hover === k ? 2.5 : 1.3; ctx.strokeStyle = hot ? danger : tok('--line'); ctx.stroke();
+        ctx.fillStyle = hot ? danger : tok('--fg'); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        let fs = w < 500 ? 10.5 : 12, lines;
+        do { ctx.font = `600 ${fs}px ${tok('--font')}`; lines = wrap(ctx, N[k][0], r * 2 - 8); fs -= .5; } while (fs > 7 && lines.some(l => ctx.measureText(l).width > r * 2 - 8)); lines.forEach((l, i) => ctx.fillText(l, x, y + (i - (lines.length - 1) / 2) * 13));
+        ctx.textAlign = 'left';
+      }
+    },
+  });
+  function set(m, k) {
+    mode = m; pick = k;
+    seg([document.getElementById('blast-broad'), document.getElementById('blast-least')], document.getElementById(m === 'broad' ? 'blast-broad' : 'blast-least'));
+    pressChips(chipEl, k);
+    const reach = reachOf(k, m), others = [...reach].filter(x => x !== k);
+    const paths = E[m].filter(([a, c]) => reach.has(a) && reach.has(c)).map(([a, c, why]) => `${N[a][0]} → ${N[c][0]} (${why})`);
+    out.innerHTML = `<b>${esc(N[k][0])} compromised: reaches ${others.length} of ${Object.keys(N).length - 1} other systems.</b> ${esc(notes[m])}` +
+      (paths.length ? `<br><span class="muted">${esc(paths.join('; '))}</span>` : '');
+    b.draw();
+  }
+  chips(chipEl, Object.entries(N).map(([k, v]) => [k, v[0]]), k => set(mode, k));
+  document.getElementById('blast-broad').onclick = () => set('broad', pick);
+  document.getElementById('blast-least').onclick = () => set('least', pick);
+  set('broad', 'cam');
+}
+
+/* ---------- 4. Port scan ---------- */
+{
+  const base = () => [
+    { p: 22, s: 'SSH', need: true }, { p: 53, s: 'DNS (Pi-hole)', need: true }, { p: 443, s: 'HTTPS reverse proxy', need: true },
+    { p: 80, s: 'Pi-hole admin page' }, { p: 3000, s: 'Grafana, default login' }, { p: 5432, s: 'PostgreSQL' },
+    { p: 6379, s: 'Redis, no password', blocked: true }, { p: 2375, s: 'Docker API, no auth', blocked: true }, { p: 9100, s: 'node_exporter' },
+  ];
+  const extra = [{ p: 8123, s: 'Home Assistant' }, { p: 1883, s: 'MQTT broker' }, { p: 9000, s: 'Portainer' }, { p: 5000, s: 'dev web server' }, { p: 8384, s: 'Syncthing GUI' }, { p: 27017, s: 'MongoDB' }];
+  let ports = base(), mode = 'block', sweep = -1, scanned = false, nextExtra = 0;
+  const out = document.getElementById('scan-out'), tiles = [];
+  const open = t => mode === 'block' ? !t.blocked : !!t.need;
+  const b = mount('scan', {
+    height: w => { const cols = Math.max(2, Math.floor((w - 24) / 150)); return 16 + Math.ceil(ports.length / cols) * 74; },
+    hit: (x, y) => { const t = tiles.find(o => x >= o.x && x <= o.x + o.w && y >= o.y && y <= o.y + o.h); return t ? t.i : null; },
+    click: i => { const t = ports[i]; if (mode === 'block') t.blocked = !t.blocked; else t.need = !t.need; report(); b.draw(); },
+    draw(ctx, w, h, b) {
+      tiles.length = 0;
+      const cols = Math.max(2, Math.floor((w - 24) / 150)), gap = 10, tw = (w - 24 - gap * (cols - 1)) / cols, th = 64;
+      ports.forEach((t, i) => {
+        const x = 12 + (i % cols) * (tw + gap), y = 10 + Math.floor(i / cols) * (th + gap);
+        tiles.push({ i, x, y, w: tw, h: th });
+        const shown = scanned && (sweep < 0 || i <= sweep), o = open(t);
+        let fill = tok('--node'), stroke = tok('--line'), label = 'listening';
+        if (shown) { if (!o) { fill = tok('--side'); label = 'blocked'; } else if (t.need) { fill = tok('--ok-soft'); stroke = tok('--ok'); label = 'open, needed'; } else { fill = tok('--danger-soft'); stroke = tok('--danger'); label = 'EXPOSED'; } }
+        else label = o ? (t.need ? 'rule: allow' : mode === 'block' ? 'no rule: open' : 'rule: allow') : 'rule: drop';
+        rrect(ctx, x, y, tw, th, 8); ctx.fillStyle = fill; ctx.fill();
+        ctx.lineWidth = b.hover === i ? 2.5 : 1.2; ctx.strokeStyle = stroke; ctx.stroke();
+        ctx.textBaseline = 'top'; ctx.fillStyle = tok('--fg'); ctx.font = `600 15px ${tok('--mono')}`; ctx.fillText(':' + t.p, x + 10, y + 8);
+        ctx.font = `12px ${tok('--font')}`; ctx.fillStyle = tok('--muted'); ctx.fillText(wrap(ctx, t.s, tw - 20)[0], x + 10, y + 28);
+        ctx.font = `600 11px ${tok('--font')}`; ctx.fillStyle = shown && o && !t.need ? tok('--danger') : shown && o ? tok('--ok') : tok('--muted'); ctx.fillText(label, x + 10, y + 45);
+        if (t.isNew) { ctx.fillStyle = tok('--accent'); ctx.font = `600 10px ${tok('--font')}`; ctx.textAlign = 'right'; ctx.fillText('NEW', x + tw - 8, y + 9); ctx.textAlign = 'left'; }
+      });
+      if (sweep >= 0 && tiles[sweep]) { const t = tiles[sweep]; ctx.strokeStyle = tok('--accent'); ctx.lineWidth = 3; rrect(ctx, t.x - 3, t.y - 3, t.w + 6, t.h + 6, 10); ctx.stroke(); }
+    },
+  });
+  function report() {
+    const exp = ports.filter(open), bad = exp.filter(t => !t.need);
+    out.innerHTML = scanned
+      ? `<b>${exp.length} port${exp.length === 1 ? '' : 's'} reachable from the internet. ${bad.length ? `<span style="color:var(--danger)">${bad.length} of them nobody meant to expose: ${esc(bad.map(t => ':' + t.p + ' ' + t.s).join(', '))}.</span>` : '<span style="color:var(--ok)">Every one of them is needed.</span>'}</b> ` +
+        (mode === 'block' ? 'With a blocklist, each new service is open until you remember to block it.' : 'With an allowlist, a new service stays closed until you add a rule for it.')
+      : `Policy: <b>${mode === 'block' ? 'block what you don\'t want' : 'allow what you need'}</b>. Press <b>Scan</b> to see the Pi the way a scanner does. Press <b>Install another service</b> a few times, then scan again under each policy.`;
+  }
+  function scan() {
+    scanned = true;
+    if (reduce) { sweep = -1; report(); b.draw(); return; }
+    sweep = 0; const step = () => { b.draw(); if (++sweep < ports.length) setTimeout(step, 110); else { sweep = -1; report(); b.draw(); } }; step();
+  }
+  function setMode(m) { mode = m; seg([document.getElementById('scan-block'), document.getElementById('scan-allow')], document.getElementById(m === 'block' ? 'scan-block' : 'scan-allow')); report(); b.draw(); }
+  document.getElementById('scan-block').onclick = () => setMode('block');
+  document.getElementById('scan-allow').onclick = () => setMode('allow');
+  document.getElementById('scan-run').onclick = scan;
+  document.getElementById('scan-add').onclick = () => { if (nextExtra < extra.length) { ports.push({ ...extra[nextExtra++], isNew: true }); scanned = false; report(); b.draw(); } };
+  document.getElementById('scan-reset').onclick = () => { ports = base(); nextExtra = 0; scanned = false; sweep = -1; setMode('block'); };
+  report(); b.draw();
+}
+
+/* ---------- 30-day plan ticks (this browser only) ---------- */
+document.querySelectorAll('#todo input').forEach(cb => {
+  try { cb.checked = localStorage.getItem('eeh-' + cb.id) === '1'; } catch (e) {}
+  cb.addEventListener('change', () => { try { localStorage.setItem('eeh-' + cb.id, cb.checked ? '1' : '0'); } catch (e) {} });
+});
+})();
+</script>
+</body></html>
