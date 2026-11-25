@@ -86,7 +86,7 @@ li.task input:checked + span{color:var(--muted);text-decoration:line-through}
 <div class="layout">
 <nav aria-label="Contents">
   <div class="brand">ML &amp; AI Engineering</div>
-  <div class="overall"><span id="doneCount">0</span> of 130 checkpoints done</div>
+  <div class="overall"><span id="doneCount">0</span> of 134 checkpoints done</div>
   <div class="bar"><span id="overallBar"></span></div>
   <ul><li><a href="#program-overview">Program overview<span class="prog" data-for="program-overview"></span></a></li>
 <li><a href="#reading-list">Reading list<span class="prog" data-for="reading-list"></span></a></li>
@@ -1592,6 +1592,11 @@ T12,API returns 500 errors for bulk requests,technical
 <td>Documentation</td>
 <td>Communication between independent agents</td>
 </tr>
+<tr>
+<td><a href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener">How we built our multi-agent research system</a> — Anthropic</td>
+<td>Article</td>
+<td>When an orchestrator with worker agents pays off, and what it costs</td>
+</tr>
 </tbody>
 </table></div>
 <p><strong>Weekly schedule</strong></p>
@@ -1614,8 +1619,8 @@ T12,API returns 500 errors for bulk requests,technical
 <tr>
 <td>34</td>
 <td>The agent loop, orchestration and memory</td>
-<td>Albada ch. 5–6; ReAct paper; Huyen ch. 6 (agents)</td>
-<td>Exercise 2</td>
+<td>Albada ch. 5–6; ReAct paper; Huyen ch. 6 (agents); multi-agent research system article</td>
+<td>Exercises 2 and 8</td>
 </tr>
 <tr>
 <td>35</td>
@@ -1654,6 +1659,7 @@ Who is our top support rep by sales?,database
 <li><strong>Agent evaluation.</strong> Write 20 Chinook questions with known answers (start with Exercise 2's seven). Compare the agent against a fixed workflow (one text-to-SQL call, then execution) on accuracy, average steps and cost per question.</li>
 <li><strong>Guardrails.</strong> Add a step limit, a cost cap and a fake <code>delete_invoice(id)</code> tool that requires human confirmation. Write tests showing the agent stops at each limit and never deletes without confirmation.</li>
 <li><strong>Skills.</strong> Write a skill following the Agent Skills specification that packages Chinook know-how: a schema summary, three tested query recipes (revenue by country, top artists, sales by support rep) and a rule to return at most 50 rows. Run Exercise 5's 20 questions with and without the skill available, and report accuracy, average steps and tokens used.</li>
+<li><strong>Multi-agent orchestration.</strong> Task: "For each of the top 3 countries by revenue, give the total revenue, the top genre and the top artist by sales." Build it two ways over Chinook: (a) the single agent from Exercise 2, and (b) an orchestrator that plans the work, starts one worker agent per country (each with its own <code>run_sql</code> and a short brief), then merges the results. First write the answers yourself with plain SQL; the USA (523.06) must come first. Run each version 10 times and report correct runs, total tokens, wall-clock time and how each failure happened (bad brief, worker error, merge error). Write a short decision: is the orchestrator worth its extra tokens on this task, and what kind of task would change your answer?</li>
 </ol>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
@@ -1661,6 +1667,7 @@ Who is our top support rep by sales?,database
 <li class="task"><label><input type="checkbox" data-id="c21"><span>The MCP server passes all tool calls in the MCP Inspector</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c22"><span>Exercise 5 includes a written decision: ship the agent or the fixed workflow, and why</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c23"><span>Exercise 6's tests pass</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c131"><span>Exercise 8 reports correct runs, tokens and time for both versions over 10 runs each, with a written ship decision</span></label></li>
 </ul>
 </section><section class="module kind-aie" data-mod="aie-604-evals-and-production-weeks-3740"><h3 id="aie-604-evals-and-production-weeks-3740">AIE 604 — Evals and production (Weeks 37–40)</h3>
 <p><strong>Summary:</strong> Measuring whether an LLM feature actually works, and running it safely and cheaply in production. Systematic evaluation is what separates professional AI engineering from demos.</p>
@@ -1710,6 +1717,16 @@ Who is our top support rep by sales?,database
 <td>Indirect prompt injection</td>
 </tr>
 <tr>
+<td><a href="https://arxiv.org/abs/2309.15217" target="_blank" rel="noopener">RAGAS: Automated Evaluation of Retrieval Augmented Generation</a> — Es et al.</td>
+<td>Paper</td>
+<td>Faithfulness and answer relevance for RAG</td>
+</tr>
+<tr>
+<td><a href="https://github.com/zilliztech/GPTCache" target="_blank" rel="noopener">GPTCache</a></td>
+<td>Documentation</td>
+<td>Reusing answers for questions that mean the same thing</td>
+</tr>
+<tr>
 <td><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications</a></td>
 <td>Article</td>
 <td>Security risks checklist</td>
@@ -1757,7 +1774,7 @@ Who is our top support rep by sales?,database
 <td>38</td>
 <td>Tracing, observability, evals in CI</td>
 <td>Shankar and Husain part IV; Langfuse documentation; OpenTelemetry GenAI conventions</td>
-<td>Exercises 3 and 5</td>
+<td>Exercises 3, 5 and 7</td>
 </tr>
 <tr>
 <td>39</td>
@@ -1769,7 +1786,7 @@ Who is our top support rep by sales?,database
 <td>40</td>
 <td>Cost, latency, open models; term project</td>
 <td>Huyen ch. 9–10; Ollama documentation</td>
-<td>Exercise 6; term project; checkpoint test</td>
+<td>Exercises 6 and 8; term project; checkpoint test</td>
 </tr>
 </tbody>
 </table></div>
@@ -1786,6 +1803,19 @@ J6,Who wrote Pride and Prejudice?,Jane Austen,It was Charlotte Brontë.,incorrec
 J7,What is the boiling point of water at sea level in Celsius?,100,Around 100 degrees.,correct
 J8,What is the boiling point of water at sea level in Celsius?,100,&quot;It depends on altitude, but usually 90.&quot;,incorrect
 </code></pre>
+<p>Sample data (synthetic) — cached questions and new questions, save as <code>cache_pairs.csv</code> (<code>reuse</code> says whether the cached answer is right for the new question):</p>
+<pre><code class="language-csv">cached_question,new_question,reuse
+How do I reset my password?,&quot;I forgot my password, how do I change it?&quot;,yes
+How do I reset my password?,How do I change my username?,no
+What is your refund policy?,Can I get my money back?,yes
+Do you ship to Canada?,Do you deliver to Canada?,yes
+Do you ship to Canada?,Do you ship to Mexico?,no
+How many customers are in Brazil?,How many customers do we have in Brazil?,yes
+How many customers are in Brazil?,How many customers are in Argentina?,no
+What were total sales in 2010?,What were total sales in 2011?,no
+Which album has the most tracks?,What album contains the largest number of songs?,yes
+Which album has the most tracks?,Which album has the fewest tracks?,no
+</code></pre>
 <ol>
 <li><strong>Build an eval set.</strong> From the <a href="https://huggingface.co/datasets/rajpurkar/squad_v2" target="_blank" rel="noopener">SQuAD 2.0</a> validation set, sample 50 questions with contexts. Score a model's answers with exact match and token-level F1, then hand-check 10 disagreements between the two metrics.</li>
 <li><strong>Calibrate an LLM judge.</strong> Extend <code>judged.csv</code> to 30 rows with new cases, run an LLM judge on all of them, and compute agreement and Cohen's kappa against <code>human_label</code>. Change the judge prompt until agreement reaches at least 80%.</li>
@@ -1793,6 +1823,8 @@ J8,What is the boiling point of water at sea level in Celsius?,100,&quot;It depe
 <li><strong>Prompt-injection testing.</strong> Data: <a href="https://huggingface.co/datasets/deepset/prompt-injections" target="_blank" rel="noopener">deepset/prompt-injections</a> (labeled injection and benign prompts). Measure how often an app with a defensive system prompt follows injected instructions, then add an input classifier and report both the block rate and the false-positive rate on benign prompts. Add one <em>indirect</em> injection hidden in a retrieved document and test it too.</li>
 <li><strong>Tracing.</strong> Add tracing to the AIE 602 RAG pipeline and capture one full request: retrieval, model calls, tokens, latency and cost per step.</li>
 <li><strong>Local vs hosted.</strong> Run 100 prompts from <a href="https://huggingface.co/datasets/databricks/databricks-dolly-15k" target="_blank" rel="noopener">databricks-dolly-15k</a> through a local open model and a hosted API. Compare judged quality, p50 and p95 latency, and cost per 1,000 requests.</li>
+<li><strong>RAG faithfulness.</strong> Take the AIE 602 SciFact RAG system and answer 30 test claims. Score each answer for <em>faithfulness</em> (is every statement backed by the retrieved passages?) and <em>answer relevance</em> with an LLM judge, then hand-label 10 answers and report how often you and the judge agree. Control: for 10 of the claims, swap in passages from unrelated claims and rerun; faithfulness on those must drop clearly, or the judge isn't measuring anything. Put retrieval scores (recall@5, nDCG@10) and answer scores in one table, and name one failure where retrieval was right but the answer wasn't.</li>
+<li><strong>Semantic caching.</strong> Embed both columns of <code>cache_pairs.csv</code> and treat a new question as a cache hit when its cosine similarity to the cached one is above a threshold. Sweep the threshold from 0.80 to 0.98 and, at each step, report the hit rate and the <em>wrong-hit</em> rate (a hit where <code>reuse</code> is <code>no</code>). Pick the lowest threshold with no wrong hits, then test it on 500 pairs from the <a href="https://huggingface.co/datasets/nyu-mll/glue" target="_blank" rel="noopener">GLUE QQP</a> validation split (labeled duplicate questions) and report the same two rates. Finally, add the cache in front of the term-project app and estimate the money saved per 1,000 requests, assuming 30% of real questions repeat in meaning. Explain why near-misses like "2010 vs 2011" are the main risk, and one way to guard against them.</li>
 </ol>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
@@ -1800,6 +1832,8 @@ J8,What is the boiling point of water at sea level in Celsius?,100,&quot;It depe
 <li class="task"><label><input type="checkbox" data-id="c25"><span>The LLM judge agrees with human labels on at least 80% of 30 cases</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c26"><span>At least 90% of injection attempts are blocked, with the false-positive rate reported</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c27"><span>A one-page cost estimate for running the app for 1,000 daily users</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c132"><span>Exercise 7's faithfulness score drops clearly on the swapped-passage control, and the judge agrees with your labels on at least 8 of 10</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c133"><span>Exercise 8's chosen threshold has no wrong hits on <code>cache_pairs.csv</code>, with its QQP hit and wrong-hit rates reported</span></label></li>
 </ul>
 <p>Chapter numbers for <em>AI Engineering</em> refer to the first edition.</p>
 </section><h2 id="term-3-ai-solutions-engineering-weeks-4160">Term 3 — AI solutions engineering (Weeks 41–60)</h2>
@@ -2010,6 +2044,11 @@ J8,What is the boiling point of water at sea level in Celsius?,100,&quot;It depe
 <td>Layout-aware document parsing</td>
 </tr>
 <tr>
+<td><a href="https://arxiv.org/abs/2407.01449" target="_blank" rel="noopener">ColPali: Efficient Document Retrieval with Vision Language Models</a> — Faysse et al.</td>
+<td>Paper</td>
+<td>Searching page images directly, and the ViDoRe benchmark</td>
+</tr>
+<tr>
 <td><a href="https://docs.langchain.com/oss/python/langgraph/overview" target="_blank" rel="noopener">LangGraph documentation</a></td>
 <td>Documentation</td>
 <td>Stateful agent workflows</td>
@@ -2052,8 +2091,8 @@ J8,What is the boiling point of water at sea level in Celsius?,100,&quot;It depe
 <tr>
 <td>49</td>
 <td>Document AI and text-to-SQL</td>
-<td>Docling documentation</td>
-<td>Exercises 4 and 5</td>
+<td>Docling documentation; ColPali paper</td>
+<td>Exercises 4, 5 and 7</td>
 </tr>
 <tr>
 <td>50</td>
@@ -2095,6 +2134,7 @@ dee,contractor
 <li><strong>Receipt extraction.</strong> Data: <a href="https://huggingface.co/datasets/naver-clova-ix/cord-v2" target="_blank" rel="noopener">CORD v2</a> (scanned receipts with labeled fields). Extract menu items and totals from the test split with a document parser plus an LLM, or with a vision model. Report field-level accuracy against the labels.</li>
 <li><strong>Safe text-to-SQL.</strong> Over the <a href="https://github.com/lerocha/chinook-database" target="_blank" rel="noopener">Chinook</a> database, answer 15 natural-language questions with generated SQL. Run every query under a read-only database role, block any statement that isn't a <code>SELECT</code>, and report accuracy. Include the AIE 603 check questions.</li>
 <li><strong>Voice and frameworks.</strong> (a) Transcribe 50 utterances from <a href="https://www.openslr.org/12" target="_blank" rel="noopener">LibriSpeech</a> test-clean with an open speech-to-text model and report the word error rate; then build a voice loop (speech-to-text, LLM, text-to-speech) and measure average response time. (b) Rebuild the AIE 603 agent in LangGraph and write a one-page comparison with the plain-SDK version: code size, control, debugging and lock-in.</li>
+<li><strong>Multimodal RAG.</strong> Data: a document-page set from the <a href="https://huggingface.co/vidore" target="_blank" rel="noopener">ViDoRe benchmark</a> (page images of reports and slides, with questions and the page that answers each). Build two retrievers: (a) text only: parse each page with Docling, embed the text, search it as in AIE 602; (b) page images: embed each page image with a ColPali-style model and search with the question. Report recall@5 and nDCG@10 for both, split into questions answered by plain text and questions answered by a chart, table or figure. Then answer 20 questions with a vision model given the top 3 pages, and report answer accuracy and cost per question for each retriever.</li>
 </ol>
 <p><strong>Checkpoint test</strong></p>
 <ul class="checklist">
@@ -2103,6 +2143,7 @@ dee,contractor
 <li class="task"><label><input type="checkbox" data-id="c35"><span>Exercise 4 reaches at least 90% field accuracy on total amounts</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c36"><span>Exercise 5 blocks all write attempts and reaches at least 80% accuracy</span></label></li>
 <li class="task"><label><input type="checkbox" data-id="c37"><span>The voice loop responds in under 1.5 seconds on average</span></label></li>
+<li class="task"><label><input type="checkbox" data-id="c134"><span>Exercise 7 reports recall@5 and nDCG@10 for both retrievers, split by text and chart/table questions</span></label></li>
 </ul>
 </section><section class="module kind-sol" data-mod="sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153"><h3 id="sol-653-security-privacy-compliance-and-responsible-ai-weeks-5153">SOL 653 — Security, privacy, compliance and responsible AI (Weeks 51–53)</h3>
 <p><strong>Summary:</strong> Enterprise AI deals are often won or lost in the security review. This course covers threat-modeling an LLM system, protecting personal data, answering security questionnaires, and mapping a deployment to the laws and frameworks customers cite.</p>
