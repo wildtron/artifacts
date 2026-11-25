@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security Teams Curriculum: Blue, Red, Purple</title>
+<style>
+  :root{
+    --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6a63; --card:#ffffff; --line:#e4e2da;
+    --accent:#3b3a8f; --accent-soft:#ecebf8; --ok:#2f7d4f; --chip:#efede5;
+    --on-team:#fff; --blue:#2b6cb0; --blue-bg:#eef4fc; --red:#b83232; --red-bg:#fcefee; --purple:#7a4fb0; --purple-bg:#f4eefb;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#161614; --fg:#ecebe5; --muted:#a09f96; --card:#1f1f1c; --line:#33322d;
+      --accent:#a9a7f0; --accent-soft:#25243a; --ok:#5cc489; --chip:#2a2a26;
+      --on-team:#161614; --blue:#6aa6e8; --blue-bg:#172231; --red:#ee7d7d; --red-bg:#2e1a1a; --purple:#bb95ea; --purple-bg:#251d31; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 16px 80px}
+  h1{font-size:2rem;margin:0 0 6px;letter-spacing:-.02em}
+  h2{font-size:1.35rem;margin:44px 0 12px;letter-spacing:-.01em}
+  h3{font-size:1rem;margin:18px 0 6px}
+  p{margin:8px 0}
+  a{color:var(--accent)}
+  .sub{color:var(--muted);max-width:72ch}
+  .nav{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem;margin-bottom:14px}
+  .note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:16px 0;font-size:.94rem}
+  .bar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;margin:20px 0 0}
+  .progress{height:10px;background:var(--chip);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+  .barrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:.9rem;color:var(--muted)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:99px;padding:3px 11px;font-size:.82rem;cursor:pointer}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.link{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.88rem;padding:0;text-decoration:underline}
+  .tbl{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--chip);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .map{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .map a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--fg);text-decoration:none}
+  .map a:hover{border-color:var(--accent)}
+  .map b{display:block;font-size:.92rem}
+  .map small{color:var(--muted);display:block;margin:2px 0 8px}
+  .mini{height:4px;background:var(--chip);border-radius:9px;overflow:hidden}
+  .mini>i{display:block;height:100%;background:var(--ok);width:0}
+  .phase{margin-top:36px;scroll-margin-top:110px}
+  .phase>h2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .phase .tag{font-size:.75rem;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 9px;border-radius:99px}
+  details.proj{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden;scroll-margin-top:110px}
+  details.proj>summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+  details.proj>summary::-webkit-details-marker{display:none}
+  .ptitle{font-weight:650;font-size:1.05rem}
+  .pmeta{color:var(--muted);font-size:.85rem;grid-column:1/2}
+  .pstat{font-size:.82rem;color:var(--muted);grid-row:1/3;grid-column:2/3;text-align:right;white-space:nowrap}
+  .tags{display:inline-flex;gap:5px;margin-left:6px;vertical-align:middle;flex-wrap:wrap}
+  .tg{font-size:.72rem;font-weight:600;background:var(--chip);border-radius:5px;padding:1px 7px;color:var(--fg)}
+  .body{padding:2px 18px 18px;border-top:1px solid var(--line)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+  @media (max-width:720px){.cols{grid-template-columns:1fr}}
+  ul.plain{margin:6px 0;padding-left:20px}
+  ul.plain li{margin:3px 0}
+  .fw{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+  .fw span{font-size:.8rem;border:1px solid var(--line);border-radius:6px;padding:2px 8px;background:var(--bg)}
+  .fw span b{color:var(--accent);font-weight:650;margin-right:4px}
+  .ms{margin-top:14px}
+  .ms h4{margin:0 0 4px;font-size:.92rem}
+  label.chk{display:flex;gap:9px;align-items:flex-start;padding:3px 0;cursor:pointer}
+  label.chk input{margin-top:5px;accent-color:var(--ok)}
+  label.chk.done span{color:var(--muted);text-decoration:line-through}
+  ul.refs{list-style:none;margin:6px 0;padding:0}
+  ul.refs li{display:flex;gap:9px;align-items:baseline;padding:3px 0;font-size:.92rem}
+  ul.refs a{color:var(--fg);text-decoration-color:var(--line);text-underline-offset:3px}
+  ul.refs a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+  .ra{color:var(--muted)}
+  .rk{flex:none;width:44px;text-align:center;font-size:.68rem;font-weight:650;border-radius:5px;padding:1px 0;background:var(--chip);color:var(--muted)}
+  .rk-book{background:var(--accent-soft);color:var(--accent)}
+  .done-box{margin-top:14px;padding:10px 12px;background:var(--accent-soft);border-radius:8px;font-size:.92rem}
+  details.t-blue{background:var(--blue-bg);border-color:color-mix(in srgb,var(--blue) 35%,transparent);border-left:5px solid var(--blue)}
+  details.t-red{background:var(--red-bg);border-color:color-mix(in srgb,var(--red) 35%,transparent);border-left:5px solid var(--red)}
+  details.t-purple{background:var(--purple-bg);border-color:color-mix(in srgb,var(--purple) 35%,transparent);border-left:5px solid var(--purple)}
+  details.proj .body{border-top-color:color-mix(in srgb,var(--fg) 10%,transparent)}
+  .team{font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:5px;padding:1px 7px;margin-right:8px;color:var(--on-team);vertical-align:middle}
+  .team.blue{background:var(--blue)}.team.red{background:var(--red)}.team.purple{background:var(--purple)}
+  .chip.tb.on,.chip.tr.on,.chip.tp.on{color:var(--on-team)}
+  .map a.dim{opacity:.4}
+  .chip.tb.on{background:var(--blue);border-color:var(--blue)}.chip.tr.on{background:var(--red);border-color:var(--red)}.chip.tp.on{background:var(--purple);border-color:var(--purple)}
+  .chip.tb{background:var(--blue-bg)}.chip.tr{background:var(--red-bg)}.chip.tp{background:var(--purple-bg)}
+  ul.xl{list-style:none;padding:0;margin:6px 0;display:flex;flex-direction:column;gap:5px}
+  ul.xl a{display:inline-flex;align-items:center;gap:0;color:var(--fg);text-decoration:none;font-size:.92rem}
+  ul.xl a:hover span:last-child{text-decoration:underline}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;margin:10px 0}
+  .legend>span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .tcount{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .tcount span{font-size:.7rem;border-radius:4px;padding:0 6px}
+  .chiprow{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+  .hidden{display:none!important}
+  footer{margin-top:50px;color:var(--muted);font-size:.85rem}
+  @media print{.bar{position:static}details.proj{break-inside:avoid}.chips,button{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav" id="nav"></div>
+  <h1 id="h1"></h1>
+  <p class="sub" id="intro"></p>
+  <div id="pre"></div>
+
+  <div class="bar">
+    <div class="progress" aria-label="Overall progress"><i id="overallBar"></i></div>
+    <div class="barrow">
+      <span id="overallText">0 / 0</span>
+      <span class="chips chiprow" id="teamChips"></span>
+      <span class="chips chiprow" id="chips"></span>
+      <button class="link" id="expand">Expand all</button>
+      <button class="link" id="collapse">Collapse all</button>
+      <button class="link" id="reset">Reset progress</button>
+    </div>
+  </div>
+
+  <h2>Map</h2>
+  <div class="map" id="map"></div>
+
+  <div id="phases"></div>
+  <div id="post"></div>
+  <footer id="foot"></footer>
+</div>
+<script>
+const CONFIG = {
+  key: "security-teams-curriculum-v1",
+  title: "Security Teams Curriculum: Blue, Red, Purple",
+  h1: "Security Teams Curriculum",
+  intro: "One curriculum for three teams, from secure software to securing LLMs and AI agents. <b>Blue</b> modules build defences, <b>Red</b> modules test them on authorized targets, and <b>Purple</b> modules cover the overlap, where both teams work together to measure and close the gaps. Every module maps to MITRE ATT&amp;CK, D3FEND and ATLAS, the OWASP Top 10s, NIST and CIS. Each has a hands-on lab, milestone checklists and a clear \"done when\", and links to its counterparts on the other teams. Progress is saved in your browser.",
+  pre: `<div class="legend"><span><i style="background:var(--blue)"></i><span><b>Blue team</b>: prevent, detect, respond</span></span><span><i style="background:var(--red)"></i><span><b>Red team</b>: assess and emulate, with authorisation</span></span><span><i style="background:var(--purple)"></i><span><b>Purple team</b>: where both overlap</span></span></div>
+  <div class="note"><b>Ground rules:</b> Red Team work happens only on systems you own or are explicitly authorized in writing to test: your own lab, a cloud sandbox account, or intentionally vulnerable training targets. Start with <a href="#r-roe">Ethics, law and rules of engagement</a>. Every Red module ends with a handoff to Blue: the evidence, the fix, and the detection that should have fired.</div>
+  <div class="note"><b>How to use this:</b> use the team filter to follow one track, or work a phase across all three teams. The \"Linked modules\" in each card go both ways, so jump between the attack, the defence and the joint exercise for the same surface.</div>
+  <h2>Frameworks you will use</h2>
+  <div class="tbl"><table><thead><tr><th>Framework</th><th>What it is for</th><th>Where it shows up</th></tr></thead><tbody>
+  <tr><td><a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK</a></td><td>Adversary tactics and techniques, observed in the wild</td><td>Detection coverage, hunting, purple teaming</td></tr>
+  <tr><td><a href="https://d3fend.mitre.org/" target="_blank" rel="noopener">MITRE D3FEND</a></td><td>Defensive countermeasures mapped to ATT&amp;CK</td><td>Hardening, control selection</td></tr>
+  <tr><td><a href="https://atlas.mitre.org/" target="_blank" rel="noopener">MITRE ATLAS</a></td><td>Adversary techniques against AI/ML systems</td><td>Phase 6</td></tr>
+  <tr><td><a href="https://cwe.mitre.org/top25/" target="_blank" rel="noopener">CWE Top 25</a> / <a href="https://capec.mitre.org/" target="_blank" rel="noopener">CAPEC</a></td><td>Weakness and attack-pattern catalogues</td><td>Secure coding, code review</td></tr>
+  <tr><td><a href="https://owasp.org/Top10/" target="_blank" rel="noopener">OWASP Top 10</a>, <a href="https://owasp.org/www-project-application-security-verification-standard/" target="_blank" rel="noopener">ASVS</a>, <a href="https://owasp.org/API-Security/" target="_blank" rel="noopener">API Top 10</a>, <a href="https://owaspsamm.org/" target="_blank" rel="noopener">SAMM</a></td><td>Web/API risks, verification requirements, program maturity</td><td>Phase 1</td></tr>
+  <tr><td><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications</a> and the Agentic Top 10</td><td>Risks specific to LLM apps and autonomous agents</td><td>Phase 6</td></tr>
+  <tr><td><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">NIST CSF 2.0</a>, <a href="https://csrc.nist.gov/pubs/sp/800/218/final" target="_blank" rel="noopener">SSDF</a>, <a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener">SP 800-61r3</a>, <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">AI RMF</a></td><td>Program structure, secure development, incident response, AI risk</td><td>Throughout</td></tr>
+  <tr><td><a href="https://www.cisecurity.org/controls" target="_blank" rel="noopener">CIS Controls</a> / <a href="https://www.cisecurity.org/cis-benchmarks" target="_blank" rel="noopener">Benchmarks</a></td><td>Prioritised safeguards and hardening baselines</td><td>Phase 5</td></tr>
+  <tr><td><a href="https://slsa.dev/" target="_blank" rel="noopener">SLSA</a>, <a href="https://www.sigstore.dev/" target="_blank" rel="noopener">Sigstore</a>, <a href="https://scorecard.dev/" target="_blank" rel="noopener">OpenSSF Scorecard</a></td><td>Software supply chain integrity</td><td>Phase 2</td></tr>
+  </tbody></table></div>
+  `,
+  post: "",
+  foot: "Core shelf: Security Engineering (Anderson), Threat Modeling (Shostack), The Practice of Network Security Monitoring (Bejtlich), Intelligence-Driven Incident Response (Roberts and Brown), Real-World Bug Hunting (Yaworski), Red Team Development and Operations (Vest and Tubberville), Not with a Bug, But with a Sticker (Siva Kumar and Anderson), and Developer's Playbook for Large Language Model Security (Wilson).",
+  nav: [["← All pages", "index.html"]],
+  labels: { a: "What you will learn", b: "Hands-on lab", checks: "Milestones", c: "Stretch goals", links: "Linked modules", done: "Done when:", unit: "milestones" }
+};
+const PHASES = [
+  {id:"p0", name:"Phase 0: Foundations", tag:"everyone", time:"5 to 7 weeks", goal:"Shared ground for every team: the systems you defend or test, how to reason about threats, and the legal and ethical rules that make offensive work legitimate."},
+  {id:"p1", name:"Phase 1: Application security", tag:"AppSec", time:"8 to 10 weeks", goal:"Blue stops vulnerabilities from being written and catches them before release. Red finds the ones that got through and proves their impact on intentionally vulnerable targets."},
+  {id:"p2", name:"Phase 2: Supply chain, cloud and containers", tag:"platform", time:"6 to 8 weeks", goal:"Secure, and then assess, what your software is built from and where it runs."},
+  {id:"p3", name:"Phase 3: Detection engineering and adversary emulation", tag:"SOC + emulation", time:"8 to 10 weeks", goal:"Blue collects signals and writes detections. Red emulates real adversary behaviour from ATT&CK. Purple closes the loop by testing every detection against that emulation."},
+  {id:"p4", name:"Phase 4: Response, forensics, intel and hunting", tag:"DFIR", time:"8 to 10 weeks", goal:"Handle incidents end to end, and go looking for what your detections missed."},
+  {id:"p5", name:"Phase 5: Identity, hardening and human factors", tag:"hardening", time:"6 to 8 weeks", goal:"Shrink the attack surface and decide which fixes matter most."},
+  {id:"p6", name:"Phase 6: AI and LLM security", tag:"AI security", time:"10 to 12 weeks", goal:"Blue governs, secures and monitors models, LLM apps and agents. Red tests them with ATLAS and the OWASP LLM Top 10. Purple turns the findings into regression evals that run on every release."},
+  {id:"p7", name:"Phase 7: Purple team program and capstone", tag:"purple team", time:"6 to 8 weeks", goal:"Bring the teams together: run purple exercises as an ongoing program, then a full capstone engagement against a lab organisation you built and defend."}
+];
+
+const ITEMS = [
+/* ---------- P0 ---------- */
+{ id:"p-fund", phase:"p0", title:"Security fundamentals and the systems you defend or test", tags:["NIST"], time:"2 to 3 weeks",
+  summary:"The CIA triad and its limits, defence in depth, least privilege, and how Linux, Windows and TCP/IP work at the level a defender needs. Without this, logs are just noise.",
+  fw:[["NIST CSF 2.0","Govern, Identify, Protect, Detect, Respond, Recover"],["CIS Controls","IG1 safeguards"]],
+  a:["CIA, AAA, defence in depth, least privilege, fail-safe defaults (Saltzer and Schroeder)","TCP/IP, DNS, HTTP(S), TLS handshakes and where each can be observed","Linux: processes, users, permissions, systemd, journald, auditd","Windows: processes, services, registry, Event Log, how Active Directory fits together","Risk = likelihood × impact; assets, threats, vulnerabilities, controls"],
+  b:["Build a home lab: hypervisor, one Linux server, one Windows client, and a small domain controller on an isolated network","Capture your own traffic in Wireshark and identify DNS, the TLS handshake and HTTP","Map your lab against the six NIST CSF 2.0 functions"],
+  checks:[{h:"M1: Lab", items:["Isolated lab network with snapshots so you can reset","Linux and Windows hosts reachable only inside the lab","Network diagram and an asset inventory in a README"]},
+          {h:"M2: Concepts", items:["Explain each CSF 2.0 function with one control from your lab","Annotated packet capture of a full HTTPS page load","Write a one-page risk register for the lab (5 risks, owner, treatment)"]}],
+  c:["Earn a fundamentals certification such as Security+ or ISC2 CC","Rebuild the lab as code (Vagrant, Ludus or Terraform)"],
+  links:["r-roe","r-foundations","b-telemetry"],
+  refs:[["Book","Security Engineering, 3rd ed.","Ross Anderson","https://www.cl.cam.ac.uk/~rja14/book.html"],["Spec","NIST Cybersecurity Framework 2.0","NIST","https://www.nist.gov/cyberframework"],["Docs","CIS Critical Security Controls","CIS","https://www.cisecurity.org/controls"],["Book","The Linux Command Line","William Shotts","https://linuxcommand.org/tlcl.php"]],
+  done:"You can sketch your lab from memory, explain where each kind of log comes from, and justify each item in your risk register." },
+
+{ id:"p-threatmodel", phase:"p0", title:"Threat modeling", tags:["MITRE","OWASP"], time:"2 weeks",
+  summary:"Ask four questions: what are we building, what can go wrong, what are we going to do about it, and did we do a good job? This module teaches STRIDE, attack trees, data-flow diagrams and how to pick which threats to handle first.",
+  fw:[["Threat Modeling Manifesto","4 questions"],["STRIDE","per element"],["CAPEC","attack patterns"],["MITRE ATT&CK","tactics for realism"]],
+  a:["Data-flow diagrams with trust boundaries","STRIDE per element, LINDDUN for privacy, PASTA at a glance","Attack trees and abuse cases","Turning threats into backlog items and test cases","Threat modeling for ML and LLM systems (preview of Phase 6)"],
+  b:["Threat model a small web app (OWASP Juice Shop works well) with OWASP Threat Dragon","Turn the top threats into tickets with acceptance criteria"],
+  checks:[{h:"M1: Model", items:["DFD with trust boundaries, data stores and external entities","At least 15 STRIDE threats, each with a mitigation","Each threat linked to a CAPEC or CWE ID"]},
+          {h:"M2: Use it", items:["Top 5 threats turned into tickets with test cases","Lightweight threat-model template your team could use in a 30-minute review"]}],
+  c:["Run a threat-modeling session with someone else and facilitate it","Try Elevation of Privilege, the card game"],
+  links:["r-method"],
+  refs:[["Book","Threat Modeling: Designing for Security","Adam Shostack",""],["Docs","Threat Modeling Manifesto","","https://www.threatmodelingmanifesto.org/"],["Docs","OWASP Threat Modeling Cheat Sheet","OWASP","https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"],["Tool","OWASP Threat Dragon","OWASP","https://owasp.org/www-project-threat-dragon/"]],
+  done:"Someone can hand you an architecture diagram and in an hour you produce a ranked list of threats with a mitigation for each." },
+
+/* ---------- P1 ---------- */
+{ id:"b-ssdlc", phase:"p1", title:"Secure SDLC and AppSec programs", tags:["NIST","OWASP"], time:"1 to 2 weeks",
+  summary:"Security as part of how software gets built: requirements, design review, secure defaults, security gates in CI, and measuring program maturity.",
+  fw:[["NIST SSDF (SP 800-218)","PO, PS, PW, RV"],["OWASP SAMM","5 business functions"],["OWASP ASVS","as requirements"]],
+  a:["SSDF practice groups and how they map onto a real pipeline","SAMM assessment and a roadmap to improve","Security champions, paved roads, guardrails rather than gates","Shift-left versus shift-everywhere, and how to measure it"],
+  b:["Run a SAMM self-assessment for a real or imagined team","Write a one-page secure SDLC policy mapped to SSDF tasks"],
+  checks:[{h:"M1: Assess", items:["SAMM scorecard with current and target maturity","Gap list mapped to SSDF practices"]},
+          {h:"M2: Plan", items:["12-month roadmap with 3 quick wins","Definition of done for security in pull requests"]}],
+  c:["Compare SSDF with Microsoft SDL and BSIMM"],
+  links:["r-method"],
+  refs:[["Spec","NIST SP 800-218 Secure Software Development Framework","NIST","https://csrc.nist.gov/pubs/sp/800/218/final"],["Docs","OWASP SAMM","OWASP","https://owaspsamm.org/"],["Book","Alice and Bob Learn Application Security","Tanya Janca",""]],
+  done:"You can explain how a commit becomes a release and point to the security control at each step." },
+
+{ id:"b-securecode", phase:"p1", title:"Secure coding: OWASP Top 10 and ASVS", tags:["OWASP","CWE"], time:"3 weeks",
+  summary:"Learn each OWASP Top 10 risk from the defender's side: the root cause, the fix in code, and how you verify it with ASVS.",
+  fw:[["OWASP Top 10:2025","A01 to A10"],["OWASP ASVS 5.0","L1 and L2"],["CWE Top 25","most dangerous weaknesses"]],
+  a:["Access control done centrally, deny by default (A01)","Misconfiguration and secure defaults (A02); supply chain failures (A03)","Crypto failures (A04); injection and parameterised queries, output encoding (A05)","Insecure design (A06); authentication failures (A07); integrity failures (A08)","Logging and alerting failures (A09); handling exceptional conditions safely (A10)","CSP, CORS, cookie flags and other security headers"],
+  b:["Take a deliberately vulnerable app (Juice Shop, or DVWA) and fix rather than exploit: patch at least one issue per Top 10 category","Write a regression test for each fix"],
+  checks:[{h:"M1: Learn", items:["One-page note per Top 10 category: root cause, CWE, fix, ASVS requirement","Work through the PortSwigger Academy theory for each category"]},
+          {h:"M2: Fix", items:["10 fixes merged, each with a failing-then-passing test","Security headers and CSP set up and scored","ASVS L1 checklist completed for the app"]}],
+  c:["Do the same exercise in a second language or framework","Contribute a fix or doc improvement to an OWASP project"],
+  links:["r-web","r-auth"],
+  refs:[["Spec","OWASP Top 10","OWASP","https://owasp.org/Top10/"],["Spec","OWASP ASVS","OWASP","https://owasp.org/www-project-application-security-verification-standard/"],["Docs","OWASP Cheat Sheet Series","OWASP","https://cheatsheetseries.owasp.org/"],["Docs","Web Security Academy","PortSwigger","https://portswigger.net/web-security"],["Docs","CWE Top 25","MITRE","https://cwe.mitre.org/top25/"]],
+  done:"For every Top 10 category you can show a fix in code and a test that would catch a regression." },
+
+{ id:"b-api", phase:"p1", title:"API security", tags:["OWASP"], time:"2 weeks",
+  summary:"APIs fail in their own way: broken object- and function-level authorisation, too much data in responses, no rate limits, and forgotten endpoints.",
+  fw:[["OWASP API Security Top 10 (2023)","API1 to API10"],["ASVS","V4 API and web service"]],
+  a:["BOLA, BOPLA and BFLA, and how to design authorisation checks that prevent them","Schema-first design with OpenAPI, and validating requests and responses against it","Rate limits, quotas and protecting sensitive business flows","API inventory and finding shadow APIs; SSRF defences","GraphQL and gRPC specifics"],
+  b:["Deploy OWASP crAPI locally, then harden it: add authorisation checks, schema validation and rate limits","Build an API inventory from gateway logs"],
+  checks:[{h:"M1: Harden", items:["Central authorisation middleware with tests for BOLA and BFLA","Response filtering removes fields that should not be exposed","Rate limiting on auth and expensive endpoints"]},
+          {h:"M2: Govern", items:["OpenAPI spec for every endpoint, enforced in CI","API inventory with owner and data classification"]}],
+  c:["Add API contract tests that fuzz against the schema"],
+  links:["r-api"],
+  refs:[["Spec","OWASP API Security Top 10","OWASP","https://owasp.org/API-Security/"],["Tool","OWASP crAPI","OWASP","https://github.com/OWASP/crAPI"],["Book","Hacking APIs","Corey Ball",""]],
+  done:"Every endpoint in your API is in the inventory, has an owner, and has an authorisation test." },
+
+{ id:"b-appsec-tools", phase:"p1", title:"AppSec tooling: SAST, DAST, SCA and secrets scanning", tags:["OWASP","CWE"], time:"2 weeks",
+  summary:"Automate what can be automated, tune it so developers trust it, and send findings to the people who can fix them.",
+  fw:[["NIST SSDF","PW.7, PW.8, RV.1"],["CWE","rule mapping"]],
+  a:["SAST with Semgrep and CodeQL, and writing your own rules","DAST with OWASP ZAP in CI","SCA with OSV-Scanner or Trivy; reachability and noise","Secrets scanning and pre-commit hooks","Triage, false-positive budgets, metrics (MTTR, escape rate)"],
+  b:["Build a CI pipeline for a sample app that runs SAST, SCA, secrets scanning and a ZAP baseline scan","Write 3 custom Semgrep rules for patterns specific to your code"],
+  checks:[{h:"M1: Pipeline", items:["All four scanners run on every PR","Results land in one place (SARIF, code scanning)","Build fails only on high-confidence, high-severity findings"]},
+          {h:"M2: Tune", items:["3 custom rules with test cases","False-positive rate measured and reduced","Triage runbook for developers"]}],
+  c:["Add fuzzing (OSS-Fuzz style) for one parser"],
+  links:["r-codereview","r-binary"],
+  refs:[["Docs","Semgrep docs","Semgrep","https://semgrep.dev/docs/"],["Docs","CodeQL docs","GitHub","https://codeql.github.com/docs/"],["Tool","OWASP ZAP","ZAP","https://www.zaproxy.org/"],["Tool","OSV-Scanner","Google","https://google.github.io/osv-scanner/"]],
+  done:"Developers see useful findings in their PR within minutes, and you can show the false-positive rate going down." },
+
+{ id:"b-crypto", phase:"p1", title:"Applied cryptography, secrets and identity protocols", tags:["OWASP","NIST"], time:"2 weeks",
+  summary:"Use well-tested building blocks correctly: TLS, password hashing, encryption at rest, key management, and getting OAuth 2.0 and OIDC right.",
+  fw:[["OWASP Top 10","A04 Cryptographic Failures, A07 Authentication Failures"],["ASVS","V6, V11 crypto and auth"],["NIST SP 800-63B","authenticators"]],
+  a:["Symmetric vs asymmetric, AEAD, why you never write your own crypto","Password storage: Argon2id, bcrypt; MFA and passkeys (WebAuthn)","TLS configuration and certificate lifecycle","Secrets management: Vault or cloud KMS, rotation, short-lived credentials","OAuth 2.0 / OIDC flows, PKCE, token storage and validation; post-quantum migration planning"],
+  b:["Move a sample app from secrets in environment variables to a secrets manager with rotation","Add passkey login to a demo app","Score your TLS configuration and fix the findings"],
+  checks:[{h:"M1: Secrets", items:["No secrets in the repo or images (scanner proves it)","Database credentials rotate automatically"]},
+          {h:"M2: Identity", items:["OIDC login with PKCE, with tokens validated correctly","Passkey or WebAuthn second factor","Passwords hashed with Argon2id using recommended settings"]}],
+  c:["Build a crypto inventory and plan for post-quantum algorithms"],
+  links:["r-auth"],
+  refs:[["Book","Serious Cryptography, 2nd ed.","Jean-Philippe Aumasson",""],["Spec","NIST SP 800-63B","NIST","https://pages.nist.gov/800-63-4/sp800-63b.html"],["Docs","OAuth 2.0 Security Best Current Practice (RFC 9700)","IETF","https://www.rfc-editor.org/rfc/rfc9700"],["Docs","Password Storage Cheat Sheet","OWASP","https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"]],
+  done:"You can review any auth flow or crypto use in a codebase and say whether it is correct, and why." },
+
+/* ---------- P2 ---------- */
+{ id:"b-supply", phase:"p2", title:"Software supply chain security", tags:["OWASP","NIST"], time:"2 weeks",
+  summary:"Dependencies, build systems and artifacts are part of your attack surface. Make builds provable, artifacts signed and dependencies known.",
+  fw:[["SLSA","build levels 1 to 3"],["OWASP Top 10","A03 Software Supply Chain Failures, A08 Integrity Failures"],["OWASP Top 10 CI/CD Risks","CICD-SEC-1 to 10"],["ATT&CK","T1195 Supply Chain Compromise"]],
+  a:["SBOMs (CycloneDX, SPDX) and VEX","Signing and verifying with Sigstore (cosign), provenance attestations","Hardening CI/CD: pinned actions, least-privilege tokens, ephemeral runners, OIDC to the cloud","Dependency confusion and typosquatting, and how to defend against them","OpenSSF Scorecard for judging dependencies"],
+  b:["Take a repo to SLSA Build L2 or L3: generate an SBOM, sign the container image, attach provenance, and verify them at deploy time","Run Scorecard on your top 10 dependencies"],
+  checks:[{h:"M1: Know", items:["SBOM generated on every build","Scorecard results for key dependencies, with decisions recorded"]},
+          {h:"M2: Prove", items:["Images signed with cosign and verified by an admission policy","Provenance attestation attached","CI uses OIDC with no long-lived cloud keys"]}],
+  c:["Run a private package mirror with an allowlist"],
+  links:["r-supply"],
+  refs:[["Spec","SLSA","OpenSSF","https://slsa.dev/"],["Docs","Sigstore","OpenSSF","https://www.sigstore.dev/"],["Tool","OpenSSF Scorecard","OpenSSF","https://scorecard.dev/"],["Spec","OWASP Top 10 CI/CD Security Risks","OWASP","https://owasp.org/www-project-top-10-ci-cd-security-risks/"],["Book","Software Supply Chain Security","Cassie Crossley",""]],
+  done:"A production deploy is refused unless its image is signed and has provenance from your own CI." },
+
+{ id:"b-cloud", phase:"p2", title:"Cloud security posture and IAM", tags:["MITRE","CIS"], time:"3 weeks",
+  summary:"In the cloud, identity is the new perimeter. Learn the shared responsibility model, IAM, logging and posture management. The Cloud Security Review page on this site goes deeper on IAM, compliance and IaC.",
+  fw:[["ATT&CK Cloud matrix","IaaS, SaaS, Identity Provider"],["CIS Benchmarks","AWS / Azure / GCP foundations"],["CSA CCM","control mapping"]],
+  a:["Shared responsibility, account and organization structure, guardrails (SCPs, policies)","IAM least privilege, workload identity, access analysis","Cloud audit logs (CloudTrail, Activity Log, Audit Logs) and where they go","Posture management with Prowler or similar; IaC scanning (Checkov, tfsec)","Data protection: KMS, bucket policies, public access blocks"],
+  b:["In a sandbox account, deploy a deliberately misconfigured environment with Terraform, scan it with Prowler, and fix it back to the CIS baseline","Centralise audit logs into your SIEM (see Logging and telemetry pipelines)"],
+  checks:[{h:"M1: Baseline", items:["Prowler report before and after, with findings fixed","Org-level guardrails that prevent public buckets and root use"]},
+          {h:"M2: Observe", items:["Audit logs centralised and tamper-resistant","Alert on 3 high-risk IAM events"]}],
+  c:["Map your cloud detections to the ATT&CK Cloud matrix"],
+  links:["r-cloud"],
+  refs:[["Docs","ATT&CK Cloud Matrix","MITRE","https://attack.mitre.org/matrices/enterprise/cloud/"],["Tool","Prowler","Prowler","https://github.com/prowler-cloud/prowler"],["Docs","CIS Benchmarks","CIS","https://www.cisecurity.org/cis-benchmarks"],["Book","Practical Cloud Security, 2nd ed.","Chris Dotson",""],["Docs","Cloud Security Review (companion page)","this site","cloud-security-review.html"]],
+  done:"Your sandbox passes the CIS foundations benchmark and alerts on risky IAM changes within minutes." },
+
+{ id:"b-k8s", phase:"p2", title:"Container and Kubernetes security", tags:["MITRE","CIS"], time:"2 to 3 weeks",
+  summary:"Harden the image, the cluster and the runtime. Then detect what gets past those controls.",
+  fw:[["ATT&CK Containers matrix",""],["Microsoft Threat Matrix for Kubernetes",""],["CIS Kubernetes Benchmark",""],["NSA/CISA Kubernetes Hardening Guide",""]],
+  a:["Minimal and distroless images, image scanning with Trivy","Pod Security Standards, RBAC, NetworkPolicies, secrets","Admission control (Kyverno or OPA Gatekeeper)","Runtime detection with Falco or Tetragon (eBPF)","Cluster audit logging"],
+  b:["Spin up a local cluster (kind or k3d), run kube-bench, fix the findings, enforce Pod Security Standards (restricted) and a default-deny network policy","Deploy Falco and trigger its rules safely with test events"],
+  checks:[{h:"M1: Harden", items:["kube-bench report before and after","Restricted pod security on app namespaces","Default-deny NetworkPolicy"]},
+          {h:"M2: Detect", items:["Falco alerts forwarded to the SIEM","Audit log policy turned on and collected"]}],
+  c:["Practise on Kubernetes Goat from the defender's side"],
+  links:["r-k8s"],
+  refs:[["Docs","Threat Matrix for Kubernetes","Microsoft","https://microsoft.github.io/Threat-Matrix-for-Kubernetes/"],["Tool","Falco","CNCF","https://falco.org/"],["Book","Container Security","Liz Rice",""],["Book","Hacking Kubernetes","Andrew Martin and Michael Hausenblas",""]],
+  done:"A pod that tries to run privileged is refused, and an unexpected shell in a container raises an alert." },
+
+/* ---------- P3 ---------- */
+{ id:"b-telemetry", phase:"p3", title:"Logging and telemetry pipelines", tags:["MITRE","NIST"], time:"2 to 3 weeks",
+  summary:"You can't detect what you don't collect. Choose data sources based on ATT&CK data components, then normalise them and keep costs under control.",
+  fw:[["ATT&CK","Data Sources and Data Components"],["OWASP Top 10:2025","A09 Security Logging and Alerting Failures"],["CIS Control 8","Audit Log Management"]],
+  a:["Sysmon with a community config; Windows audit policy","auditd, journald and osquery on Linux","Shipping and normalising logs: Elastic Common Schema, OCSF","Retention, sampling, cost and privacy","Application security logging (what to log and what never to log)"],
+  b:["Stand up a SIEM (Elastic, Wazuh or Security Onion) and send it Sysmon, Linux, cloud and app logs from your lab","Build a data-source coverage map in ATT&CK Navigator"],
+  checks:[{h:"M1: Collect", items:["Windows (Sysmon + Security log) and Linux logs arriving","Application auth events logged in structured JSON"]},
+          {h:"M2: Map", items:["Navigator layer showing which techniques you have data for","Retention and cost notes per data source"]}],
+  c:["Use OpenTelemetry to correlate app traces with security events"],
+  links:["r-emulation"],
+  refs:[["Tool","Sysmon","Microsoft","https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"],["Tool","ATT&CK Navigator","MITRE","https://mitre-attack.github.io/attack-navigator/"],["Docs","Security Onion documentation","Security Onion","https://docs.securityonion.net/"],["Docs","Logging Cheat Sheet","OWASP","https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"]],
+  done:"For any ATT&CK technique you're asked about, you can say whether you have the data to see it." },
+
+{ id:"b-detect", phase:"p3", title:"Detection engineering", tags:["MITRE"], time:"3 to 4 weeks",
+  summary:"Treat detections as code: write them, test them against real emulated behaviour, version them and measure them.",
+  fw:[["ATT&CK","technique-level coverage"],["Pyramid of Pain","target behaviours, not hashes"],["Palantir ADS","alert documentation"]],
+  a:["Sigma rules and converting them to your SIEM's query language","Behaviour-based vs indicator-based detection","Testing detections with Atomic Red Team in your own lab","Detection-as-code: repo, CI, unit tests with recorded logs","Alert tuning, severity, and tracking precision and recall"],
+  b:["Write 10 Sigma detections across at least 4 ATT&CK tactics, validate each by running the matching Atomic test in your lab, and document each with the ADS template"],
+  checks:[{h:"M1: Write", items:["10 Sigma rules in a git repo","Each has an ADS document: goal, blind spots, false positives, response"]},
+          {h:"M2: Prove", items:["Each rule fires on its Atomic test in the lab","CI converts and lints the rules","Coverage layer updated in Navigator"]}],
+  c:["Contribute a rule to SigmaHQ","Score your coverage with DeTT&CT"],
+  links:["r-emulation","p-program"],
+  refs:[["Tool","Sigma","SigmaHQ","https://github.com/SigmaHQ/sigma"],["Tool","Atomic Red Team","Red Canary","https://github.com/redcanaryco/atomic-red-team"],["Docs","Alerting and Detection Strategy Framework","Palantir","https://github.com/palantir/alerting-detection-strategy-framework"],["Paper","The Pyramid of Pain","David Bianco","https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html"],["Docs","Elastic detection rules","Elastic","https://github.com/elastic/detection-rules"]],
+  done:"Every detection in your repo has a test that proves it fires, and documentation an analyst could act on at 3 a.m." },
+
+{ id:"b-nsm", phase:"p3", title:"Network security monitoring", tags:["MITRE"], time:"2 weeks",
+  summary:"Endpoints can lie, but the network rarely does. Use Zeek and Suricata to get visibility, and learn how to spot beaconing, tunneling and lateral movement.",
+  fw:[["ATT&CK","TA0011 Command and Control, TA0008 Lateral Movement, TA0010 Exfiltration"],["D3FEND","Network Traffic Analysis"]],
+  a:["Zeek logs (conn, dns, http, ssl, files) and what each tells you","Suricata IDS rules and tuning","Spotting beaconing and odd DNS from statistics","Visibility with encrypted traffic: JA4 fingerprints, SNI, certificates","Full packet capture vs flow data trade-offs"],
+  b:["Run Zeek and Suricata (or Security Onion) on your lab network; analyse public practice PCAPs such as malware-traffic-analysis.net exercises"],
+  checks:[{h:"M1: Deploy", items:["Zeek and Suricata logs in the SIEM","Baseline of normal traffic in the lab"]},
+          {h:"M2: Analyse", items:["3 PCAP exercises written up with indicators and timeline","A beaconing-detection query with a tested threshold"]}],
+  c:["Write a Zeek script for a custom detection"],
+  links:["r-network"],
+  refs:[["Book","The Practice of Network Security Monitoring","Richard Bejtlich",""],["Docs","Zeek documentation","Zeek","https://docs.zeek.org/"],["Docs","Suricata documentation","OISF","https://docs.suricata.io/"],["Docs","Malware traffic analysis exercises","Brad Duncan","https://www.malware-traffic-analysis.net/"]],
+  done:"Given a PCAP, you can rebuild what happened and turn it into a detection." },
+
+/* ---------- P4 ---------- */
+{ id:"b-ir", phase:"p4", title:"Incident response", tags:["NIST"], time:"2 to 3 weeks",
+  summary:"Prepare, detect and analyse, contain, eradicate, recover, learn. Under pressure, process is what keeps people calm.",
+  fw:[["NIST SP 800-61r3","mapped to CSF 2.0"],["SANS PICERL",""],["ATT&CK","scoping by technique"]],
+  a:["IR plans, roles, communication and legal/regulatory notification","Playbooks for common cases: phishing, ransomware, cloud key leak, insider","Triage and scoping; containment options and their trade-offs","Evidence handling and chain of custody","Blameless post-incident reviews"],
+  b:["Write 3 playbooks and run tabletop exercises against them; work through a Splunk Boss of the SOC (BOTS) dataset as a mock incident"],
+  checks:[{h:"M1: Prepare", items:["IR plan with roles, severity matrix and contact tree","3 playbooks mapped to ATT&CK techniques"]},
+          {h:"M2: Practise", items:["Tabletop run and lessons recorded","BOTS investigation written up as an incident report"]}],
+  c:["Automate one playbook step with a SOAR tool such as Shuffle"],
+  links:["p-capstone"],
+  refs:[["Spec","NIST SP 800-61r3 Incident Response Recommendations","NIST","https://csrc.nist.gov/pubs/sp/800/61/r3/final"],["Data","Boss of the SOC v3 dataset","Splunk","https://github.com/splunk/botsv3"],["Book","Intelligence-Driven Incident Response, 2nd ed.","Rebekah Brown and Scott Roberts",""]],
+  done:"You can lead a tabletop exercise and produce an incident report that management and engineers both find useful." },
+
+{ id:"b-dfir", phase:"p4", title:"Digital forensics", tags:["NIST"], time:"3 weeks",
+  summary:"Disk, memory, logs and cloud artifacts. Rebuild the timeline and say what you know, what you don't, and how confident you are.",
+  fw:[["NIST SP 800-86","forensics in IR"],["ATT&CK","map findings to techniques"]],
+  a:["Windows artifacts: event logs, prefetch, amcache, shimcache, registry, MFT","Linux artifacts: auth logs, shell history, systemd, cron","Memory forensics with Volatility 3","Super-timelines with Plaso; fast triage with Velociraptor, Hayabusa or Chainsaw","Cloud forensics: snapshots, audit logs and identity"],
+  b:["Work through public forensic challenge images (for example the DFIR Report or Ali Hadi's datasets); deploy Velociraptor in the lab and do a remote triage collection"],
+  checks:[{h:"M1: Disk and logs", items:["Timeline built from one Windows image","EVTX triage with Hayabusa or Chainsaw"]},
+          {h:"M2: Memory and scale", items:["Volatility analysis of one memory image","Velociraptor hunt across all lab hosts"]}],
+  c:["Learn basic static malware triage with YARA and Ghidra"],
+  links:["p-capstone"],
+  refs:[["Docs","Velociraptor","Rapid7","https://docs.velociraptor.app/"],["Tool","Volatility 3","Volatility Foundation","https://github.com/volatilityfoundation/volatility3"],["Tool","Hayabusa","Yamato Security","https://github.com/Yamato-Security/hayabusa"],["Book","The Art of Memory Forensics","Ligh, Case, Levy, Walters",""],["Docs","The DFIR Report","","https://thedfirreport.com/"]],
+  done:"Given an image, you can produce a timeline of attacker activity with evidence behind each entry." },
+
+{ id:"b-cti", phase:"p4", title:"Cyber threat intelligence", tags:["MITRE"], time:"2 weeks",
+  summary:"Find out who is likely to target you and how. Then turn that into priorities for detections, hunts and controls.",
+  fw:[["ATT&CK","Groups and Software"],["Diamond Model",""],["STIX 2.1 / TAXII",""]],
+  a:["Intelligence requirements and the intel cycle","Strategic, operational and tactical intel","Turning a threat report into ATT&CK techniques","Sharing with STIX/TAXII and MISP","Estimative language and judging how reliable a source is"],
+  b:["Pick 3 threat groups relevant to your sector, map them in ATT&CK Navigator, overlay your detection coverage, and prioritise the gaps"],
+  checks:[{h:"M1: Collect", items:["Intelligence requirements written","3 groups profiled with sources"]},
+          {h:"M2: Act", items:["Navigator layer: threat techniques against your coverage","Top 5 gaps turned into detection or hunt tickets"]}],
+  c:["Run MISP and ingest one feed"],
+  links:["r-emulation"],
+  refs:[["Docs","ATT&CK Groups","MITRE","https://attack.mitre.org/groups/"],["Docs","STIX/TAXII documentation","OASIS","https://oasis-open.github.io/cti-documentation/"],["Tool","MISP","MISP Project","https://www.misp-project.org/"]],
+  done:"Your detection roadmap is driven by named threats, not guesswork." },
+
+{ id:"b-hunt", phase:"p4", title:"Threat hunting", tags:["MITRE"], time:"2 weeks",
+  summary:"Start from a hypothesis, search for evidence, and turn what you learn into detections. Assume you have already been breached and go looking.",
+  fw:[["ATT&CK","hypotheses per technique"],["PEAK / TaHiTI","hunt frameworks"]],
+  a:["Hypothesis-driven, intel-driven and baseline hunts","Stacking, long-tail analysis, frequency analysis","Jupyter notebooks for hunting","Write-ups that turn hunt results into detections"],
+  b:["Run 3 hunts against the OTRF Security Datasets or your own emulation logs, using the ThreatHunter-Playbook approach"],
+  checks:[{h:"M1: Hunt", items:["3 hunts with hypothesis, data, queries and results","Notebook for at least one"]},
+          {h:"M2: Close the loop", items:["At least one hunt became a production detection","Data gaps found during hunting logged"]}],
+  c:["Hunt in cloud audit logs for anomalous identity behaviour"],
+  links:["r-emulation"],
+  refs:[["Data","Security Datasets","OTRF","https://github.com/OTRF/Security-Datasets"],["Docs","ThreatHunter-Playbook","OTRF","https://github.com/OTRF/ThreatHunter-Playbook"],["Docs","PEAK Threat Hunting Framework","Splunk","https://www.splunk.com/en_us/blog/security/peak-threat-hunting-framework.html"]],
+  done:"Each hunt ends with a new detection, a closed data gap, or a documented reason why neither was needed." },
+
+/* ---------- P5 ---------- */
+{ id:"b-identity", phase:"p5", title:"Identity and Active Directory hardening", tags:["MITRE","CIS"], time:"2 to 3 weeks",
+  summary:"Most breaches end up abusing identity. Shrink privileged access, remove dangerous attack paths and watch the identity plane closely.",
+  fw:[["ATT&CK","TA0006 Credential Access, TA0004 Privilege Escalation"],["D3FEND","Credential Hardening"],["CIS Control 5 and 6",""]],
+  a:["Tiered administration and privileged access workstations","Finding and removing attack paths with BloodHound (defender's view) and PingCastle","LAPS, Credential Guard, protected users, disabling legacy auth","Kerberos and NTLM risks at the concept level, and the events that reveal them","Entra ID / cloud identity: conditional access, phishing-resistant MFA"],
+  b:["Build GOAD or a small AD lab, run PingCastle and BloodHound, then fix it until the critical attack paths are gone"],
+  checks:[{h:"M1: Assess", items:["PingCastle score and BloodHound attack paths recorded","Privileged accounts inventoried"]},
+          {h:"M2: Fix", items:["LAPS deployed; legacy protocols restricted","Tier 0 isolated; attack paths to Domain Admin removed","Detections for high-risk identity events"]}],
+  c:["Deploy honey tokens or honey accounts as deception (MITRE Engage)"],
+  links:["r-ad"],
+  refs:[["Tool","PingCastle","Netwrix","https://www.pingcastle.com/"],["Tool","BloodHound Community Edition","SpecterOps","https://github.com/SpecterOps/BloodHound"],["Docs","Securing privileged access","Microsoft","https://learn.microsoft.com/en-us/security/privileged-access-workstations/overview"],["Docs","MITRE Engage","MITRE","https://engage.mitre.org/"]],
+  done:"BloodHound shows no path from an ordinary user to Domain Admin in your lab, and the high-risk events alert." },
+
+{ id:"b-endpoint", phase:"p5", title:"Endpoint and server hardening", tags:["CIS","MITRE"], time:"2 weeks",
+  summary:"Secure baselines, application control and EDR. Make the easy attacks fail and the hard ones noisy.",
+  fw:[["CIS Benchmarks",""],["D3FEND","Platform Hardening, Execution Isolation"],["ATT&CK Mitigations","M10xx"]],
+  a:["CIS baselines for Windows and Linux, applied as code","Application allowlisting (WDAC, AppLocker), attack surface reduction rules","PowerShell logging and constrained language mode","EDR concepts: telemetry, prevention, response actions","Patch cadence and configuration drift"],
+  b:["Harden lab hosts to CIS L1 with Ansible or Group Policy, then re-run the Atomic tests from Detection engineering and record which ones are now prevented and which are still detected"],
+  checks:[{h:"M1: Harden", items:["CIS L1 applied as code","PowerShell script-block logging on"]},
+          {h:"M2: Measure", items:["Before/after table of Atomic tests: prevented, detected, missed","Exceptions documented with owners"]}],
+  c:["Pilot application allowlisting in audit mode"],
+  links:["r-emulation"],
+  refs:[["Docs","ATT&CK Mitigations","MITRE","https://attack.mitre.org/mitigations/enterprise/"],["Docs","D3FEND","MITRE","https://d3fend.mitre.org/"],["Docs","Mappings Explorer","Center for Threat-Informed Defense","https://center-for-threat-informed-defense.github.io/mappings-explorer/"]],
+  done:"You can show, with numbers, how much your hardening reduced the techniques that succeed." },
+
+{ id:"b-vuln", phase:"p5", title:"Vulnerability management", tags:["NIST","CIS"], time:"1 to 2 weeks",
+  summary:"You will never patch everything, so decide by exploitability and exposure, not by CVSS score alone.",
+  fw:[["CVSS v4",""],["EPSS",""],["CISA KEV",""],["SSVC",""],["CIS Control 7",""]],
+  a:["Asset inventory as the foundation","Scanning with authenticated vs unauthenticated scans (OpenVAS, Nuclei templates)","Prioritising with KEV, EPSS, reachability and exposure","SLAs, exceptions, risk acceptance","Coordinated vulnerability disclosure and security.txt"],
+  b:["Scan the lab, then prioritise the findings with KEV, EPSS and SSVC and compare the result with a CVSS-only ranking"],
+  checks:[{h:"M1: Scan", items:["Authenticated scan of every lab host","Findings deduplicated against the asset inventory"]},
+          {h:"M2: Prioritise", items:["SSVC decision for top 10 findings","Remediation SLA policy","security.txt and a disclosure policy for a demo app"]}],
+  c:["Automate the KEV/EPSS enrichment"],
+  links:["r-network"],
+  refs:[["Spec","CVSS v4.0","FIRST","https://www.first.org/cvss/v4-0/"],["Data","EPSS","FIRST","https://www.first.org/epss/"],["Data","Known Exploited Vulnerabilities Catalog","CISA","https://www.cisa.gov/known-exploited-vulnerabilities-catalog"],["Docs","SSVC","CISA","https://www.cisa.gov/stakeholder-specific-vulnerability-categorization-ssvc"]],
+  done:"Your top 10 vulnerabilities are ranked by real-world risk, and you can defend that ranking." },
+
+/* ---------- P6 ---------- */
+{ id:"b-ai-gov", phase:"p6", title:"AI risk management and governance", tags:["NIST","AI"], time:"2 weeks",
+  summary:"Before touching controls, know what AI you run, what it can affect, and which rules apply. This module covers frameworks, inventories, impact assessments and policy.",
+  fw:[["NIST AI RMF 1.0","Govern, Map, Measure, Manage"],["NIST AI 600-1","Generative AI profile"],["ISO/IEC 42001","AI management system"],["EU AI Act","risk tiers"],["Google SAIF",""]],
+  a:["AI inventory: models, providers, data flows, agents and tools","Risk tiers and impact assessments","Acceptable-use policy for staff using AI tools; shadow AI","Third-party model and vendor risk","Mapping AI RMF to your existing controls"],
+  b:["Create an AI system inventory and an AI RMF profile for one LLM application; write an AI acceptable-use policy"],
+  checks:[{h:"M1: Map", items:["Inventory of AI systems with owner, data classification and autonomy level","AI RMF Map function completed for one system"]},
+          {h:"M2: Govern", items:["Acceptable-use policy","Risk register with mitigations mapped to OWASP LLM Top 10 and ATLAS"]}],
+  c:["Gap analysis against ISO/IEC 42001"],
+  links:["r-llm-method"],
+  refs:[["Spec","NIST AI Risk Management Framework","NIST","https://www.nist.gov/itl/ai-risk-management-framework"],["Spec","NIST AI 600-1 Generative AI Profile","NIST","https://doi.org/10.6028/NIST.AI.600-1"],["Docs","Secure AI Framework (SAIF)","Google","https://saif.google/"],["Docs","Guidelines for secure AI system development","NCSC / CISA","https://www.ncsc.gov.uk/collection/guidelines-secure-ai-system-development"],["Spec","ISO/IEC 42001","ISO","https://www.iso.org/standard/81230.html"]],
+  done:"For each AI system you own, you can name its owner, its data, its risk tier and its top three mitigations." },
+
+{ id:"b-llm-app", phase:"p6", title:"Securing LLM applications", tags:["OWASP","AI"], time:"3 weeks",
+  summary:"Prompt injection can't be fully solved by filters alone, so design the system to limit damage: treat model output as untrusted, isolate untrusted content, and keep secrets out of prompts.",
+  fw:[["OWASP LLM Top 10 (2025)","LLM01 to LLM10"],["MITRE ATLAS","AML.T0051 LLM Prompt Injection"],["NIST AI 100-2","adversarial ML taxonomy"]],
+  a:["Direct vs indirect prompt injection; why the system prompt is not a security boundary (LLM01, LLM07)","Output handling: encode, validate, never pass model output straight into a shell, SQL or HTML (LLM05)","Sensitive information disclosure and least-privilege retrieval (LLM02)","RAG security: per-user authorisation in vector stores, poisoned documents (LLM08)","Unbounded consumption: token budgets and rate limits (LLM10); misinformation and grounding (LLM09)","Guardrail models (Llama Guard, Prompt Guard), spotlighting and data marking — and their limits"],
+  b:["Build a small RAG chatbot over your own documents, then harden it: per-user retrieval filtering, output encoding, token budgets, an input/output classifier, and logging. Measure it with promptfoo or garak before and after"],
+  checks:[{h:"M1: Build and baseline", items:["RAG app with authentication and per-user document permissions","Baseline red-team scan results recorded"]},
+          {h:"M2: Harden", items:["Model output treated as untrusted in every sink","Guardrail classifier on input and output","Token and cost limits per user","Re-scan shows measurable improvement; residual risk documented"]}],
+  c:["Try the CaMeL / dual-LLM design pattern for untrusted data"],
+  links:["r-prompt","r-llm-method"],
+  refs:[["Spec","OWASP Top 10 for LLM Applications","OWASP GenAI","https://genai.owasp.org/llm-top-10/"],["Docs","MITRE ATLAS","MITRE","https://atlas.mitre.org/"],["Paper","Defending Against Indirect Prompt Injection Attacks With Spotlighting","Hines et al.","https://arxiv.org/abs/2403.14720"],["Paper","Defeating Prompt Injections by Design (CaMeL)","Debenedetti et al.","https://arxiv.org/abs/2503.18813"],["Tool","promptfoo","","https://github.com/promptfoo/promptfoo"],["Tool","PurpleLlama (Llama Guard, Prompt Guard)","Meta","https://github.com/meta-llama/PurpleLlama"],["Book","Developer's Playbook for Large Language Model Security","Steve Wilson",""]],
+  done:"Your app stays within its blast radius even when an injected instruction succeeds, and you can show test results to prove it." },
+
+{ id:"b-agent", phase:"p6", title:"Securing agents, tools and MCP", tags:["OWASP","AI"], time:"2 to 3 weeks",
+  summary:"Agents act on the world, so the risk moves from what the model says to what it does. Limit what agents can do, authorise every tool call, and keep a human in the loop where it matters.",
+  fw:[["OWASP LLM06","Excessive Agency"],["OWASP Top 10 for Agentic Applications","ASI01 to ASI10"],["MITRE ATLAS","agent techniques"]],
+  a:["The \"lethal trifecta\": private data + untrusted content + a way to send data out","Least-privilege tools, scoped credentials, per-action authorisation","Sandboxing code execution; network egress allowlists","MCP server trust: provenance, tool-description poisoning, version pinning","Human approval for high-impact actions; audit trails for every tool call","Memory and context poisoning; multi-agent trust boundaries"],
+  b:["Build an agent with 3 tools (read docs, search the web, send email to an allowlist). Add scoped credentials, a sandbox, egress controls and approval gates, then evaluate it with AgentDojo-style injection tasks"],
+  checks:[{h:"M1: Constrain", items:["Each tool has its own minimal credential","Code execution runs in a sandbox with no network","High-impact actions need human approval"]},
+          {h:"M2: Observe", items:["Every tool call logged with inputs, outputs and the triggering context","Detections for odd tool sequences such as read-then-send","Injection evaluation results before and after the controls"]}],
+  c:["Write an MCP server allowlist and pinning policy"],
+  links:["r-agent"],
+  refs:[["Spec","OWASP Top 10 for Agentic Applications (2026)","OWASP GenAI","https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"],["Docs","The lethal trifecta for AI agents","Simon Willison","https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"],["Paper","AgentDojo","Debenedetti et al.","https://arxiv.org/abs/2406.13352"],["Docs","Model Context Protocol","","https://modelcontextprotocol.io/"]],
+  done:"Even a fully hijacked agent in your lab cannot exfiltrate data or take an irreversible action without a human seeing it." },
+
+{ id:"b-mlops", phase:"p6", title:"ML pipeline and model supply chain security", tags:["MITRE","AI"], time:"2 weeks",
+  summary:"Models are code and data. Protect training data, model artifacts and the platforms that serve them.",
+  fw:[["MITRE ATLAS","ML Supply Chain Compromise, Poison Training Data"],["OWASP LLM03 / LLM04","Supply Chain, Data and Model Poisoning"],["SLSA","for models"]],
+  a:["Unsafe serialisation formats (pickle) vs safetensors; scanning models","Model provenance, signing and model cards","Data lineage and poisoning risks; dataset integrity","Securing notebooks, training clusters and model registries","Inference endpoint security: auth, rate limits and anti-extraction monitoring"],
+  b:["Set up a model registry pipeline that scans models with ModelScan, converts them to safetensors, signs the artifacts, and records lineage"],
+  checks:[{h:"M1: Scan", items:["Model scanning in CI for every artifact","Pickle-based models blocked or converted"]},
+          {h:"M2: Prove", items:["Signed models with provenance","Dataset hashes and lineage recorded","Inference API with auth, quotas and query-pattern logging"]}],
+  c:["Try model signing with the OpenSSF model-signing project"],
+  links:["r-model-supply","r-advml"],
+  refs:[["Tool","ModelScan","Protect AI","https://github.com/protectai/modelscan"],["Docs","Safetensors","Hugging Face","https://huggingface.co/docs/safetensors"],["Spec","NIST AI 100-2 E2025 Adversarial Machine Learning","NIST","https://csrc.nist.gov/pubs/ai/100/2/e2025/final"],["Docs","ATLAS case studies (Case Studies section)","MITRE","https://atlas.mitre.org/"]],
+  done:"No model reaches production without being scanned, signed and traced back to its data." },
+
+{ id:"b-ai-monitor", phase:"p6", title:"AI monitoring, evaluation and incident response", tags:["NIST","AI"], time:"2 weeks",
+  summary:"Run security evaluations on every release, monitor production AI for abuse, and have a plan ready for AI incidents.",
+  fw:[["NIST AI RMF","Measure, Manage"],["OpenTelemetry GenAI conventions",""],["ATLAS","detection mapping"]],
+  a:["Security evals in CI: injection, leakage and jailbreak regression suites","Production telemetry: prompts, tool calls, refusals and costs, with privacy controls","Detecting abuse patterns and extraction attempts","AI incident playbooks: model rollback, prompt or tool kill switches, disclosure"],
+  b:["Add a security eval suite to CI for the RAG app from Securing LLM applications, emit OpenTelemetry GenAI traces into your SIEM, and write an AI incident playbook"],
+  checks:[{h:"M1: Evaluate", items:["Eval suite fails the build on regression","Results tracked across model versions"]},
+          {h:"M2: Monitor and respond", items:["GenAI traces in the SIEM with 2 detections","AI incident playbook with a kill switch tested"]}],
+  c:["Join an AI incident database and study 5 real incidents"],
+  links:["r-llm-method"],
+  refs:[["Spec","OpenTelemetry semantic conventions for generative AI","OpenTelemetry","https://opentelemetry.io/docs/specs/semconv/gen-ai/"],["Tool","garak","NVIDIA","https://github.com/NVIDIA/garak"],["Data","AI Incident Database","","https://incidentdatabase.ai/"]],
+  done:"A model or prompt change that weakens security is caught by CI, and production abuse raises an alert." },
+
+/* P7 purple items are in red.js */
+];
+ITEMS.push(
+/* ---------- P0 red ---------- */
+{ id:"r-roe", phase:"p0", title:"Ethics, law and rules of engagement", tags:["NIST"], time:"1 week",
+  summary:"The line between a red teamer and a criminal is written authorisation. Learn the laws, contracts and rules of engagement before you touch anything you don't own.",
+  fw:[["NIST SP 800-115","planning phase"],["PTES","pre-engagement"],["TIBER-EU","threat-led testing"]],
+  a:["Computer misuse laws (CFAA, UK Computer Misuse Act, local equivalents) at a practical level","Scope, authorisation letters, rules of engagement, emergency stop procedures","Handling sensitive data you find; data protection duties","Bug bounty program rules and safe-harbour language","Coordinated vulnerability disclosure"],
+  b:["Write a full rules-of-engagement document and authorisation template for your own home lab","Read the policies of three public bug bounty programs and compare scope and safe-harbour terms"],
+  checks:[{h:"M1: Paperwork", items:["Rules-of-engagement template: scope, out-of-scope, timing, contacts, stop conditions","Authorisation letter template"]},
+          {h:"M2: Judgement", items:["Written notes on 3 grey-area scenarios and what you would do","Data handling plan for credentials or personal data found during a test"]}],
+  c:["Read the TIBER-EU framework and compare it with a standard penetration test"],
+  links:["p-fund","p-capstone"],
+  refs:[["Spec","NIST SP 800-115 Technical Guide to Information Security Testing","NIST","https://csrc.nist.gov/pubs/sp/800/115/final"],["Docs","Penetration Testing Execution Standard (PTES)","site often offline; widely mirrored",""],["Docs","TIBER-EU framework","European Central Bank","https://www.ecb.europa.eu/paym/cyber-resilience/tiber-eu/html/index.en.html"],["Docs","disclose.io safe harbour","disclose.io","https://disclose.io/"]],
+  done:"You never start testing without a signed scope, and you can explain why every rule in your RoE is there." },
+
+{ id:"r-method", phase:"p0", title:"Testing methodology and reporting", tags:["NIST","OWASP","MITRE"], time:"2 weeks",
+  summary:"Penetration testing, red teaming and adversary emulation are different jobs with different goals. All three only matter if the report leads to fixes.",
+  fw:[["PTES","phases"],["OWASP WSTG","test cases"],["ATT&CK","reporting by technique"],["CVSS v4","severity"]],
+  a:["Vulnerability assessment vs penetration test vs red team vs purple team","Recon, enumeration, validation, impact demonstration, reporting","Writing findings: description, evidence, impact, likelihood, remediation, references","Severity with CVSS v4 plus business context","Executive summaries that non-specialists can act on"],
+  b:["Write a mock report from a public training target you completed (for example a Juice Shop challenge): 3 findings, an executive summary, and remediation mapped to OWASP and CWE"],
+  checks:[{h:"M1: Method", items:["Personal testing checklist based on PTES and WSTG","Note-taking and evidence template"]},
+          {h:"M2: Report", items:["Report template with severity matrix","Mock report reviewed by a peer or against a public sample report"]}],
+  c:["Study published public pentest reports and compare structure"],
+  links:["p-threatmodel","b-ssdlc"],
+  refs:[["Docs","OWASP Web Security Testing Guide","OWASP","https://owasp.org/www-project-web-security-testing-guide/"],["Spec","CVSS v4.0","FIRST","https://www.first.org/cvss/v4-0/"],["Book","Red Team Development and Operations","Joe Vest and James Tubberville",""]],
+  done:"A developer can read one of your findings and fix it without asking you a single question." },
+
+{ id:"r-foundations", phase:"p0", title:"Offensive foundations: scripting, systems and CTFs", tags:["CWE"], time:"3 to 4 weeks",
+  summary:"Comfort on the Linux and Windows command line, scripting in Python and Bash, how protocols really behave, and the problem-solving habits CTFs build.",
+  fw:[["ATT&CK","tactic overview"],["CWE","weakness classes"]],
+  a:["Linux and Windows internals relevant to permissions and processes","Python for automation: HTTP clients, parsing and small tools","Protocol behaviour: HTTP, DNS, SMB, LDAP, Kerberos at the concept level","Reading the ATT&CK matrix as a map of what attackers do and why","CTF methodology: enumerate, hypothesise, verify, write up"],
+  b:["Complete beginner modules on pwn.college, OverTheWire Bandit, or TryHackMe/Hack The Box starter paths","Write up every challenge you solve"],
+  checks:[{h:"M1: Skills", items:["OverTheWire Bandit finished","5 small Python tools in a repo (port checker, HTTP fuzzer for your own app, log parser…)"]},
+          {h:"M2: Practice", items:["10 CTF challenge write-ups","Each write-up has a \"how a defender would see this\" section"]}],
+  c:["Play a beginner CTF event as part of a team"],
+  links:["p-fund"],
+  refs:[["Docs","pwn.college","Arizona State University","https://pwn.college/"],["Docs","OverTheWire wargames","OverTheWire","https://overthewire.org/wargames/"],["Book","Black Hat Python, 2nd ed.","Justin Seitz and Tim Arnold",""],["Book","Linux Basics for Hackers","OccupyTheWeb",""]],
+  done:"You can work through an unfamiliar box methodically and explain each step, including what it would look like in the logs." },
+
+/* ---------- P1 red ---------- */
+{ id:"r-web", phase:"p1", title:"Web application testing", tags:["OWASP","CWE"], time:"4 weeks",
+  summary:"Test web apps systematically against the OWASP Top 10 and the Web Security Testing Guide, using intentionally vulnerable targets.",
+  fw:[["OWASP Top 10:2025","A01 to A10"],["OWASP WSTG","v4.2+"],["CAPEC","web attack patterns"],["ATT&CK","T1190 Exploit Public-Facing Application"]],
+  a:["Intercepting proxies (Burp Suite Community, OWASP ZAP) and how to use them methodically","Access control and business logic testing","Injection classes, XSS, SSRF and deserialisation at the concept level, with the root cause for each","Client-side issues: CORS, CSP bypass conditions, clickjacking","Mapping each finding to a CWE and a fix"],
+  b:["Work through the PortSwigger Web Security Academy learning paths","Complete OWASP Juice Shop challenges and write a report on them","Hand each finding to Blue (Secure coding: OWASP Top 10 and ASVS) and confirm the fix holds"],
+  checks:[{h:"M1: Learn", items:["Apprentice-level labs completed for every Academy topic","WSTG checklist adapted into your own testing notes"]},
+          {h:"M2: Test and report", items:["Juice Shop: at least one challenge per Top 10 category","Report with findings mapped to OWASP, CWE and ASVS","Every finding re-tested after the Blue fix"]}],
+  c:["Practitioner-level Academy labs","Join a bug bounty program with a clear scope"],
+  links:["b-securecode","b-appsec-tools"],
+  refs:[["Docs","Web Security Academy","PortSwigger","https://portswigger.net/web-security"],["Docs","OWASP Web Security Testing Guide","OWASP","https://owasp.org/www-project-web-security-testing-guide/"],["Tool","OWASP Juice Shop","OWASP","https://owasp.org/www-project-juice-shop/"],["Book","Real-World Bug Hunting","Peter Yaworski",""],["Book","The Web Application Hacker's Handbook, 2nd ed.","Stuttard and Pinto",""]],
+  done:"You can test an unfamiliar web app against the full WSTG checklist and produce a report a developer can fix from." },
+
+{ id:"r-api", phase:"p1", title:"API testing", tags:["OWASP"], time:"2 weeks",
+  summary:"APIs expose objects and functions directly, so authorisation flaws are common and high-impact. Test for each OWASP API risk.",
+  fw:[["OWASP API Security Top 10 (2023)","API1 to API10"],["OWASP WSTG","API testing"]],
+  a:["Discovering endpoints from docs, clients and traffic","Testing object-level and function-level authorisation across users and roles","Mass assignment and excessive data exposure","Rate limits and business-flow abuse","GraphQL introspection and query complexity"],
+  b:["Assess OWASP crAPI (and VAmPI) locally; report every API Top 10 category you can show, then re-test after the Blue API security hardening"],
+  checks:[{h:"M1: Map", items:["Full endpoint inventory with roles","Authorisation matrix: which role should reach which object"]},
+          {h:"M2: Test", items:["Findings for at least 6 API Top 10 categories","Each finding has a regression test the Blue side can keep"]}],
+  c:["Test a GraphQL target such as DVGA"],
+  links:["b-api"],
+  refs:[["Spec","OWASP API Security Top 10","OWASP","https://owasp.org/API-Security/"],["Tool","OWASP crAPI","OWASP","https://github.com/OWASP/crAPI"],["Book","Hacking APIs","Corey Ball",""]],
+  done:"Your authorisation matrix is complete and every cell has been tested." },
+
+{ id:"r-auth", phase:"p1", title:"Authentication, sessions and OAuth testing", tags:["OWASP"], time:"2 weeks",
+  summary:"Identity flows are complex and often slightly wrong. Learn to test login, sessions, MFA, password reset, JWTs and OAuth/OIDC flows.",
+  fw:[["OWASP Top 10","A07 Authentication Failures"],["ASVS","V6, V7, V10"],["RFC 9700","OAuth security BCP"]],
+  a:["Session management weaknesses and cookie attributes","Password reset and account recovery logic","JWT validation mistakes at the concept level","OAuth/OIDC: redirect URI validation, state and PKCE, token leakage","MFA bypass conditions caused by logic flaws"],
+  b:["Complete the authentication, OAuth and JWT topics in the Web Security Academy; test the passkey/OIDC app you built in Applied cryptography, secrets and identity protocols (Blue)"],
+  checks:[{h:"M1: Learn", items:["Academy labs for authentication, OAuth and JWT completed"]},
+          {h:"M2: Assess", items:["Test plan for an OIDC login based on RFC 9700","Assessment of your own Blue-module app, with findings fixed and re-tested"]}],
+  c:["Review an open-source auth library's issue history for patterns"],
+  links:["b-crypto","b-securecode"],
+  refs:[["Docs","OAuth 2.0 Security Best Current Practice (RFC 9700)","IETF","https://www.rfc-editor.org/rfc/rfc9700"],["Docs","Web Security Academy: OAuth","PortSwigger","https://portswigger.net/web-security/oauth"],["Docs","Testing for authentication (WSTG)","OWASP","https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/README"]],
+  done:"You can review any login or OAuth flow and list the specific checks it passes and fails." },
+
+{ id:"r-mobile", phase:"p1", title:"Mobile application testing", tags:["OWASP"], time:"2 weeks",
+  summary:"Mobile apps ship their client code to the attacker. Test storage, network, platform interaction and resilience against the OWASP mobile standards.",
+  fw:[["OWASP MASVS","verification standard"],["OWASP MASTG","testing guide"],["OWASP Mobile Top 10",""]],
+  a:["Android and iOS security models","Static analysis of app packages (MobSF)","Insecure local storage and logging","Certificate pinning and network security config","Platform interaction: intents, deep links, WebViews"],
+  b:["Assess the OWASP MAS crackmes (the UnCrackable apps) and other intentionally vulnerable test apps in an emulator"],
+  checks:[{h:"M1: Setup", items:["Emulator test environment with proxy","MobSF static scan of a test app"]},
+          {h:"M2: Assess", items:["Findings mapped to MASVS controls","Remediation notes for each"]}],
+  c:["Compare Android and iOS results for the same app"],
+  links:["b-securecode","b-api"],
+  refs:[["Spec","OWASP MASVS and MASTG","OWASP","https://mas.owasp.org/"],["Tool","MobSF","","https://github.com/MobSF/Mobile-Security-Framework-MobSF"]],
+  done:"You can assess a mobile app against MASVS L1 and explain each finding's fix." },
+
+{ id:"r-codereview", phase:"p1", title:"Security code review and fuzzing", tags:["CWE","OWASP"], time:"3 weeks",
+  summary:"The most efficient way to find bugs is to read the code. Learn to trace sources to sinks by hand, write your own static-analysis queries, and fuzz parsers.",
+  fw:[["CWE Top 25",""],["OWASP Code Review Guide",""],["NIST SSDF","PW.7"]],
+  a:["Source-to-sink tracing and taint thinking","Variant analysis: one bug, find its siblings with Semgrep or CodeQL","Coverage-guided fuzzing (libFuzzer, AFL++, cargo-fuzz) of your own code","Triage: is it reachable, exploitable, and how severe?","Reporting through coordinated disclosure"],
+  b:["Review an intentionally vulnerable codebase, write CodeQL or Semgrep queries for each bug class you find, and fuzz one parser you wrote in your own projects"],
+  checks:[{h:"M1: Review", items:["Manual review notes with sources, sinks and trust boundaries","3 variant-analysis queries that find the bug class"]},
+          {h:"M2: Fuzz", items:["Fuzz harness in CI for one of your parsers","Crashes triaged and fixed with regression tests"]}],
+  c:["Study published CodeQL variant analyses from GitHub Security Lab"],
+  links:["b-appsec-tools"],
+  refs:[["Docs","OWASP Code Review Guide","OWASP","https://owasp.org/www-project-code-review-guide/"],["Docs","CodeQL docs","GitHub","https://codeql.github.com/docs/"],["Docs","libFuzzer","LLVM","https://llvm.org/docs/LibFuzzer.html"],["Book","The Art of Software Security Assessment","Dowd, McDonald, Schuh",""]],
+  done:"Each bug you find by hand becomes a query or fuzz test that would catch it next time." },
+
+{ id:"r-binary", phase:"p1", title:"Memory safety and binary fundamentals", tags:["CWE"], time:"4 weeks",
+  summary:"Understand why memory-unsafe code fails and how modern mitigations work, using structured educational platforms.",
+  fw:[["CWE","CWE-787, CWE-416, CWE-125"],["D3FEND","Stack Frame Canary, ASLR"]],
+  a:["x86-64 and ARM basics, calling conventions, the stack and the heap","Memory corruption bug classes and why they happen","Mitigations: ASLR, NX, stack canaries, CFI, memory tagging","Reverse engineering with Ghidra","Why memory-safe languages remove whole bug classes"],
+  b:["Work through the pwn.college memory-errors and reverse-engineering modules; for each challenge, note which mitigation would have stopped it"],
+  checks:[{h:"M1: Read", items:["Ghidra analysis of 5 crackme-style binaries","Notes on each mitigation and what it does and doesn't stop"]},
+          {h:"M2: Practice", items:["pwn.college memory-errors module completed","Short essay: what migrating to a memory-safe language would remove"]}],
+  c:["Read Google Project Zero write-ups and summarise the root cause of 3"],
+  links:["b-appsec-tools"],
+  refs:[["Docs","pwn.college","Arizona State University","https://pwn.college/"],["Tool","Ghidra","NSA","https://ghidra-sre.org/"],["Book","Hacking: The Art of Exploitation, 2nd ed.","Jon Erickson",""],["Book","Practical Binary Analysis","Dennis Andriesse",""]],
+  done:"You can explain a memory-safety bug from root cause to mitigation in a way a C developer finds useful." },
+
+/* ---------- P2 red ---------- */
+{ id:"r-supply", phase:"p2", title:"Supply chain and CI/CD assessment", tags:["OWASP","MITRE"], time:"2 weeks",
+  summary:"Assess how code becomes an artifact: who can change the pipeline, what it trusts, and whether provenance would reveal tampering.",
+  fw:[["OWASP Top 10 CI/CD Risks","CICD-SEC-1 to 10"],["ATT&CK","T1195 Supply Chain Compromise"],["SLSA","threat model"]],
+  a:["The SLSA threat model: source, build, dependency and distribution threats","CI/CD weaknesses: poisoned pipeline execution, over-privileged tokens, unpinned actions","Dependency confusion and typosquatting at the concept level","Reviewing pipeline configuration as code"],
+  b:["Assess a deliberately vulnerable CI/CD environment such as CI/CD Goat in your lab, then review your own Blue supply chain pipeline against the CI/CD Top 10"],
+  checks:[{h:"M1: Assess", items:["CI/CD Goat challenges completed in an isolated lab","Pipeline review checklist built from the CI/CD Top 10"]},
+          {h:"M2: Verify", items:["Review of your Blue pipeline with findings","Confirm that signature verification blocks an unsigned image"]}],
+  c:["Run OpenSSF Scorecard on your dependencies and analyse the weakest one"],
+  links:["b-supply"],
+  refs:[["Spec","OWASP Top 10 CI/CD Security Risks","OWASP","https://owasp.org/www-project-top-10-ci-cd-security-risks/"],["Tool","CI/CD Goat","Cider Security","https://github.com/cider-security-research/cicd-goat"],["Spec","SLSA threats","OpenSSF","https://slsa.dev/spec/v1.0/threats"]],
+  done:"You can review a pipeline and list every place an attacker could inject code, and which control stops each one." },
+
+{ id:"r-cloud", phase:"p2", title:"Cloud security assessment", tags:["MITRE","CIS"], time:"3 weeks",
+  summary:"In the cloud, most compromises come from misconfiguration and over-broad identities. Learn to assess IAM, storage, compute and logging in sandbox accounts you own.",
+  fw:[["ATT&CK Cloud matrix",""],["CIS Benchmarks",""],["Cloud provider pentest policies",""]],
+  a:["Each provider's penetration testing policy and what it allows","IAM policy evaluation and privilege escalation paths at the concept level","Storage and metadata-service misconfigurations","Assessment tooling: ScoutSuite, Prowler, PMapper","Showing impact and proposing least-privilege fixes"],
+  b:["Complete flAWS and flAWS2, then deploy CloudGoat scenarios in your own sandbox account and write a report for each","Hand findings to Cloud security posture and IAM (Blue) and check the alerts fired"],
+  checks:[{h:"M1: Learn", items:["flAWS and flAWS2 completed (attacker and defender paths)","Provider pentest policy notes"]},
+          {h:"M2: Assess", items:["3 CloudGoat scenarios with reports","For each, the CloudTrail events and detection that should have fired"]}],
+  c:["Run Stratus Red Team techniques against your sandbox to validate Blue detections"],
+  links:["b-cloud"],
+  refs:[["Docs","flAWS","Scott Piper","http://flaws.cloud/"],["Tool","CloudGoat","Rhino Security Labs","https://github.com/RhinoSecurityLabs/cloudgoat"],["Tool","Stratus Red Team","Datadog","https://github.com/DataDog/stratus-red-team"],["Docs","ATT&CK Cloud Matrix","MITRE","https://attack.mitre.org/matrices/enterprise/cloud/"]],
+  done:"For each cloud finding you report, you can name the audit event that reveals it and the policy change that fixes it." },
+
+{ id:"r-k8s", phase:"p2", title:"Container and Kubernetes assessment", tags:["MITRE","CIS"], time:"2 weeks",
+  summary:"Assess container images, cluster configuration and workload isolation against the Kubernetes threat matrix.",
+  fw:[["ATT&CK Containers matrix",""],["Microsoft Threat Matrix for Kubernetes",""],["CIS Kubernetes Benchmark",""]],
+  a:["Container isolation and how misconfiguration weakens it (privileged pods, host mounts)","RBAC review and service-account token exposure","Network policy gaps","Assessment with kube-bench and Trivy (kube-hunter is archived)"],
+  b:["Work through Kubernetes Goat in a local cluster; for each scenario record the Falco alert or audit event the Blue side should see"],
+  checks:[{h:"M1: Assess", items:["Kubernetes Goat scenarios completed","RBAC review of your Blue cluster"]},
+          {h:"M2: Hand off", items:["Each finding mapped to the threat matrix","Detection gaps handed to Container and Kubernetes security (Blue)"]}],
+  c:["Re-assess the cluster after Blue hardening"],
+  links:["b-k8s"],
+  refs:[["Tool","Kubernetes Goat","Madhu Akula","https://github.com/madhuakula/kubernetes-goat"],["Docs","Threat Matrix for Kubernetes","Microsoft","https://microsoft.github.io/Threat-Matrix-for-Kubernetes/"],["Book","Hacking Kubernetes","Andrew Martin and Michael Hausenblas",""]],
+  done:"Your Kubernetes findings come with the exact controls and detections that address them." },
+
+/* ---------- P3 red ---------- */
+{ id:"r-network", phase:"p3", title:"Network and service assessment", tags:["MITRE","NIST"], time:"2 weeks",
+  summary:"Discover what is exposed, identify what's vulnerable, and validate findings carefully without disrupting services.",
+  fw:[["ATT&CK","TA0043 Reconnaissance, TA0007 Discovery"],["NIST SP 800-115","technical assessment"],["CVSS / EPSS / KEV","prioritisation"]],
+  a:["Host and service discovery with Nmap; safe scanning practices","Service enumeration and version identification","Validating vulnerabilities safely vs exploiting them","Prioritising with KEV and EPSS","What your scans look like in Zeek and Suricata"],
+  b:["Assess your own lab network (or Metasploitable 2/3 in an isolated network) and compare your findings with the Blue vulnerability scan","Watch your own scans in the Blue NSM tooling"],
+  checks:[{h:"M1: Discover", items:["Asset and service map of the lab","Comparison with the Blue asset inventory: what was missing?"]},
+          {h:"M2: Validate", items:["Top findings validated without causing outages","Your scan traffic identified in Zeek/Suricata logs"]}],
+  c:["Use Nuclei templates against your lab and review which ones are high-signal"],
+  links:["b-nsm","b-vuln"],
+  refs:[["Docs","Nmap Network Scanning","Gordon Lyon","https://nmap.org/book/"],["Spec","NIST SP 800-115","NIST","https://csrc.nist.gov/pubs/sp/800/115/final"],["Tool","Metasploitable 3","Rapid7","https://github.com/rapid7/metasploitable3"]],
+  done:"Your network findings match up with the Blue inventory, and you know exactly how noisy your testing was." },
+
+{ id:"r-emulation", phase:"p3", title:"Adversary emulation with ATT&CK", tags:["MITRE"], time:"3 weeks",
+  summary:"Emulation means reproducing a real adversary's known behaviour, technique by technique, so defenders can measure what they would catch. The goal is to measure detection, not to evade it.",
+  fw:[["ATT&CK","Groups → techniques → procedures"],["CTID Adversary Emulation Library",""],["MITRE Caldera",""]],
+  a:["Reading CTI and extracting technique-level procedures","Emulation plans: scope, techniques, success criteria, safety","Running atomic tests and automated emulation (Atomic Red Team, Caldera)","Recording results per technique for the Purple team","Safety: cleanup, test accounts, change windows"],
+  b:["Pick a group from the CTID Emulation Library, run its plan against your lab with Caldera and Atomic Red Team, and hand a timestamped log of each technique to the Blue detection team"],
+  checks:[{h:"M1: Plan", items:["Emulation plan with technique list and cleanup steps","Lab snapshot before the run"]},
+          {h:"M2: Run", items:["Timestamped execution log per technique","Results recorded in the Purple detection-validation module"]}],
+  c:["Write your own Caldera adversary profile from a recent public threat report"],
+  links:["b-detect","b-telemetry","b-hunt","b-cti","b-endpoint","p-detval"],
+  refs:[["Tool","MITRE Caldera","MITRE","https://caldera.mitre.org/"],["Tool","Atomic Red Team","Red Canary","https://github.com/redcanaryco/atomic-red-team"],["Docs","Adversary Emulation Library","Center for Threat-Informed Defense","https://github.com/center-for-threat-informed-defense/adversary_emulation_library"],["Docs","ATT&CK Evaluations","MITRE","https://evals.mitre.org/"]],
+  done:"For a named adversary, you can replay their known techniques in the lab and tell the defenders exactly what ran and when." },
+
+/* ---------- P5 red ---------- */
+{ id:"r-ad", phase:"p5", title:"Identity and Active Directory assessment", tags:["MITRE"], time:"3 weeks",
+  summary:"In most Windows estates, attack paths through AD are the main risk. Learn to map them and report them in a deliberately vulnerable lab.",
+  fw:[["ATT&CK","TA0006 Credential Access, TA0004 Privilege Escalation, TA0008 Lateral Movement"],["ATT&CK","T1558 Steal or Forge Kerberos Tickets (concept)"]],
+  a:["How AD authentication works: Kerberos and NTLM","Common AD misconfiguration classes: delegation, ACLs, weak service accounts, certificate services","Attack-path mapping with BloodHound","Assessment with PingCastle","Reporting paths as graphs with a fix for each edge"],
+  b:["Deploy GOAD (Game of Active Directory) in an isolated lab, map the attack paths, and report each one with the Blue hardening that removes it"],
+  checks:[{h:"M1: Map", items:["BloodHound graph of the lab domain","List of misconfigurations with ATT&CK technique IDs"]},
+          {h:"M2: Report and re-test", items:["Report with a fix for every path edge","Re-test after Identity and Active Directory hardening (Blue) shows the paths are gone"]}],
+  c:["Assess Active Directory Certificate Services misconfigurations in the lab"],
+  links:["b-identity"],
+  refs:[["Tool","GOAD (Game of Active Directory)","Orange Cyberdefense","https://github.com/Orange-Cyberdefense/GOAD"],["Tool","BloodHound Community Edition","SpecterOps","https://github.com/SpecterOps/BloodHound"],["Tool","PingCastle","Netwrix","https://www.pingcastle.com/"],["Docs","Certified Pre-Owned (AD CS whitepaper)","SpecterOps","https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf"]],
+  done:"You can map and explain every attack path in the lab domain, and each one has a fix the Blue side applied." },
+
+{ id:"r-social", phase:"p5", title:"Social engineering and awareness programs", tags:["MITRE","NIST"], time:"1 to 2 weeks",
+  summary:"People are part of the attack surface. Run phishing simulations ethically, only with organisational approval, to measure and improve reporting rather than to shame anyone.",
+  fw:[["ATT&CK","T1566 Phishing, T1598 Phishing for Information"],["NIST SP 800-50","awareness and training"]],
+  a:["Approvals, HR and legal involvement, and ethical limits","Designing simulations that measure reporting rate, not just click rate","Pretexting and vishing risks at the concept level","Email authentication (SPF, DKIM, DMARC) and how it limits spoofing","Turning results into training and technical controls"],
+  b:["In your own lab with test mailboxes, set up GoPhish, run a simulation against test accounts, and build the reporting workflow and metrics"],
+  checks:[{h:"M1: Prepare", items:["Program charter with approvals, exclusions and data handling","SPF/DKIM/DMARC reviewed for a test domain"]},
+          {h:"M2: Run and learn", items:["Lab simulation against test accounts only","Metrics dashboard: report rate, time to report","Training content based on the results"]}],
+  c:["Design a phishing-resistant MFA rollout plan that would make the simulation irrelevant"],
+  links:["b-identity","b-ir"],
+  refs:[["Tool","GoPhish","","https://getgophish.com/"],["Spec","NIST SP 800-50r1 Building a Cybersecurity and Privacy Learning Program","NIST","https://csrc.nist.gov/pubs/sp/800/50/r1/final"],["Docs","DMARC overview","dmarc.org","https://dmarc.org/overview/"]],
+  done:"Your simulation program improves reporting rates and is something staff and HR would sign off on." },
+
+/* ---------- P6 red ---------- */
+{ id:"r-llm-method", phase:"p6", title:"AI red teaming methodology", tags:["MITRE","OWASP","AI"], time:"2 weeks",
+  summary:"AI red teaming tests the whole system: the model, the prompts, retrieval, tools and the humans in the loop. It covers both security and safety harms.",
+  fw:[["MITRE ATLAS","tactics and techniques"],["OWASP LLM Top 10 (2025)",""],["NIST AI 600-1","GenAI risks"],["NIST AI 100-2","attack taxonomy"]],
+  a:["Scoping AI red-team engagements: model vs system, security vs safety harms","Threat modelling an LLM application with ATLAS","Manual vs automated testing (PyRIT, garak, promptfoo)","Measuring attack success rate, and why single examples are not enough","Reporting AI findings with reproducible transcripts and severity"],
+  b:["Scope and run a red-team assessment of the RAG app you built in Securing LLM applications (Blue), using garak and PyRIT, and report the findings mapped to ATLAS and the LLM Top 10"],
+  checks:[{h:"M1: Plan", items:["Scope and harm categories defined","ATLAS-based threat model of the app"]},
+          {h:"M2: Test and report", items:["Automated scan results plus manual testing","Findings with reproduction transcripts and success rates","Findings turned into regression evals (Purple AI loop)"]}],
+  c:["Read Microsoft's lessons from red teaming 100 generative AI products and compare with your process"],
+  links:["b-ai-gov","b-llm-app","b-ai-monitor","p-ailoop"],
+  refs:[["Docs","MITRE ATLAS","MITRE","https://atlas.mitre.org/"],["Tool","PyRIT","Microsoft","https://github.com/Azure/PyRIT"],["Tool","garak","NVIDIA","https://github.com/NVIDIA/garak"],["Paper","Lessons From Red Teaming 100 Generative AI Products","Microsoft AI Red Team","https://arxiv.org/abs/2501.07238"],["Spec","NIST AI 100-2 E2025","NIST","https://csrc.nist.gov/pubs/ai/100/2/e2025/final"]],
+  done:"You can scope, run and report an AI red-team assessment, and give the defenders a test suite they can keep running." },
+
+{ id:"r-prompt", phase:"p6", title:"Prompt injection and jailbreak testing", tags:["OWASP","AI"], time:"2 weeks",
+  summary:"Prompt injection (LLM01) is the defining LLM vulnerability. Learn the categories (direct, indirect, multi-turn), how to measure them, and why they can't be filtered away entirely.",
+  fw:[["OWASP LLM01","Prompt Injection"],["OWASP LLM07","System Prompt Leakage"],["ATLAS","AML.T0051 LLM Prompt Injection, AML.T0054 LLM Jailbreak"]],
+  a:["Direct vs indirect injection through documents, web pages and tool output","System prompt leakage and why it shouldn't contain secrets","Jailbreak categories and research results at the concept level (GCG, multi-turn)","Benchmarks for measuring robustness (HarmBench, AgentDojo)","Why guardrails reduce but do not remove risk"],
+  b:["Play Lakera's Gandalf to build intuition, then test your own RAG app with poisoned documents in its corpus and measure success rates before and after the Blue defences"],
+  checks:[{h:"M1: Intuition", items:["Gandalf levels completed, with notes on each defence","Reading notes on Greshake et al. and the GCG paper"]},
+          {h:"M2: Measure", items:["Indirect injection test set against your own app","Success rate measured before and after Blue mitigations"]}],
+  c:["Compare guardrail products on the same test set"],
+  links:["b-llm-app"],
+  refs:[["Docs","Gandalf","Lakera","https://gandalf.lakera.ai/"],["Paper","Not what you've signed up for: Indirect Prompt Injection","Greshake et al.","https://arxiv.org/abs/2302.12173"],["Paper","Universal and Transferable Adversarial Attacks on Aligned Language Models","Zou et al.","https://arxiv.org/abs/2307.15043"],["Paper","HarmBench","Mazeika et al.","https://arxiv.org/abs/2402.04249"]],
+  done:"You can report an injection success rate with a reproducible test set, not just a screenshot." },
+
+{ id:"r-agent", phase:"p6", title:"Agent, tool and MCP abuse testing", tags:["OWASP","AI"], time:"2 weeks",
+  summary:"When an agent has tools, a successful injection becomes an action. Test whether untrusted content can make the agent misuse tools, leak data or escalate privileges.",
+  fw:[["OWASP LLM06","Excessive Agency"],["OWASP Top 10 for Agentic Applications","ASI01 to ASI10"],["ATLAS","agent-related techniques"]],
+  a:["Tool misuse and goal hijacking through untrusted content","Data exfiltration conditions (the lethal trifecta)","MCP risks: tool-description poisoning, over-broad servers, rug-pull updates","Memory poisoning across sessions","Benchmarks: AgentDojo, InjecAgent"],
+  b:["Run AgentDojo-style tasks against the agent you built in Securing agents, tools and MCP (Blue); test whether injected content can trigger tool calls the user did not ask for"],
+  checks:[{h:"M1: Test", items:["Test cases for each tool covering injected and benign content","MCP server review: permissions, descriptions, pinning"]},
+          {h:"M2: Report", items:["Attack success rates before and after Blue controls","Findings mapped to the Agentic Top 10"]}],
+  c:["Test a multi-agent setup for trust between agents"],
+  links:["b-agent"],
+  refs:[["Paper","AgentDojo","Debenedetti et al.","https://arxiv.org/abs/2406.13352"],["Paper","InjecAgent","Zhan et al.","https://arxiv.org/abs/2403.02691"],["Docs","The lethal trifecta for AI agents","Simon Willison","https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"],["Spec","OWASP Top 10 for Agentic Applications (2026)","OWASP GenAI","https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"]],
+  done:"You can show which content sources can steer each of the agent's tools, and confirm the Blue controls contain them." },
+
+{ id:"r-advml", phase:"p6", title:"Adversarial machine learning", tags:["MITRE","AI"], time:"3 weeks",
+  summary:"The classical attacks on ML models: evasion, poisoning, inference and extraction. Study them through research papers and robustness toolkits on models you train yourself.",
+  fw:[["MITRE ATLAS","Evade ML Model, Poison Training Data, Infer Training Data Membership, Extract ML Model"],["NIST AI 100-2","taxonomy"],["OWASP LLM04","Data and Model Poisoning"]],
+  a:["Evasion: adversarial examples (FGSM, PGD) and adversarial training","Poisoning and backdoors (BadNets, web-scale poisoning)","Membership inference and training-data extraction","Model extraction through prediction APIs","Measuring robustness, and why defences are often broken by adaptive attacks"],
+  b:["Using the Adversarial Robustness Toolbox on a small image or text classifier you trained yourself: run an evasion attack, a poisoning experiment and a membership-inference test, then apply one defence and measure it"],
+  checks:[{h:"M1: Read", items:["Summaries of the FGSM, PGD, BadNets and membership-inference papers"]},
+          {h:"M2: Experiment", items:["Notebook for each attack class on your own model","One defence evaluated with before/after metrics"]}],
+  c:["Reproduce a result from the training-data extraction paper on a small model"],
+  links:["b-mlops"],
+  refs:[["Tool","Adversarial Robustness Toolbox","LF AI & Data","https://github.com/Trusted-AI/adversarial-robustness-toolbox"],["Paper","Explaining and Harnessing Adversarial Examples","Goodfellow et al.","https://arxiv.org/abs/1412.6572"],["Paper","Towards Deep Learning Models Resistant to Adversarial Attacks","Madry et al.","https://arxiv.org/abs/1706.06083"],["Paper","BadNets","Gu et al.","https://arxiv.org/abs/1708.06733"],["Paper","Membership Inference Attacks Against ML Models","Shokri et al.","https://arxiv.org/abs/1610.05820"],["Book","Not with a Bug, But with a Sticker","Ram Shankar Siva Kumar and Hyrum Anderson",""]],
+  done:"You can explain each class of ML attack, show it on your own model, and show a measured defence." },
+
+{ id:"r-model-supply", phase:"p6", title:"Model and data supply chain assessment", tags:["MITRE","OWASP","AI"], time:"1 to 2 weeks",
+  summary:"Assess how models and datasets enter your organisation: unsafe formats, unverified sources, poisoned data and over-trusted registries.",
+  fw:[["ATLAS","ML Supply Chain Compromise"],["OWASP LLM03","Supply Chain"],["OWASP LLM04","Data and Model Poisoning"]],
+  a:["Why pickle-based model files can run code when they are loaded","Sleeper-agent research and the limits of behavioural testing","Dataset provenance and poisoning risks","Reviewing model registry permissions"],
+  b:["Review the model pipeline from the Blue ML supply chain module: check that ModelScan flags a known-unsafe test file from the scanner's own test fixtures, and audit registry permissions"],
+  checks:[{h:"M1: Review", items:["Inventory of model and dataset sources","Registry permission review"]},
+          {h:"M2: Verify", items:["Scanner catches the unsafe test artifact","Findings handed to ML pipeline and model supply chain security (Blue)"]}],
+  c:["Read the Sleeper Agents paper and write up what it means for model vetting"],
+  links:["b-mlops"],
+  refs:[["Tool","Fickling","Trail of Bits","https://github.com/trailofbits/fickling"],["Tool","ModelScan","Protect AI","https://github.com/protectai/modelscan"],["Paper","Sleeper Agents","Hubinger et al.","https://arxiv.org/abs/2401.05566"],["Paper","Poisoning Web-Scale Training Datasets is Practical","Carlini et al.","https://arxiv.org/abs/2302.10149"]],
+  done:"You can show where an untrusted model or dataset could enter the pipeline, and confirm the control that blocks it." },
+
+/* ---------- PURPLE (overlaps) ---------- */
+{ id:"p-detval", phase:"p3", title:"Detection validation loop", tags:["MITRE"], time:"2 weeks",
+  summary:"This is where Blue detection engineering and Red adversary emulation overlap. Run a technique, check what was logged, detected and alerted, fix the gap, and run it again.",
+  fw:[["ATT&CK","per-technique outcomes"],["DeTT&CT","data and detection scoring"],["MITRE Engage","deception (optional)"]],
+  a:["Outcome categories: prevented, alerted, logged only, not logged","Continuous validation: scheduling atomic tests against detections","Measuring coverage honestly (technique ≠ procedure)","Shared tracking that both teams can read"],
+  b:["Combine the Red emulation run with the Blue detection repo: for 20 techniques record the outcome, fix the gaps, and re-run until each is alerted or the gap is documented"],
+  checks:[{h:"M1: Baseline", items:["20 techniques run with outcomes recorded","Navigator layer of outcomes"]},
+          {h:"M2: Improve", items:["Every \"not logged\" or \"logged only\" result has a ticket","Re-run shows improved coverage","Scheduled weekly re-test of the top 10 techniques"]}],
+  c:["Add a deception control (honey token) and measure detection time"],
+  links:["b-detect","b-telemetry","r-emulation","p-program"],
+  refs:[["Tool","DeTT&CT","Rabobank CDC","https://github.com/rabobank-cdc/DeTTECT"],["Tool","Atomic Red Team","Red Canary","https://github.com/redcanaryco/atomic-red-team"],["Tool","ATT&CK Navigator","MITRE","https://mitre-attack.github.io/attack-navigator/"]],
+  done:"Both teams agree on one coverage map, and it improves every time you re-run it." },
+
+{ id:"p-ailoop", phase:"p6", title:"AI red–blue evaluation loop", tags:["OWASP","AI","NIST"], time:"2 weeks",
+  summary:"This is where AI red teaming and AI defence overlap. Red findings become automated evals, Blue fixes are measured against them, and the suite runs on every model, prompt or tool change.",
+  fw:[["NIST AI RMF","Measure"],["OWASP LLM Top 10",""],["ATLAS","technique-tagged tests"]],
+  a:["Turning red-team transcripts into regression tests","Thresholds and release gates for attack success rate","Tracking robustness across model upgrades","Balancing security against helpfulness (over-refusal)"],
+  b:["Merge the Red findings from the prompt-injection and agent modules into the Blue eval suite; gate releases on attack success rate and over-refusal rate"],
+  checks:[{h:"M1: Suite", items:["Every Red finding has an automated test tagged with ATLAS and LLM Top 10 IDs","Over-refusal benchmark included"]},
+          {h:"M2: Gate", items:["CI blocks releases above the threshold","Trend chart across 3 model or prompt versions"]}],
+  c:["Share a sanitised test set with the community"],
+  links:["r-llm-method","r-prompt","r-agent","b-llm-app","b-agent","b-ai-monitor"],
+  refs:[["Tool","promptfoo","","https://github.com/promptfoo/promptfoo"],["Tool","PyRIT","Microsoft","https://github.com/Azure/PyRIT"],["Spec","NIST AI RMF","NIST","https://www.nist.gov/itl/ai-risk-management-framework"]],
+  done:"No change to your AI system ships without passing the red-team regression suite." },
+
+/* ---------- P7 purple ---------- */
+{ id:"p-program", phase:"p7", title:"Purple team program", tags:["MITRE"], time:"3 weeks",
+  summary:"Run purple teaming as an ongoing program rather than a one-off: intel-driven exercise plans, shared outcomes, and engineering follow-through.",
+  fw:[["ATT&CK","emulation plans"],["Purple Team Exercise Framework (PTEF)",""],["CTID Adversary Emulation Library",""],["NIST CSF 2.0","Identify → Improve"]],
+  a:["Choosing exercises from threat intel and recent incidents","Roles: exercise coordinator, red operator, blue analyst, engineering owner","Recording outcomes per technique (VECTR)","Program metrics leadership cares about","Running a CTID emulation plan end to end"],
+  b:["Run a full purple exercise from a CTID emulation plan in your lab: Red executes, Blue watches live, and every gap becomes a tracked ticket. Repeat a month later"],
+  checks:[{h:"M1: Plan", items:["Exercise plan with scope, techniques, success criteria and safety rules","Roles assigned (even if you play several)"]},
+          {h:"M2: Run and repeat", items:["Results recorded per technique in VECTR","Every gap has an owner; second run shows improvement","Quarterly program report"]}],
+  c:["Automate repeat exercises with Caldera"],
+  links:["b-detect","b-cti","r-emulation","p-detval"],
+  refs:[["Docs","Purple Team Exercise Framework","SCYTHE","https://github.com/scythe-io/purple-team-exercise-framework"],["Docs","Adversary Emulation Library","Center for Threat-Informed Defense","https://github.com/center-for-threat-informed-defense/adversary_emulation_library"],["Tool","VECTR","Security Risk Advisors","https://github.com/SecurityRiskAdvisors/VECTR"]],
+  done:"You have a before-and-after coverage chart for a named adversary, and a program that keeps producing them." },
+
+{ id:"p-capstone", phase:"p7", title:"Capstone: build it, attack it, defend it", tags:["NIST","MITRE","OWASP","AI"], time:"4 to 6 weeks",
+  summary:"Bring everything together. Build a lab organisation (web app, API, cloud account, Kubernetes, AD and an LLM agent), defend it with Blue controls, assess it under Red rules of engagement, and close the gaps as a Purple team.",
+  fw:[["NIST CSF 2.0","all functions"],["ATT&CK + ATLAS","coverage"],["OWASP","Top 10, API, LLM, Agentic"],["SP 800-61r3","response"]],
+  a:["Program design and metrics (MTTD, MTTR, coverage)","Running an engagement under signed rules of engagement, even in your own lab","Defending live and handling incidents","Communicating risk to leadership"],
+  b:["Build the lab organisation with every Blue control from earlier phases","Write rules of engagement, then run a Red assessment across app, cloud, identity and AI","Respond as Blue during the exercise window, then run the Purple debrief"],
+  checks:[{h:"M1: Build (Blue)", items:["All components deployed with controls","Coverage map across ATT&CK and ATLAS"]},
+          {h:"M2: Assess (Red)", items:["Signed RoE for the exercise","Assessment report with findings across all layers"]},
+          {h:"M3: Close the loop (Purple)", items:["Incident report from the Blue side","Joint debrief: each finding prevented, detected or missed","Fixes applied and re-tested","One-page executive summary"]}],
+  c:["Publish the write-up as a portfolio piece (sanitised)","Invite a peer to play Red or Blue blind"],
+  links:["b-ir","b-dfir","r-roe","p-program"],
+  refs:[["Book","Building Secure and Reliable Systems","Google","https://google.github.io/building-secure-and-reliable-systems/"],["Book","Crafting the InfoSec Playbook","Bollinger, Enright, Valites",""],["Tool","Ludus range builder","Bad Sector Labs","https://docs.ludus.cloud/"]],
+  done:"You can show a working defensive program, a professional assessment of it, and evidence that the gaps were closed." }
+);
+
+</script>
+<script>
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const L = CONFIG.labels;
+const TEAMS = {blue:"Blue", red:"Red", purple:"Purple"};
+const teamOf = p => ({b:"blue", r:"red", p:"purple"})[p.id[0]];
+ITEMS.forEach(p => { p.team = teamOf(p); p.links = p.links || []; });
+const BYID = Object.fromEntries(ITEMS.map(p => [p.id, p]));
+// make every link two-way
+ITEMS.forEach(p => p.links.forEach(id => { const q = BYID[id]; if(q && !q.links.includes(p.id)) q.links.push(p.id); }));
+ITEMS.forEach(p => p.links = p.links.filter(id => BYID[id] && id !== p.id).sort((a, b) => ITEMS.indexOf(BYID[a]) - ITEMS.indexOf(BYID[b])));
+
+let state = {};
+try { state = JSON.parse(localStorage.getItem(CONFIG.key) || "{}"); } catch(e){ state = {}; }
+function save(){ try { localStorage.setItem(CONFIG.key, JSON.stringify(state)); } catch(e){} }
+const ul = a => `<ul class="plain">${a.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+const itemIds = p => p.checks.flatMap((m, mi) => m.items.map((_, ii) => p.id + "." + mi + "." + ii));
+const allTags = [...new Set(ITEMS.flatMap(p => p.tags))].sort();
+let activeTag = null, activeTeam = null;
+try { activeTeam = localStorage.getItem(CONFIG.key + ".team") || null; } catch(e){}
+
+document.title = CONFIG.title;
+document.getElementById("h1").textContent = CONFIG.h1;
+document.getElementById("intro").innerHTML = CONFIG.intro;
+document.getElementById("pre").innerHTML = CONFIG.pre || "";
+document.getElementById("post").innerHTML = CONFIG.post || "";
+document.getElementById("foot").innerHTML = CONFIG.foot || "";
+document.getElementById("nav").innerHTML = CONFIG.nav.map(([t, u]) => `<a href="${u}">${esc(t)}</a>`).join("");
+
+function render(){
+  const host = document.getElementById("phases");
+  host.innerHTML = "";
+  PHASES.forEach(ph => {
+    const sec = document.createElement("section");
+    sec.className = "phase"; sec.id = ph.id;
+    sec.innerHTML = `<h2>${esc(ph.name)} <span class="tag">${esc(ph.tag)}</span></h2><p class="sub">${esc(ph.goal)}</p>`;
+    ITEMS.filter(p => p.phase === ph.id).forEach(p => {
+      const d = document.createElement("details");
+      d.className = "proj t-" + p.team; d.id = p.id; d.dataset.tags = p.tags.join("|"); d.dataset.team = p.team;
+      let h = `<summary><div class="ptitle"><span class="team ${p.team}">${TEAMS[p.team]}</span>${esc(p.title)}<span class="tags">${p.tags.map(t => `<span class="tg">${esc(t)}</span>`).join("")}</span></div>
+        <div class="pmeta">${esc(p.time)}</div><div class="pstat" id="stat-${p.id}"></div></summary><div class="body">
+        <p>${esc(p.summary)}</p>`;
+      if(p.fw && p.fw.length) h += `<h3>Framework mapping</h3><div class="fw">${p.fw.map(([k, v]) => `<span><b>${esc(k)}</b>${esc(v)}</span>`).join("")}</div>`;
+      h += `<div class="cols"><div><h3>${L.a}</h3>${ul(p.a)}</div><div><h3>${L.b}</h3>${ul(p.b)}</div></div><h3>${L.checks}</h3>`;
+      p.checks.forEach((m, mi) => {
+        h += `<div class="ms"><h4>${esc(m.h)}</h4>` + m.items.map((it, ii) => {
+          const id = p.id + "." + mi + "." + ii;
+          return `<label class="chk ${state[id] ? "done" : ""}"><input type="checkbox" data-id="${id}" ${state[id] ? "checked" : ""}><span>${esc(it)}</span></label>`;
+        }).join("") + `</div>`;
+      });
+      if(p.c && p.c.length) h += `<h3>${L.c}</h3>${ul(p.c)}`;
+      if(p.links.length) h += `<h3>${L.links}</h3><ul class="xl">${p.links.map(id => { const q = BYID[id];
+        return `<li><a href="#${id}"><span class="team ${q.team}">${TEAMS[q.team]}</span><span>${esc(q.title)}</span></a></li>`; }).join("")}</ul>`;
+      const refs = p.refs || [];
+      if(refs.length) h += `<h3>References</h3><ul class="refs">${refs.map(([k, t, a, u]) =>
+        `<li><span class="rk rk-${k.toLowerCase()}">${k}</span><span>${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : `<i>${esc(t)}</i>`}${a ? ` <span class="ra">· ${esc(a)}</span>` : ""}</span></li>`).join("")}</ul>`;
+      h += `<div class="done-box"><b>${L.done}</b> ${esc(p.done)}</div></div>`;
+      d.innerHTML = h;
+      sec.appendChild(d);
+    });
+    host.appendChild(sec);
+  });
+  document.getElementById("map").innerHTML = PHASES.map(ph => {
+    const n = t => ITEMS.filter(p => p.phase === ph.id && p.team === t).length;
+    return `<a href="#${ph.id}" data-phase="${ph.id}"><b>${esc(ph.name)}</b><small>${esc(ph.time)}</small><div class="mini"><i id="mini-${ph.id}"></i></div>
+      <div class="tcount">${Object.keys(TEAMS).filter(n).map(t => `<span class="team ${t}">${n(t)} ${TEAMS[t]}</span>`).join("")}</div></a>`; }).join("");
+  updateStats(); applyFilter();
+}
+document.getElementById("phases").addEventListener("change", e => {
+  const cb = e.target.closest("input[type=checkbox]");
+  if(!cb) return;
+  state[cb.dataset.id] = cb.checked;
+  cb.closest("label").classList.toggle("done", cb.checked);
+  save(); updateStats();
+});
+const visible = p => (!activeTeam || p.team === activeTeam) && (!activeTag || p.tags.includes(activeTag));
+
+function updateStats(){
+  let total = 0, done = 0; const per = {};
+  ITEMS.forEach(p => {
+    const ids = itemIds(p), n = ids.filter(i => state[i]).length;
+    const el = document.getElementById("stat-" + p.id);
+    if(el) el.textContent = n + " / " + ids.length;
+    if(!visible(p)) return;
+    total += ids.length; done += n;
+    per[p.phase] = per[p.phase] || [0, 0]; per[p.phase][0] += n; per[p.phase][1] += ids.length;
+  });
+  PHASES.forEach(ph => { const el = document.getElementById("mini-" + ph.id), v = per[ph.id] || [0, 1];
+    if(el) el.style.width = (v[1] ? 100 * v[0] / v[1] : 0) + "%"; });
+  document.getElementById("overallBar").style.width = (total ? 100 * done / total : 0) + "%";
+  document.getElementById("overallText").textContent = done + " / " + total + " " + L.unit + (activeTeam ? " (" + TEAMS[activeTeam] + " team)" : "");
+}
+
+function applyFilter(){
+  document.querySelectorAll("details.proj").forEach(d => d.classList.toggle("hidden", !visible(BYID[d.id])));
+  document.querySelectorAll("section.phase").forEach(s =>
+    s.classList.toggle("hidden", !s.querySelector("details.proj:not(.hidden)")));
+  document.querySelectorAll("#map a").forEach(a => a.classList.toggle("dim", !ITEMS.some(p => p.phase === a.dataset.phase && visible(p))));
+  document.querySelectorAll("#chips .chip").forEach(c => c.classList.toggle("on", c.dataset.t === (activeTag || "")));
+  document.querySelectorAll("#teamChips .chip").forEach(c => c.classList.toggle("on", c.dataset.t === (activeTeam || "")));
+  try { localStorage.setItem(CONFIG.key + ".team", activeTeam || ""); } catch(e){}
+  updateStats();
+}
+
+function chipRow(host, opts, set){
+  opts.forEach(([v, label, cls]) => {
+    const b = document.createElement("button");
+    b.className = "chip " + (cls || ""); b.dataset.t = v; b.textContent = label;
+    b.onclick = () => { set(v || null); applyFilter(); };
+    host.appendChild(b);
+  });
+}
+chipRow(document.getElementById("teamChips"), [["", "All teams"], ["blue", "Blue team", "tb"], ["red", "Red team", "tr"], ["purple", "Purple team", "tp"]], v => activeTeam = v);
+chipRow(document.getElementById("chips"), [["", "All frameworks"], ...allTags.map(t => [t, t])], v => activeTag = v);
+document.getElementById("expand").onclick = () => document.querySelectorAll("details.proj:not(.hidden)").forEach(d => d.open = true);
+document.getElementById("collapse").onclick = () => document.querySelectorAll("details.proj").forEach(d => d.open = false);
+document.getElementById("reset").onclick = () => { if(confirm("Clear all ticked milestones on this page?")){ state = {}; save(); render(); } };
+
+function openHash(){
+  const id = location.hash.slice(1), d = id && document.getElementById(id);
+  if(d && d.tagName === "DETAILS"){
+    if(d.classList.contains("hidden")){ activeTeam = null; activeTag = null; applyFilter(); }
+    d.open = true; d.scrollIntoView({ block:"start" });
+  }
+}
+render();
+window.addEventListener("hashchange", openHash);
+openHash();
+</script>
+</body>
+</html>
