@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Systems Programming Roadmap: Stash + Daily Tools</title>
+<title>Systems Programming Roadmap: Stash File Sharing</title>
 <style>
   :root{
     --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6a63; --card:#ffffff; --line:#e4e2da;
@@ -37,6 +37,7 @@
   th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{background:var(--chip);font-weight:600}
   tr:last-child td{border-bottom:none}
+  @media (max-width:720px){table{display:block;overflow-x:auto}td{min-width:130px}}
   .arch{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
   .arch canvas{display:block;width:100%}
   .arch-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:.8rem;color:var(--muted)}
@@ -83,7 +84,7 @@
 <body>
 <div class="wrap">
   <h1>Systems Programming Roadmap</h1>
-  <p class="sub">One flagship project (<b>stash</b>, a personal notes / bookmarks / "where did I put it" store with fast search) that every language plugs into, plus small daily-use tools. Each project below has a scope, what you learn, milestone checklists, and a clear "done when". Tick boxes as you go; progress is saved in your browser.</p>
+  <p class="sub">One flagship project (<b>stash</b>, a quick way to send files, text, links, photos and video between your Linux, Windows, Android and iPhone devices, on your home network or over the internet) that every language plugs into. Each project below has a scope, what you learn, milestone checklists, and a clear "done when". Tick boxes as you go; progress is saved in your browser.</p>
 
   <div class="bar">
     <div class="progress" aria-label="Overall progress"><i id="overallBar"></i></div>
@@ -96,37 +97,63 @@
     </div>
   </div>
 
+  <h2>How each device shares</h2>
+  <p class="sub">One always-on machine runs the hub. Everything talks to it over HTTP, so a browser is enough to start. Sharing and sync must work both on your home network and over the internet. There are no native phone apps to write: Swift and Kotlin are not on the language list, and a web app plus the iPhone's Shortcuts app covers sharing.</p>
+  <table id="devices">
+    <thead><tr><th>Device</th><th>Send</th><th>Receive</th><th>Limits to plan around</th></tr></thead>
+    <tbody>
+      <tr><td><b>Linux</b></td><td><code>stash send</code>, drop folder, terminal UI, web app</td><td>Inbox folder, CLI, shared clipboard</td><td>The first server and the terminal UI use Unix APIs, so they run here.</td></tr>
+      <tr><td><b>Windows</b></td><td>Explorer's "Send to" menu, CLI, drop folder, web app</td><td>Inbox folder, shared clipboard, web app</td><td>The terminal UI needs WSL2.</td></tr>
+      <tr><td><b>Android</b></td><td>Share sheet to the installed web app, or the web page</td><td>Web app, with a copy button for text</td><td>The share sheet entry needs HTTPS and a real app install. Apps cannot read the clipboard in the background.</td></tr>
+      <tr><td><b>iPhone</b></td><td>Share sheet to a Shortcut, or the web page</td><td>Web app on the Home Screen; a Shortcut that copies the latest text</td><td>Safari has no web share target (check again when you get there). Transfers can stop when the app is in the background. The HTTPS certificate must be trusted.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Home network and internet</h2>
+  <p class="sub">One name for the hub, two ways to reach it. Your devices need no settings change when you leave the house.</p>
+  <table id="routes">
+    <thead><tr><th></th><th>At home</th><th>Over the internet</th></tr></thead>
+    <tbody>
+      <tr><td><b>Finding the hub</b></td><td>The name gives the hub's home address</td><td>The same name gives your relay's public address</td></tr>
+      <tr><td><b>Path</b></td><td>Device to hub, directly</td><td>Device to relay, then down a connection the hub opened</td></tr>
+      <tr><td><b>Encryption</b></td><td>HTTPS to the hub</td><td>The same HTTPS; the relay forwards bytes it cannot read</td></tr>
+      <tr><td><b>Speed limit</b></td><td>Your Wi-Fi</td><td>Your upload speed and the relay</td></tr>
+      <tr><td><b>Needs</b></td><td>A local DNS override for one name</td><td>A small public server. No router port forwarding.</td></tr>
+      <tr><td><b>Works from</b></td><td>Phase 0 (web page), then every client</td><td>Phase 2, first milestone of stash-sync</td></tr>
+    </tbody>
+  </table>
+
   <h2>The shape of the system</h2>
   <div class="arch">
-    <canvas id="archCanvas" role="img" aria-label="System diagram: browser, sync gateway, foundation, the stash daemon, integrity tool, clients and standalone tools, grouped by role"><ul id="archFallback"></ul></canvas>
+    <canvas id="archCanvas" role="img" aria-label="System diagram: your devices, the web app, public links and sync, the first server, the stash hub, integrity checks, desktop tools, the distributed store, networking and the Tack language"><ul id="archFallback"></ul></canvas>
     <div class="arch-legend" id="archLegend"></div>
     <p class="arch-cap" id="archCap">Hover a box to see its details, or click it to jump to that project.</p>
   </div>
 
   <h2>Suggested pacing</h2>
-  <p class="sub">Estimates assume about 6 to 8 focused hours a week alongside work and law school. One "weekend" is roughly one 4 to 6 hour block. They are guesses, so adjust as you learn how fast you move.</p>
+  <p class="sub">Estimates assume about 6 to 8 focused hours a week alongside work and law school. One "weekend" is roughly one 4 to 6 hour block. They are guesses, so adjust as you learn how fast you move. You can share between all four devices on your home network at the end of phase 0, and over the internet in phase 2. Every later phase makes that nicer or teaches something deeper.</p>
   <table>
     <thead><tr><th>Phase</th><th>What</th><th>Languages</th><th>Estimate</th></tr></thead>
     <tbody>
-      <tr><td>0</td><td>Foundations: Redis clone, small CLI warm-ups</td><td>C++, C</td><td>5 to 7 weekends</td></tr>
-      <tr><td>1</td><td>Stash core daemon and log verifier</td><td>Rust, C</td><td>7 to 11 weekends</td></tr>
-      <tr><td>2</td><td>Clients and front end</td><td>Zig, TS/HTML/CSS, WASM</td><td>6 to 8 weekends</td></tr>
-      <tr><td>3</td><td>Glue and scripting, plus sync</td><td>Go, PHP, Python, Perl</td><td>7 to 9 weekends</td></tr>
-      <tr><td>4</td><td>Standalone daily tools</td><td>C++, Rust, Zig</td><td>5 to 7 weekends</td></tr>
+      <tr><td>0</td><td>First share: a web page on your network that all four devices can use, plus a duplicate finder</td><td>C++, C</td><td>4 to 7 weekends</td></tr>
+      <tr><td>1</td><td>The hub daemon and its storage checker</td><td>Rust, C</td><td>7 to 11 weekends</td></tr>
+      <tr><td>2</td><td>Every device, anywhere: web app, phone share sheets, CLI, sync over your network and the internet, in-browser hashing</td><td>Zig, Go, TS/HTML/CSS, C++, Rust, WASM</td><td>12 to 16 weekends</td></tr>
+      <tr><td>3</td><td>Links for other people, media processing and sorting</td><td>PHP, Python, Perl</td><td>4 to 5 weekends</td></tr>
+      <tr><td>4</td><td>Daily desktop tools: terminal UI, shared clipboard, drop folder</td><td>C++, Rust, Zig</td><td>6 to 7 weekends</td></tr>
       <tr><td>5</td><td>Cross-language features: shared C library, Zig/Rust FFI, WASM plugins, live updates, conformance tests</td><td>All of them</td><td>12 to 16 weekends</td></tr>
-      <tr><td>6</td><td>Distributed stash: Maelstrom challenges, Raft from scratch, a sharded cluster, a chaos lab</td><td>Go, Rust, Python</td><td>15 to 21 weekends</td></tr>
-      <tr><td>7</td><td>Networking deep dive: your own TCP over UDP, discovery and NAT traversal, an io_uring load balancer, eBPF</td><td>Zig, C, Go, C++, Rust</td><td>11 to 14 weekends</td></tr>
-      <tr><td>8</td><td>Tack, your own language: interpreter, compiler to WebAssembly, editor tooling</td><td>Go, Rust, TypeScript</td><td>11 to 16 weekends</td></tr>
+      <tr><td>6</td><td>Distributed file store: Maelstrom challenges, Raft from scratch, a replicated cluster, a chaos lab</td><td>Go, Rust, Python</td><td>15 to 21 weekends</td></tr>
+      <tr><td>7</td><td>Networking deep dive: your own TCP over UDP, discovery and NAT traversal, an io_uring proxy, eBPF</td><td>Zig, C, Go, C++, Rust</td><td>11 to 14 weekends</td></tr>
+      <tr><td>8</td><td>Tack, your own language for file rules: interpreter, compiler to WebAssembly, editor tooling</td><td>Go, Rust, TypeScript, WASM</td><td>11 to 16 weekends</td></tr>
     </tbody>
   </table>
 
   <h2>How the C and C++ projects differ</h2>
-  <p class="sub">The two languages get different kinds of work, so nothing repeats. C projects are small, file-and-bytes tools where you do everything by hand. C++ projects are long-running, interactive programs where abstraction and RAII are the point.</p>
+  <p class="sub">The two languages get different kinds of work, so nothing repeats. C projects are small, file-and-bytes programs where you do everything by hand. C++ projects are long-running, interactive programs where abstraction and RAII are the point.</p>
   <table>
     <thead><tr><th></th><th>C</th><th>C++</th></tr></thead>
     <tbody>
-      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (log verifier), libstash (C ABI client library), the WASM secret-redactor plugin, mDNS responder, eBPF kernel programs</td><td>Redis clone, terminal UI for stash, live updates in the TUI, io_uring load balancer</td></tr>
-      <tr><td><b>Kind of program</b></td><td>Run-once command-line tools that read files and exit</td><td>Long-running, event-driven programs that talk to a socket</td></tr>
+      <tr><td><b>Projects</b></td><td>Duplicate file finder, stash-fsck (storage checker), libstash (C ABI client library), the WASM location-stripper plugin, mDNS responder, eBPF kernel programs</td><td>The first LAN file server, terminal UI, live updates in the TUI, io_uring edge proxy</td></tr>
+      <tr><td><b>Kind of program</b></td><td>Mostly small tools and libraries working on bytes</td><td>Long-running, event-driven programs that hold many connections</td></tr>
       <tr><td><b>What it trains</b></td><td>Raw bytes, syscalls, manual memory, defensive parsing, fuzzing</td><td>RAII, move semantics, classes and templates, variants, event loops</td></tr>
       <tr><td><b>Tooling focus</b></td><td>Valgrind, ASan, libFuzzer or AFL++, Makefile</td><td>CMake, clang-tidy, sanitizers, unit-test framework</td></tr>
     </tbody>
@@ -139,34 +166,35 @@
 
 <script>
 const PHASES = [
-  {id:"p0", name:"Phase 0: Foundations", tag:"warm-up"},
-  {id:"p1", name:"Phase 1: Stash core", tag:"flagship"},
-  {id:"p2", name:"Phase 2: Clients and front end", tag:"flagship"},
-  {id:"p3", name:"Phase 3: Glue and scripting", tag:"flagship"},
-  {id:"p4", name:"Phase 4: Standalone daily tools", tag:"daily use"},
+  {id:"p0", name:"Phase 0: First share", tag:"usable early"},
+  {id:"p1", name:"Phase 1: The hub", tag:"flagship"},
+  {id:"p2", name:"Phase 2: Every device, anywhere", tag:"flagship"},
+  {id:"p3", name:"Phase 3: Share outside and automate", tag:"flagship"},
+  {id:"p4", name:"Phase 4: Daily desktop tools", tag:"daily use"},
   {id:"p5", name:"Phase 5: Cross-language features", tag:"polyglot"},
-  {id:"p6", name:"Phase 6: Distributed stash", tag:"distributed"},
+  {id:"p6", name:"Phase 6: Distributed file store", tag:"distributed"},
   {id:"p7", name:"Phase 7: Networking deep dive", tag:"networking"},
   {id:"p8", name:"Phase 8: Tack, your own language", tag:"language"}
 ];
 
 const PROJECTS = [
 /* ---------------- PHASE 0 ---------------- */
-{ id:"redis-clone", phase:"p0", title:"Redis clone", langs:["C++"], time:"3 to 5 weekends",
-  summary:"A TCP server that speaks the real Redis protocol (RESP), so the real redis-cli works against it. This is your first end-to-end network program and the base the stash core builds on. It uses a single-threaded epoll event loop, which is how real Redis works. epoll is Linux-only, so build and run it inside WSL2 or a Docker container.",
-  learn:["TCP sockets: listen, accept, read, write","Framing a stream protocol (messages split across reads)","Non-blocking I/O and an epoll event loop (one thread, many clients)","RAII for file descriptors and buffers, and C++ move semantics","Why a single-threaded event loop needs no locks, and what it costs","Expiry (lazy vs active) and append-only persistence"],
-  scope:["Commands: PING, ECHO, SET (with PX/EX), GET, DEL, EXISTS, INCR, LPUSH/RPUSH/LRANGE","Many clients at once","Keys that expire","Survives a restart via an append-only log"],
+
+{ id:"lan-share", phase:"p0", title:"stash zero: a LAN file server from scratch", langs:["C++"], time:"3 to 5 weekends",
+  summary:"One C++ program on your Linux machine that serves one web page. Open it on the iPhone, the Android phone, the Windows PC or the Linux box on the same Wi-Fi to upload files, paste text and download what the others sent. You write the HTTP handling yourself on an epoll event loop. It stays small and plain, and you use it while the real hub is being built.",
+  learn:["TCP sockets: listen, accept, read, write","HTTP/1.1 by hand: request line, headers, Content-Length, keep-alive","Parsing multipart/form-data when a boundary is split across reads","Non-blocking I/O and an epoll event loop (one thread, many clients)","Streaming large files to disk without holding them in memory","RAII for file descriptors, C++ move semantics, and safe handling of file names"],
+  scope:["Home network only: never forward a router port to it","One page: file picker, text box, list of items with download links","Prints its address with a random token at startup (and as a QR code using an existing tool)","Saves everything into one inbox folder","Plain HTTP"],
   deliverables:[
-    {h:"M1: Listen and reply", items:["Server binds to port 6379 and accepts connections","Replies +PONG to PING; redis-cli PING works","Keeps the connection open for repeated commands"]},
-    {h:"M2: Real protocol", items:["RESP parser for arrays and bulk strings, with unit tests","Parser handles a message split across two reads","Serializer for simple strings, errors, integers, bulk strings, null","ECHO and unknown-command error reply"]},
-    {h:"M3: Data and concurrency", items:["In-memory map with SET/GET/DEL/EXISTS","Single-threaded epoll loop serves 50 concurrent clients; no thread per client","Run clean under AddressSanitizer and UBSan","SET ... PX expiry; expired keys never returned","Lists: LPUSH, RPUSH, LRANGE"]},
-    {h:"M4: Persistence and polish", items:["Append-only log written on every write command","Log replayed on startup; kill -9 test loses nothing acknowledged","redis-benchmark runs against it; record ops/sec in the README","README: architecture notes and what you would change"]}
+    {h:"M1: Serve a page", items:["Server answers GET / with the page and keeps the connection open","Both phones and the Windows PC open it over Wi-Fi (firewall rule documented)","Requests without the token are refused"]},
+    {h:"M2: Upload and download", items:["Multipart parser with unit tests, including input split across two reads","Uploads stream to a temporary file and are renamed only when complete","Downloads send Content-Length, Content-Type and Content-Disposition","Path traversal and oversize uploads are rejected, with tests"]},
+    {h:"M3: Text and media", items:["Pasted text shows on the other devices in a selectable box","Photos open in the browser","Range requests, so video plays and seeks on the iPhone"]},
+    {h:"M4: Many clients", items:["One epoll loop handles 20 transfers at once; a slow client blocks nobody","Run clean under AddressSanitizer and UBSan","README: how it works, measured throughput, and what you would change"]}
   ],
-  stretch:["Pub/Sub","Transactions (MULTI/EXEC)","Log compaction (rewrite)","Compare your numbers with real Valkey"],
-  done:"redis-cli and redis-benchmark both work against your server, data survives a restart, and you can explain every layer from socket to disk." },
+  stretch:["Drag and drop","sendfile for downloads","Download several files as one archive","systemd user service"],
+  done:"A photo from the iPhone, a video from the Android phone and a line of text from the Windows PC all reach the Linux box, and any other device can pull them back, with nothing installed on it." },
 
 { id:"c-warm", phase:"p0", title:"Duplicate file finder", langs:["C"], time:"1 to 2 weekends",
-  summary:"A command-line tool that scans folders and lists duplicate files (for example in your Downloads). It refreshes your C by exercising exactly the parts that matter: pointers, memory ownership, syscalls.",
+  summary:"A command-line tool that scans folders and lists duplicate files (for example in Downloads or your inbox folder). Its hashing is groundwork for the hub, which stores each unique file once. It refreshes your C by exercising exactly the parts that matter: pointers, memory ownership, syscalls.",
   learn:["Directory walking with opendir/readdir or nftw","File metadata with stat","Hashing and hash tables","mmap vs read","Manual memory management and Valgrind/ASan"],
   scope:["Walk one or more directories recursively","Group by size first, then hash only candidates","Print groups of duplicates and wasted space","Optional --delete-interactive (never delete without asking)"],
   deliverables:[
@@ -178,213 +206,232 @@ const PROJECTS = [
   done:"Runs on your real Downloads folder with zero leaks reported and a result you trust enough to act on." },
 
 /* ---------------- PHASE 1 ---------------- */
-{ id:"stash-core", phase:"p1", title:"Stash core daemon", langs:["Rust"], time:"6 to 9 weekends",
-  summary:"The heart of the system: a daemon that stores your notes, bookmarks and inventory items, and searches them fast. It speaks RESP (so redis-cli works) plus a few custom commands, and keeps data in an append-only log with snapshots.",
-  learn:["Rust ownership, borrowing, lifetimes in real code","Async I/O with tokio, or threads with channels","Binary file formats and crash safety","Inverted index and ranking (TF-IDF or BM25)","Error handling with Result, custom error types","Testing at unit, integration and property level"],
-  scope:["Items: id, kind (note, bookmark, item-location), title, body, tags, timestamps","Commands: STASH.ADD, STASH.GET, STASH.DEL, STASH.FIND, STASH.TAG, STASH.LIST","Full-text search with ranked results","Durable on disk; recovers after a crash","Config file and graceful shutdown"],
-  deliverables:[
-    {h:"M1: Skeleton server", items:["Cargo workspace with crates: stash-server, stash-proto, stash-index, stash-store","TCP listener with tokio; PING/ECHO work with redis-cli","RESP codec in stash-proto with tests, including fuzz-ish tests of malformed input","Structured logging with tracing"]},
-    {h:"M2: Storage engine", items:["Append-only log with length-prefixed, checksummed records","Startup replay that stops cleanly at a torn last record","In-memory primary map rebuilt from the log","Snapshot plus log truncation (compaction)","Crash test: kill the process mid-write 100 times; no corruption, no acknowledged loss"]},
-    {h:"M3: Search index", items:["Tokenizer: lowercase, split on non-alphanumerics, stop words","Inverted index: term to postings (doc id, term frequency)","Ranking with BM25 and unit tests on a tiny hand-checked corpus","Index updated on add/delete; rebuilt from the log on startup","Prefix search (typing 'doc' finds 'docker')"]},
-    {h:"M4: Commands and API", items:["All STASH.* commands implemented and documented","Plain HTTP JSON endpoint (/search?q=) for the browser UI, with CORS and an API token","Input limits (max item size, max connections) and clear errors"]},
-    {h:"M5: Hardening", items:["Integration test suite running real redis-cli commands","Benchmark: 100k items, report search latency p50/p95","Memory profile; fix the top allocation hotspot","README with architecture diagram and file-format spec","Dockerfile and a systemd or compose file to run it daily"]}
-  ],
-  stretch:["Typo-tolerant search (edit distance)","Replication to a second instance","Encrypted-at-rest log","Rewrite the index crate in C++ and compare"],
-  done:"You can add 10,000 items, kill the daemon at random, restart, and search them in under 10 ms, with tests and a written file-format spec." },
 
-{ id:"stash-fsck", phase:"p1", title:"stash-fsck: log verifier and dump tool", langs:["C"], time:"1 to 2 weekends",
-  summary:"A small C program that reads the stash daemon's log and snapshot files directly, verifies every checksum, reports torn or corrupt records, and dumps the contents. Writing it from your file-format spec (not from the Rust code) proves the spec is complete, and it gives you a real reason to practise careful byte-level parsing in C.",
-  learn:["Reading binary formats safely: bounds checks, endianness, alignment, struct packing pitfalls","Implementing CRC32 yourself","mmap versus read for sequential scans","C error-handling patterns (errno, return codes, cleanup with goto)","Fuzzing a parser with libFuzzer or AFL++","Defensive programming against hostile or damaged input"],
-  scope:["stash-fsck verify <data-dir>: check header, record lengths, checksums and ordering","stash-fsck dump <file>: print records as text or JSON lines","stash-fsck stats: record counts, sizes, dead space","Clear exit codes: 0 clean, 1 warnings (torn last record), 2 corruption"],
+{ id:"stash-core", phase:"p1", title:"Stash hub daemon", langs:["Rust"], time:"6 to 9 weekends",
+  summary:"The heart of the system, and the replacement for stash zero. It runs on your always-on machine, takes files, text and links from any device over HTTPS, stores each unique piece of content once, knows who sent what to whom, and tells the receivers right away.",
+  learn:["Rust ownership, borrowing, lifetimes in real code","Async I/O with tokio, and an HTTP server (axum or hyper)","Content-addressed storage: chunks named by their BLAKE3 hash","Crash safety: append-only log, fsync, atomic rename","Streaming and backpressure for files bigger than memory","Error handling with Result, and testing at unit, integration and property level"],
+  scope:["Items: id, kind (file, text, link, photo, video), name, size, hash, sender, receiver (one device or all), time, expiry","Resumable upload in pieces and Range download","Each device has its own token, which you can revoke","HTTP JSON API plus a live event stream","Storage quota and automatic expiry"],
   deliverables:[
-    {h:"M1: Verify", items:["Parse the log header and walk records with strict bounds checks","CRC32 implemented from scratch and tested against known vectors","Reports record count and the byte offset of the first bad record"]},
-    {h:"M2: Dump and stats", items:["dump mode in text and JSON lines","stats mode: live vs dead records and reclaimable space","A torn final record is a warning; damage in the middle is an error"]},
-    {h:"M3: Hardening", items:["Clean under AddressSanitizer and UBSan","Fuzzed for at least one hour with no crashes or hangs","Test script flips random bytes in a real log; fsck detects every case","Exit codes and usage documented in the README"]}
+    {h:"M1: Skeleton server", items:["Cargo workspace with crates: stash-server, stash-proto, stash-store","HTTPS with a certificate taken from the config (rustls)","Send text and list items with curl","Structured logging with tracing"]},
+    {h:"M2: Storage engine", items:["Files split into chunks stored by hash; identical content stored once","Metadata in an append-only log of length-prefixed, checksummed records","Startup replay that stops cleanly at a torn last record","Chunks nobody refers to are removed after delete or expiry","Crash test: kill the process mid-upload 100 times; no corruption, no acknowledged loss"]},
+    {h:"M3: Transfers", items:["Resumable upload: send pieces, ask which ones arrived, finish with a whole-file check","Range downloads","A multi-gigabyte file moves with flat memory use","Limits on item size, total storage and connections, with clear errors"]},
+    {h:"M4: Devices and events", items:["A one-time pairing code turns into a per-device token; list and revoke devices","Pairing and failed logins are rate limited, because this API will face the internet","Each device has an inbox; send to one device or all","Server-Sent Events so new items appear without a refresh","API documented with curl examples"]},
+    {h:"M5: Hardening", items:["Integration test suite against the real HTTP API","Benchmark transfer speed on your network against scp","Builds and passes tests on Linux and Windows","README with architecture diagram and storage-format spec","Dockerfile and a systemd unit to run it daily"]}
   ],
-  stretch:["--repair that truncates to the last good record after making a .bak copy","Benchmark mmap versus buffered read on a large log","Run it automatically from the Python backup tool before each backup"],
-  done:"It agrees with the Rust daemon on a 100,000-record log, catches every injected corruption, and survives an hour of fuzzing." },
+  stretch:["Content-defined chunking (FastCDC) so edited files share pieces","Compress text and other compressible items","End-to-end encryption, so the hub stores only ciphertext","SQLite metadata and compare with your log"],
+  done:"A 4 GB video survives a Wi-Fi drop and a daemon kill: it resumes, the hash matches, and sending the same file twice takes the space of one." },
+
+{ id:"stash-fsck", phase:"p1", title:"stash-fsck: storage checker and dump tool", langs:["C"], time:"1 to 2 weekends",
+  summary:"A small C program that reads the hub's metadata log and chunk store directly, verifies every checksum and hash, reports torn records, damaged or missing chunks, and dumps the contents. Writing it from your storage-format spec (not from the Rust code) proves the spec is complete, and gives you a real reason to practise careful byte-level parsing in C.",
+  learn:["Reading binary formats safely: bounds checks, endianness, alignment, struct packing pitfalls","Implementing CRC32 yourself, and calling the official BLAKE3 C library","mmap versus read for sequential scans","C error-handling patterns (errno, return codes, cleanup with goto)","Fuzzing a parser with libFuzzer or AFL++","Defensive programming against hostile or damaged input"],
+  scope:["stash-fsck verify <data-dir>: check the log, then rehash every chunk","stash-fsck dump: print records as text or JSON lines","stash-fsck stats: items, chunks, orphans, space saved by deduplication","Clear exit codes: 0 clean, 1 warnings (torn last record, orphans), 2 corruption"],
+  deliverables:[
+    {h:"M1: Verify the log", items:["Parse the log header and walk records with strict bounds checks","CRC32 implemented from scratch and tested against known vectors","Reports record count and the byte offset of the first bad record"]},
+    {h:"M2: Verify the chunks", items:["Finds missing, damaged and orphaned chunks","dump mode in text and JSON lines, and a stats mode","A torn final record is a warning; damage in the middle is an error"]},
+    {h:"M3: Hardening", items:["Clean under AddressSanitizer and UBSan","Fuzzed for at least one hour with no crashes or hangs","Test script flips random bytes in real data; fsck detects every case","Exit codes and usage documented in the README"]}
+  ],
+  stretch:["--repair that truncates to the last good record after making a .bak copy","Hash chunks on several threads","Run it from the Python backup tool before each backup"],
+  done:"It agrees with the hub on a store with thousands of items, catches every injected corruption, and survives an hour of fuzzing." },
 
 /* ---------------- PHASE 2 ---------------- */
-{ id:"zig-cli", phase:"p2", title:"stash CLI client", langs:["Zig"], time:"2 weekends",
-  summary:"A small, fast command-line client: stash add, stash find, stash get. It talks RESP to the daemon. Because it is small and has one job, it is a good first real Zig program.",
-  learn:["Zig build system (build.zig)","Explicit allocators and defer/errdefer","Error unions and optionals","comptime basics","std.net and std.io"],
-  scope:["stash add 'text' --tag docker","stash find docker compose","stash get <id>, stash rm <id>","Reads server address and token from a config file or environment","Pipes: echo foo | stash add -"],
-  deliverables:[
-    {h:"M1: Connect and send", items:["Builds with zig build; single static binary","Hand-written RESP encoder for commands; reads and decodes replies","stash ping works against the daemon"]},
-    {h:"M2: Commands", items:["add, find, get, rm, tags implemented","Argument parsing (hand-written or small lib) with --help for every command","Readable output; --json flag for scripts","Non-zero exit codes and stderr messages on failure"]},
-    {h:"M3: Quality", items:["No leaks using the testing allocator","Tests for encoder/decoder with zig test","Cross-compile to Windows and Linux from one machine","Shell completion script for PowerShell and bash"]}
-  ],
-  stretch:["Interactive fuzzy picker","Async connect with timeout","Offline queue when the daemon is down"],
-  done:"You use stash add from your terminal several times a day, and the binary is under 1 MB with no leaks." },
 
-{ id:"web-ui", phase:"p2", title:"Web UI and browser extension", langs:["TypeScript","HTML","CSS"], time:"3 to 4 weekends",
-  summary:"A fast, keyboard-first search page plus a browser extension that clips the current page (title, URL, selected text) into stash. This is where you deepen TS/HTML/CSS with no framework magic hiding things.",
-  learn:["Strict TypeScript and typed API clients","Accessible, responsive layout with modern CSS (grid, container queries, custom properties)","Browser extension (Manifest V3): content script, service worker, permissions","PWA: service worker, caching, install prompt","Keyboard UX and debouncing"],
-  scope:["Search-as-you-type with highlighted matches","Add, edit, tag, delete items","Dark and light themes","Extension: toolbar button and context menu 'Save to stash'","Works offline for already-cached items"],
+{ id:"web-ui", phase:"p2", title:"Stash web app", langs:["TypeScript","HTML","CSS"], time:"3 to 4 weekends",
+  summary:"One web app for the iPhone, the Android phone and any desktop browser: send photos, video, files, text and links, and see what arrived. This is where you deepen TS/HTML/CSS with no framework magic hiding things.",
+  learn:["Strict TypeScript and a typed API client","Mobile-first CSS: grid, container queries, custom properties, safe-area insets","File API, drag and drop, clipboard, and large touch targets","PWA: manifest, service worker, caching, install","EventSource, upload progress and resuming"],
+  scope:["Send files, photos, video, text and links to one device or all","Inbox with previews, download, copy and delete","Progress per file, with pause and resume","Dark and light themes","App shell opens even when the hub is unreachable"],
   deliverables:[
-    {h:"M1: Static UI", items:["Semantic HTML shell, mobile-friendly, passes basic Lighthouse accessibility checks","CSS design tokens (colors, spacing) and dark mode","Typed fetch client for the daemon's HTTP API (no 'any')"]},
-    {h:"M2: Features", items:["Debounced live search with highlighted terms","Item editor with tag chips","Keyboard shortcuts: / to search, j/k to move, Enter to open, e to edit","Empty, loading and error states for every view"]},
-    {h:"M3: Extension", items:["Manifest V3 extension loads unpacked in Chrome","Clip title, URL and selection; tag from a popup","Token stored in extension storage, not in code"]},
-    {h:"M4: PWA", items:["Installable, with a service worker caching the app shell","Offline read of recent items","Basic end-to-end test (Playwright) for add and search"]}
+    {h:"M1: Static UI", items:["Semantic HTML shell, passes basic Lighthouse accessibility checks","CSS design tokens (colors, spacing) and dark mode","Typed fetch client for the hub's API (no 'any')"]},
+    {h:"M2: Send and receive", items:["File and camera picker, drag and drop, and pasting an image","Progress bar per file; an upload resumes after a reload","Live inbox with reconnect","One-tap copy for text; image and video previews"]},
+    {h:"M3: App", items:["Installs on both phones' home screens","Service worker caches the app shell","Keeps the screen awake during a transfer","Playwright test: send in one browser context, receive in another"]}
   ],
-  stretch:["Drag a file to attach it","Share target on mobile","Bundle with esbuild or Vite and compare size with the no-build version"],
-  done:"You prefer using the UI over any other notes app for a full week, and the clipper works on the sites you visit most." },
+  stretch:["Browser extension (Manifest V3): send this page or image to my devices","Web Push when something arrives (on iPhone only for the installed app)","Bundle with esbuild or Vite and compare size with the no-build version"],
+  done:"For a full week you use it instead of emailing or messaging things to yourself." },
 
-{ id:"wasm-search", phase:"p2", title:"Offline search in WebAssembly", langs:["C++","Rust","WASM"], time:"2 to 3 weekends",
-  summary:"Compile the tokenizer and search index to WebAssembly so the browser can search your cached items instantly, with no server call. Do it once in Rust (easy toolchain) or C++ (Emscripten), then compare.",
-  learn:["Memory model of WASM (linear memory) and the JS/WASM boundary","wasm-bindgen / wasm-pack, or Emscripten and embind","Designing a small, copy-cheap API across the boundary","Profiling in the browser","Size optimization (wasm-opt, panic=abort, no std where possible)"],
-  scope:["Library with: build_index(items), search(query, limit), add(item), remove(id)","Same ranking as the server's BM25 (shared test vectors)","Runs in a Web Worker so the UI never blocks"],
+{ id:"phone-share", phase:"p2", title:"Share sheets on Android and iPhone", langs:["TypeScript","HTML"], time:"1 to 2 weekends",
+  summary:"Make sharing from any phone app take two or three taps. Android can list your installed web app in its share sheet. Safari cannot, so on the iPhone you build a Shortcut that appears in the share sheet and posts to the hub. Both need HTTPS that the phones trust: use a real certificate for a domain you own (DNS-01 challenge), so the same name also works over the internet later.",
+  learn:["HTTPS at home: your own certificate authority, or a real certificate for a domain you own using the DNS-01 challenge","Secure contexts: which browser features need HTTPS","The share_target manifest entry and handling its POST in a service worker","Apple Shortcuts: share sheet input and HTTP requests","Pairing a device safely with a QR code"],
+  scope:["Both phones reach the hub over HTTPS with no warnings","A QR code on the desktop pairs a phone","Android share sheet entry for files, text and links","iPhone Shortcuts: send to stash, and get the latest text"],
   deliverables:[
-    {h:"M1: Shared core", items:["Extract tokenizer and BM25 into a library with no I/O","Shared test file of (corpus, query, expected ranking) used by both server and WASM tests"]},
-    {h:"M2: Build for web", items:["Compiles to .wasm and loads from TypeScript","Strings and arrays cross the boundary without per-character calls","Runs in a Web Worker with a typed message protocol"]},
-    {h:"M3: Measure", items:["Benchmark 50k items: index build time and search latency","Final .wasm size recorded; reduced at least 30% from the first build","Short write-up: Rust vs C++ build, size, speed, developer experience"]}
+    {h:"M1: Trust and pair", items:["HTTPS works on both phones; the README says which certificate route you chose and why","The hub's name resolves on both phones (some routers block public names that point at home addresses)","A one-time QR code pairs a phone and stores its token"]},
+    {h:"M2: Android", items:["Chrome installs the web app as a real app, not just a shortcut (test this first)","Shared files, text and links reach the hub through the service worker","Checked from the photo gallery, the browser and a file manager"]},
+    {h:"M3: iPhone", items:["A 'Send to stash' Shortcut accepts photos, video, files, text and links","A 'Get from stash' Shortcut copies the latest text","A large video arrives intact","Setup page with steps another person could follow"]}
   ],
-  stretch:["SIMD for tokenizing","Persist the index to IndexedDB","Use the same crate natively in the CLI"],
-  done:"Search in the browser matches the server's results on the shared test file and answers in a few milliseconds with the network off." },
+  stretch:["Run the Zig CLI inside Termux on Android","Start the iPhone Shortcut from a widget or Back Tap","Revoke a lost phone and prove its token stops working"],
+  done:"From any app on either phone, share to stash puts the item on your PC in two or three taps." },
+
+{ id:"zig-cli", phase:"p2", title:"stash CLI for Linux and Windows", langs:["Zig"], time:"2 weekends",
+  summary:"A small, fast command-line client: stash send, stash ls, stash get, stash paste. It also plugs into the desktop, so you can send a file from the file manager. Because it has one job, it is a good first real Zig program.",
+  learn:["Zig build system (build.zig) and cross-compilation","Explicit allocators and defer/errdefer","Error unions and optionals","comptime basics","The standard library's networking, TLS, HTTP and file I/O"],
+  scope:["stash send photo.jpg --to iphone, stash send 'some text', echo hi | stash send -","stash ls, stash get <id>, stash rm <id>, stash paste (latest text)","The same config works at home and over the internet","Reads hub address and device token from a config file or environment","Explorer 'Send to' entry on Windows; a file manager action on Linux"],
+  deliverables:[
+    {h:"M1: Connect", items:["Builds with zig build; single binary","stash pair stores the device token","HTTPS to the hub with certificate checks on"]},
+    {h:"M2: Commands", items:["send, ls, get, rm and paste implemented","Large files stream, resume and show progress","Argument parsing with --help for every command","--json output, non-zero exit codes and stderr messages on failure"]},
+    {h:"M3: Desktop", items:["Cross-compile to Windows and Linux from one machine","Windows: a 'Send to' shortcut added by stash install","Linux: a file manager action that sends the selected files","Shell completion for bash and PowerShell"]},
+    {h:"M4: Quality", items:["No leaks using the testing allocator","zig test covers argument parsing and the upload protocol"]}
+  ],
+  stretch:["Interactive picker for the inbox","stash receive that waits and saves new items","Offline queue when the hub is unreachable"],
+  done:"Right-click and send on Windows, or one command on Linux, puts a file in your phone's inbox, and you use it several times a day." },
+
+{ id:"stash-sync", phase:"p2", title:"stash-sync: sync over your network and the internet", langs:["Go"], time:"4 to 5 weekends",
+  summary:"A Go program that makes stash work wherever you are. On a small public server it is a relay: the hub opens a connection out to it, so your devices reach home over the internet with no router port opened, even behind carrier-grade NAT, and it forwards encrypted bytes it cannot read. Next to each hub it keeps two hubs (for example the home PC and the laptop) in step, directly on your network or through the relay. This is Go's home ground: many concurrent connections, timeouts, retries and a single easy-to-deploy binary.",
+  learn:["Goroutines, channels, context cancellation and timeouts","The net package: copying streams both ways and running many streams over one tunnel (your own framing, or yamux)","Reading the server name from a TLS ClientHello; mutual TLS with crypto/tls","NAT and carrier-grade NAT, and why outbound connections get through","Split DNS: one name with a home answer and a public answer","Replication design: change feeds, cursors, tombstones for deletes, hybrid logical clocks, last-writer-wins and its limits","Idempotent operations, retries with exponential backoff and jitter","Table-driven tests, go test -race and testing network failure"],
+  scope:["At home, devices connect straight to the hub; away, the same name leads to the relay","TLS ends at the hub, so the relay never sees files or device tokens","The relay accepts only your hubs and limits connections and bandwidth","Hubs pull and push changed items, sending only chunks the other side lacks","Conflict policy documented and tested (concurrent rename, rename vs delete)","Status page showing the route in use, peers, last sync time and lag"],
+  deliverables:[
+    {h:"M1: Reach home from anywhere", items:["The hub dials out to the relay and reconnects after any drop","The relay routes by TLS server name and forwards bytes without decrypting","Web app, phones and CLI work at home and away with no settings change (check phone private DNS settings; if your router cannot override a name, send everything through the relay)","A phone on mobile data sends a file home, and the upload survives switching from Wi-Fi to mobile data"]},
+    {h:"M2: Design and change feed", items:["One-page sync design: node IDs, hybrid logical clock, tombstones, conflict policy, and what you are choosing not to solve","Add a changes-since-cursor endpoint to the Rust daemon (small change; update its docs and tests)","Go client for the daemon with timeouts and typed errors"]},
+    {h:"M3: Sync engine", items:["Per-peer pull and push loops as goroutines, stopped cleanly through context","Syncs directly on the same network and through the relay otherwise","Applying a change twice has no effect (idempotent)","Cursor saved to disk; survives restarts; backoff with jitter on failure","Table-driven tests for conflicts: rename vs rename, rename vs delete, delete vs delete","go test -race passes"]},
+    {h:"M4: Secure the edges", items:["Script that creates a private CA and issues hub and relay certificates","Mutual TLS on tunnel and sync connections; unknown certificates rejected","Per-client connection and bandwidth limits at the relay","Graceful shutdown that lets transfers in flight finish"]},
+    {h:"M5: Operations and proof", items:["Config file, structured logs with slog, /metrics and a small status page","Single static binary cross-compiled for Windows and Linux; Dockerfile","End-to-end test with two hubs, a simulated network partition and heavy concurrent changes that ends with identical data on both","Short write-up: where last-writer-wins loses data and how you would fix it"]}
+  ],
+  stretch:["Replace your relay with Tailscale or WireGuard and compare the setup","Use a direct IPv6 connection when both ends have one","End-to-end encrypt file contents so a second hub you do not trust cannot read them","Merge shared text with a CRDT instead of last-writer-wins"],
+  done:"A phone on mobile data sends a file that arrives at home, the relay never sees its contents, and two hubs changed while apart converge over the network or the internet with nothing lost." },
+
+{ id:"wasm-chunker", phase:"p2", title:"Hashing and chunking in WebAssembly", langs:["C++","Rust","WASM"], time:"2 to 3 weekends",
+  summary:"Compile the chunking and hashing code to WebAssembly so the browser can hash a huge video piece by piece, skip pieces the hub already has, and check the result end to end. The browser's built-in digest wants the whole input at once and has no BLAKE3. Do it once in Rust (easy toolchain) or C++ (Emscripten), then compare.",
+  learn:["Memory model of WASM (linear memory) and the JS/WASM boundary","wasm-bindgen / wasm-pack, or Emscripten and embind","Designing a small, copy-cheap API across the boundary","Profiling in the browser, including on phones","Size optimization (wasm-opt, panic=abort, no std where possible)"],
+  scope:["Library with: new hasher, update(bytes), finish, and chunk boundaries","Same chunking and hashes as the hub (shared test vectors)","Reads files in slices and runs in a Web Worker so the UI never blocks"],
+  deliverables:[
+    {h:"M1: Shared core", items:["Chunking and hashing in a library with no I/O","Shared test file of (input, chunk list, hash) used by both hub and WASM tests"]},
+    {h:"M2: In the web app", items:["Compiles to .wasm and loads from TypeScript in a Web Worker","A large file is never read into memory at once","Upload skips chunks the hub already has and checks the final hash"]},
+    {h:"M3: Measure", items:["Hashing speed on both phones and a desktop","Final .wasm size recorded; reduced at least 30% from the first build","Short write-up: Rust vs C++ build, size, speed, developer experience"]}
+  ],
+  stretch:["WASM SIMD","Encrypt each chunk in the browser with Web Crypto","Compile the same core into the Zig CLI"],
+  done:"A large video uploads from a phone without the tab running out of memory, resumes where it stopped, and the browser's hash matches the hub's." },
 
 /* ---------------- PHASE 3 ---------------- */
-{ id:"php-import", phase:"p3", title:"Import and share endpoint", langs:["PHP"], time:"1 to 2 weekends",
-  summary:"A small framework-free PHP 8 app that imports bookmarks (browser HTML export), accepts a webhook or email-forwarded link, and exposes a read-only public page for items you choose to share. It keeps your PHP sharp on security and fundamentals without Laravel doing the work.",
-  learn:["Modern PHP 8: types, enums, readonly, match","PDO with prepared statements","Sessions, CSRF, password hashing, output escaping","Routing and a tiny front controller","Composer and PHPUnit"],
-  scope:["Upload a browser bookmarks.html and import into stash","Webhook endpoint with a shared secret","Public share page with an unguessable token, expiry optional","Admin login for managing shares"],
+
+{ id:"php-share", phase:"p3", title:"Public share links and file requests", langs:["PHP"], time:"1 to 2 weekends",
+  summary:"A small framework-free PHP 8 app for people who are not on your system. Give someone a link to download one item, or a request link so they can send a file to you. It keeps your PHP sharp on security and fundamentals without Laravel doing the work.",
+  learn:["Modern PHP 8: types, enums, readonly, match","Streaming large downloads and uploads without loading them into memory","PDO with prepared statements","Sessions, CSRF, password hashing, output escaping","Routing, a tiny front controller, Composer and PHPUnit"],
+  scope:["Share link: random token, expiry, optional password, download limit, revoke","Request link: someone uploads into your inbox, with size and count limits","Admin login for managing links","Talks to the hub over its API; never reads its files directly","Reachable over the internet through the stash-sync relay, under its own name"],
   deliverables:[
     {h:"M1: Base", items:["Front controller with a tiny router and templates","Strict types on; static analysis (PHPStan level 6+) passing","Config from environment"]},
-    {h:"M2: Features", items:["Bookmark HTML parser (DOMDocument) with tests","Import sends items to the daemon over its API","Webhook with HMAC signature check","Share page: random token, optional expiry, revoke button"]},
-    {h:"M3: Security pass", items:["All SQL prepared; all output escaped","CSRF tokens on forms; secure session cookie flags","Rate limit on login and webhook","Checklist against the OWASP Top 10 written in the README"]}
+    {h:"M2: Share links", items:["Create, list and revoke links","Large downloads stream and support Range","Expiry, password and download limit tested"]},
+    {h:"M3: Request links", items:["Upload page that works on a phone","Size, count and type limits enforced on the server","Uploaded names can never escape the inbox"]},
+    {h:"M4: Security pass", items:["All SQL prepared; all output escaped","CSRF tokens on forms; secure session cookie flags","Rate limit on login, passwords and uploads","Checklist against the OWASP Top 10 written in the README"]}
   ],
-  stretch:["Containerize with php-fpm and nginx","Import from Pocket, Raindrop or Pinboard exports"],
-  done:"You imported your real browser bookmarks and shared one link publicly with confidence about its security." },
+  stretch:["Containerize with php-fpm and nginx","Preview page for photos and video","Email yourself when a request link is used"],
+  done:"Someone else downloaded a large file from your link and sent one back through a request link, and you are confident about its security." },
 
-{ id:"py-tools", phase:"p3", title:"Export, backup and flashcards", langs:["Python"], time:"2 weekends",
-  summary:"Python scripts around the stash: nightly backup, export to Markdown, usage analysis, and a spaced-repetition flashcard generator that turns tagged notes (for example law reviewer notes) into daily review cards.",
-  learn:["Packaging a CLI (pyproject, entry points, typer or argparse)","Testing with pytest and fixtures","Working with SQLite and the file system","The SM-2 spaced repetition algorithm","Scheduling with cron or systemd timers"],
-  scope:["stash-backup: dump all items to a dated, compressed file and verify it","stash-export: Markdown files, one per item, with front matter","stash-cards: pick notes tagged 'review', produce due cards each day","Simple stats: items per week, top tags, stale items"],
+{ id:"py-tools", phase:"p3", title:"Media processing, cleanup and backup", langs:["Python"], time:"2 weekends",
+  summary:"Python workers around the hub: make thumbnails and video poster frames for what arrives, clean up expired items, and back the whole thing up with a restore test.",
+  learn:["Packaging a CLI (pyproject, entry points, typer or argparse)","Image work with Pillow (iPhone HEIC photos need a plugin) and video with ffmpeg","Running subprocesses safely on untrusted files","Testing with pytest and fixtures","Scheduling with systemd timers"],
+  scope:["stash-thumbs: follow the hub's events and attach previews","stash-backup: copy metadata and chunks, then verify","stash-clean: apply retention rules","Weekly report: space used, biggest items, items per device"],
   deliverables:[
-    {h:"M1: Backup", items:["Backup command with checksum verification and restore test","Retention: keep 7 daily, 4 weekly, 12 monthly","Scheduled run and a failure alert"]},
-    {h:"M2: Export", items:["Markdown export that round-trips (import it back, same data)","Tag and link preservation","pytest suite with at least 80% coverage on the core"]},
-    {h:"M3: Flashcards", items:["Cloze or Q/A card format parsed from notes","SM-2 scheduling stored per card","Daily 'due today' list in the terminal","Review session loop with keyboard input"]}
+    {h:"M1: Previews", items:["Thumbnails for JPEG, PNG and HEIC","Poster frames for video, with a time limit per file","A broken file is logged and skipped, never fatal"]},
+    {h:"M2: Backup", items:["Incremental backup that copies only new chunks","Checksum verification and a restore test","Retention: keep 7 daily, 4 weekly, 12 monthly"]},
+    {h:"M3: Cleanup", items:["Retention rules with a dry run","Scheduled run and a failure alert","pytest suite with at least 80% coverage on the core"]}
   ],
-  stretch:["Generate card candidates with an LLM and review them before saving","Export to Anki format","Web view of the daily queue in the stash UI"],
-  done:"Backups run unattended and have been restore-tested; you review due cards daily for two weeks." },
+  stretch:["Convert HEIC to JPEG on request","Text recognition on screenshots so they are searchable","Backup to object storage"],
+  done:"Photos from the phone show previews everywhere within seconds, and backups run unattended and have been restore-tested." },
 
-{ id:"perl-text", phase:"p3", title:"Text cleanup and migration scripts", langs:["Perl"], time:"1 weekend",
-  summary:"Perl is still unmatched for quick, powerful text munging. Use it to migrate your old notes into stash and to build a bulk file renamer, learning regexes, one-liners and file processing properly.",
-  learn:["Regular expressions in depth (named captures, lookarounds, /x, /g, /e)","Perl one-liners (-n, -p, -i, -l, -a)","Hashes, references, context (scalar vs list)","File::Find, Getopt::Long, Path::Tiny","Writing tests with Test::More"],
-  scope:["Import old notes from messy text/Markdown files, extracting titles, dates and tags","Bulk renamer with dry-run (e.g. normalize screenshot names)","Log and CSV munging helpers you actually use"],
+{ id:"perl-text", phase:"p3", title:"Inbox sorter and renamer", langs:["Perl"], time:"1 weekend",
+  summary:"Perl is still unmatched for quick, powerful file and text munging, and it is the home of ExifTool. Sort received photos and files into dated folders and give them sensible names, learning regexes, one-liners and file processing properly.",
+  learn:["Regular expressions in depth (named captures, lookarounds, /x, /g, /e)","Perl one-liners (-n, -p, -i, -l, -a)","Hashes, references, context (scalar vs list)","Image::ExifTool, File::Find, Getopt::Long, Path::Tiny","Writing tests with Test::More"],
+  scope:["Sort an inbox folder by date taken and type","Bulk renamer with dry run (for example screenshots and camera names)","Transfer log helpers you actually use"],
   deliverables:[
     {h:"M1: One-liners", items:["Ten useful one-liners documented in a cheat-sheet file (rename, dedupe lines, column extract, in-place edit)","Each one tested on sample input"]},
-    {h:"M2: Importer", items:["Script that walks a folder of old notes and emits stash import commands","Dry-run mode and a summary report","Handles odd encodings and missing metadata without crashing","Test::More tests for the parsing functions"]},
+    {h:"M2: Sorter", items:["Moves files into dated folders using photo metadata, falling back to file time","Dry-run mode and a summary report","Handles odd names and missing metadata without crashing","Test::More tests for the parsing functions"]},
     {h:"M3: Renamer", items:["Pattern-based rename with preview, undo log and collision detection","Documented with perldoc/POD"]}
   ],
-  stretch:["Port the importer to Python and compare readability","Package as a CPAN-style distribution"],
-  done:"Your old notes are in stash, and you reach for Perl first when a text task would take more than three lines elsewhere." },
-
-{ id:"stash-sync", phase:"p3", title:"stash-sync: multi-device sync agent and secure gateway", langs:["Go"], time:"3 weekends",
-  summary:"A Go service that runs next to each stash daemon (for example on your laptop and your home PC). It replicates items between the machines over an encrypted, authenticated connection, and also works as a gateway that exposes the daemon safely (TLS, token auth, rate limits) so the web UI and browser extension work away from home. This is Go's home ground: many concurrent connections, timeouts, retries and a single easy-to-deploy binary. It differs from the Rust daemon (storage and search) and the Rust uptime monitor (health checks): it is about keeping separate copies consistent.",
-  learn:["Goroutines, channels, context cancellation and timeouts","net/http server and client, httputil.ReverseProxy","TLS and mutual TLS with crypto/tls","Replication design: change feeds, cursors, tombstones for deletes, hybrid logical clocks, last-writer-wins and its limits","Idempotent operations, retries with exponential backoff and jitter","Table-driven tests, go test -race, httptest, and testing network failure","log/slog, embed, and cross-compiling to Windows and Linux"],
-  scope:["Each node has an ID and a cursor per peer","Pull and push of changed items between peers","Conflict policy documented and tested (concurrent edit, edit vs delete)","Gateway: TLS, token auth, rate limiting and body-size limits in front of the daemon's HTTP API","Status page showing peers, last sync time and lag"],
-  deliverables:[
-    {h:"M1: Design and change feed", items:["One-page sync design: node IDs, hybrid logical clock, tombstones, conflict policy, and what you are choosing not to solve","Add a changes-since-cursor command to the Rust daemon (small change; update its docs and tests)","Go client for the daemon (RESP or HTTP) with timeouts and typed errors"]},
-    {h:"M2: Sync engine", items:["Per-peer pull and push loops as goroutines, stopped cleanly through context","Applying a change twice has no effect (idempotent)","Cursor saved to disk; survives restarts","Backoff with jitter on failure","Table-driven tests for conflicts: both edit, edit vs delete, delete vs delete","go test -race passes"]},
-    {h:"M3: Secure transport and gateway", items:["Script that creates a private CA and issues node certificates","Mutual TLS between sync nodes; unknown certificates rejected","Gateway reverse proxy with token auth, per-client rate limit and request-size cap","Graceful shutdown that finishes in-flight requests"]},
-    {h:"M4: Operations and proof", items:["Config file, structured logs with slog, /metrics and a small status page","Single static binary cross-compiled for Windows and Linux; Dockerfile","End-to-end test with two nodes, a simulated network partition and heavy concurrent edits that ends with identical data on both","Short write-up: where last-writer-wins loses data and how you would fix it"]}
-  ],
-  stretch:["Replace mTLS with WireGuard or Tailscale and compare the setup","End-to-end encrypt item bodies so the gateway host cannot read them","Merge note text with a CRDT instead of last-writer-wins","Resumable sync for large attachments"],
-  done:"Edit the same stash on the laptop and the PC while both are offline, reconnect them, and both converge with no lost edits; killing the agent mid-sync causes no duplicates and no loss." },
+  stretch:["Port the sorter to Python and compare readability","Package as a CPAN-style distribution"],
+  done:"A month of phone photos is sorted and named with no file lost, and you reach for Perl first when a text task would take more than three lines elsewhere." },
 
 /* ---------------- PHASE 4 ---------------- */
+
 { id:"stash-tui", phase:"p4", title:"Terminal UI for stash", langs:["C++"], time:"3 weekends",
-  summary:"A full-screen terminal app for browsing stash: a search box, a results list and a preview pane, driven by the keyboard. It talks to the daemon over RESP, reusing your Redis clone's client code. This is the C++ showcase: classes, RAII, variants and an event loop, rather than raw bytes.",
-  learn:["Modern C++ design: std::variant and std::visit for events, std::optional, ranges, std::expected (C++23)","RAII guard that restores the terminal on exit, crash or signal","One event loop that waits on both the keyboard and the daemon socket","Unicode width and UTF-8 handling","Diff-based redraw so the screen does not flicker","Unit testing (doctest or Catch2), CMake, clang-tidy"],
-  scope:["Search-as-you-type with ranked results","Preview pane and tag filter","Keys: / search, j/k move, Enter open, e edit in $EDITOR, d delete with confirm","Handles terminal resize","Builds in WSL2 or Docker (it uses Unix terminal APIs)"],
+  summary:"A full-screen terminal app for your inbox: a filter box, an item list, a preview pane and a transfers pane, driven by the keyboard. It talks to the hub over HTTPS using libcurl. This is the C++ showcase: classes, RAII, variants and an event loop, rather than raw bytes.",
+  learn:["Modern C++ design: std::variant and std::visit for events, std::optional, ranges, std::expected (C++23)","RAII guard that restores the terminal on exit, crash or signal","One event loop that waits on both the keyboard and network transfers","Unicode width and UTF-8 handling","Diff-based redraw so the screen does not flicker","Unit testing (doctest or Catch2), CMake, clang-tidy"],
+  scope:["Filter-as-you-type over the inbox","Preview pane and a transfers pane with progress","Keys: / filter, j/k move, Enter open, s send a file, c copy, d delete with confirm","Handles terminal resize","Linux, or WSL2 on Windows (it uses Unix terminal APIs)"],
   deliverables:[
     {h:"M1: Terminal layer", items:["Raw-mode RAII guard that always restores the terminal","Key parser for arrows, Ctrl combinations and escape sequences","Alternate screen, cursor control and resize signal handling"]},
     {h:"M2: UI components", items:["Input box, list view and preview pane as separate classes","Layout recomputed on resize","Event type as a std::variant, with one handler per event"]},
-    {h:"M3: Data and loop", items:["RESP client class with timeouts and clear errors","Debounced search; one loop waits on stdin and the socket","Daemon down: shows a status line and keeps retrying"]},
-    {h:"M4: Quality", items:["Diff-based rendering with no visible flicker","Unit tests for key parsing, layout and the RESP client","Clean under clang-tidy, AddressSanitizer and UBSan","Profile a redraw with 10,000 results and note the fix"]}
+    {h:"M3: Transfers", items:["HTTP client class over libcurl's multi interface, with timeouts and clear errors","Uploads and downloads run while the UI stays responsive","Hub down: shows a status line and keeps retrying"]},
+    {h:"M4: Quality", items:["Diff-based rendering with no visible flicker","Unit tests for key parsing, layout and the client","Clean under clang-tidy, AddressSanitizer and UBSan","Profile a redraw with 10,000 items and record the fix"]}
   ],
-  stretch:["Rebuild the same UI with FTXUI and compare code size","Mouse support","Windows console backend behind the same terminal interface"],
-  done:"You open it instead of the web UI for quick lookups, and quitting by any route (q, Ctrl+C, a crash) always leaves your terminal usable." },
+  stretch:["Rebuild the same UI with FTXUI and compare code size","Image previews in terminals that support them","Windows console backend behind the same terminal interface"],
+  done:"You open it instead of the web app on Linux, and quitting by any route (q, Ctrl+C, a crash) always leaves your terminal usable." },
 
-{ id:"uptime-monitor", phase:"p4", title:"Personal uptime and home monitor", langs:["Rust"], time:"2 to 3 weekends",
-  summary:"A small Rust daemon that checks the things you care about (your sites, Valkey/MySQL, Wi-Fi/router reachability, backup freshness) and alerts your phone when something fails. You use it daily and it is a second, smaller Rust project that exercises async tasks, timeouts and the networking crates, and is a good way to get comfortable before or after the stash core.",
-  learn:["Async tasks with tokio: select!, timeouts, cancellation","HTTP checks with reqwest, TCP checks with tokio::net, TLS certificate expiry","Config with serde and graceful shutdown","Testing with mock servers and tokio's paused clock","Metrics (Prometheus format) and simple alert rules"],
-  scope:["Checks: HTTP status and latency, TCP port open, TLS expiry, ping, file age (backup freshness)","Alert after N consecutive failures, and a recovery message","Notifications via a push service or Telegram bot","Tiny status page"],
+{ id:"clipboard-bridge", phase:"p4", title:"Shared clipboard for Linux and Windows", langs:["Rust"], time:"2 weekends",
+  summary:"Copy on one computer, paste on the other. A small Rust agent watches the clipboard and sends changes through the hub. Phones limit background clipboard access, so there you use the web app's copy button or the iPhone Shortcut.",
+  learn:["Clipboards on Wayland, X11 and Windows, and how they differ","The arboard crate, and where you need platform code anyway","Async tasks with tokio: select!, timeouts, cancellation","Preventing echo loops between two machines","Handling secrets: honoring the markers password managers set"],
+  scope:["Text and images, with a size cap","Off switch and per-device on or off","Never sends content marked as secret","Runs as a user service on Linux and at login on Windows"],
   deliverables:[
-    {h:"M1: Checker engine", items:["YAML or TOML config of checks with intervals","Each check runs as its own tokio task with a timeout","Results kept in memory with the last 24 h of history"]},
-    {h:"M2: Alerting", items:["Failure threshold and de-duplication (no alert spam)","Push notification on fail and on recovery","Test the logic with a fake clock"]},
-    {h:"M3: Ops", items:["/status JSON and a minimal HTML status page","/metrics endpoint in Prometheus text format","Graceful shutdown; Dockerfile; runs as a service on a small always-on machine"]}
+    {h:"M1: Local", items:["Reads and writes the clipboard on both systems","Detects changes without busy polling where the system allows it"]},
+    {h:"M2: Shared", items:["A copy appears on the other computer within a second","No echo loop, with a test for it","Images work in both directions"]},
+    {h:"M3: Safety and operations", items:["Secret-marked entries are skipped, tested with your password manager","Pause command, and clipboard items expire from the hub quickly","Starts automatically and reconnects after sleep"]}
   ],
-  stretch:["Store history in stash or SQLite","Wake-on-LAN and power-cycle hooks","Detect Wi-Fi dead zones with periodic probes from a laptop"],
-  done:"It has run unattended for two weeks, caught at least one real problem, and sent no false alarms." },
+  stretch:["Clipboard history in the TUI","End-to-end encryption for clipboard items","Tray icon"],
+  done:"You copy on Windows and paste on Linux for two weeks with no loop and no password ever sent." },
 
-{ id:"zig-timer", phase:"p4", title:"Focus timer and time log", langs:["Zig"], time:"1 weekend",
-  summary:"A tiny terminal timer (pomodoro-style) that logs work sessions to a plain file and prints weekly totals. Small enough to finish, useful enough to run every day, and a second chance to practice Zig after the stash CLI.",
-  learn:["Zig std: time, fs, io, process","Terminal handling and signals (Ctrl+C cleanly)","File formats you design yourself (a one-line-per-session log)","Writing tests and a build script from scratch"],
-  scope:["timer start 50 'task name'","Live countdown in the terminal; bell at the end","Append-only log of sessions","timer report --week prints hours per task"],
+{ id:"drop-folder", phase:"p4", title:"Drop folder: send by saving a file", langs:["Zig"], time:"1 to 2 weekends",
+  summary:"A tiny background program. Save or drag a file into out/iphone and it is sent to the iPhone; things sent to this computer land in an inbox folder with a notification. A second chance to practice Zig after the CLI, reusing its upload code.",
+  learn:["File system events: inotify on Linux, ReadDirectoryChangesW on Windows","Knowing when a file has finished being written","Calling operating system APIs from Zig","Signals, clean shutdown and retry queues","Writing tests and a build script from scratch"],
+  scope:["One outgoing subfolder per device, plus one for everyone","Incoming files saved to an inbox folder, never overwriting","Sent files move to a 'sent' folder","Desktop notification on arrival"],
   deliverables:[
-    {h:"M1: Timer", items:["Countdown with accurate time (no drift) and clean Ctrl+C handling","Terminal bell or desktop notification at the end"]},
-    {h:"M2: Log and report", items:["Session log file with a documented format","Weekly and monthly report grouped by task","Unit tests for parsing and aggregation"]}
+    {h:"M1: Watch and send", items:["Detects new files on Linux and Windows","A half-written file is never sent, with a test","Failed sends retry and survive a restart"]},
+    {h:"M2: Receive", items:["Incoming items saved safely, renaming on collision","Notification on both systems","Runs for a week without leaking memory"]}
   ],
-  stretch:["Pause and resume","Sync sessions to stash","Compare minutes tracked vs your target weekly hours"],
-  done:"You track every work block for two weeks and the report matches reality."},
+  stretch:["Ignore rules","Zip a dropped folder before sending","Screenshot folder that sends to your phone automatically"],
+  done:"You move files to your phone by saving them into a folder, without opening anything."},
 
 /* ---------------- PHASE 5 ---------------- */
+
 { id:"libstash", phase:"p5", title:"libstash: one C library, five language bindings", langs:["C","Python","Zig","Go","Perl","PHP"], time:"3 to 4 weekends",
-  summary:"A small client library with a stable C ABI (connect, add, find, get, free) and thin bindings to it from Python, Zig, Go, Perl and PHP. Every other language can call a C ABI, so this is the fastest way to see how each one handles foreign memory, strings, errors and callbacks.",
+  summary:"A small client library with a stable C ABI (connect, send, list, fetch, free) built on libcurl and thin bindings to it from Python, Zig, Go, Perl and PHP. Every other language can call a C ABI, so this is the fastest way to see how each one handles foreign memory, strings, errors and callbacks.",
   learn:["Designing a stable C ABI: opaque handles, out-parameters, error codes, versioning","Who frees what: ownership rules across a language boundary","Python ctypes or cffi, Zig @cImport, Go cgo, Perl FFI::Platypus, PHP FFI","Shared vs static libraries, symbol visibility, soname","Callbacks from C into a garbage-collected language"],
-  scope:["libstash.so / stash.dll with a single public header","Functions: stash_connect, stash_add, stash_find (iterator), stash_get, stash_free, stash_last_error","Bindings that feel native in each language (exceptions in Python, error unions in Zig, error values in Go)","The same 10-line example program in every language"],
+  scope:["libstash.so / stash.dll with a single public header","Functions: stash_connect, stash_send_file, stash_list (iterator), stash_fetch, stash_free, stash_last_error","Bindings that feel native in each language (exceptions in Python, error unions in Zig, error values in Go)","The same 10-line example program in every language"],
   deliverables:[
     {h:"M1: The C library", items:["Public header with opaque handle types and documented ownership for every pointer","No globals; two handles are safe to use from two threads","Builds as a shared and a static library; only public symbols exported","Unit tests, and clean under ASan and Valgrind"]},
     {h:"M2: First two bindings", items:["Python binding (ctypes or cffi) with a context manager and exceptions","Zig binding via @cImport with a Zig-style wrapper (allocator in, error union out)","The example program prints identical output in both"]},
     {h:"M3: Three more", items:["Go binding with cgo; Go never keeps a C pointer after a call returns","Perl binding with FFI::Platypus","PHP binding with the FFI extension","Write-up: what each language made easiest and hardest"]},
-    {h:"M4: Callbacks and safety", items:["stash_find_each(handle, query, callback, userdata) used from at least two languages","Reply parser fuzzed for an hour with no crashes","ABI check: add a function to the library and the old bindings keep working without a rebuild"]}
+    {h:"M4: Callbacks and safety", items:["stash_list_each(handle, filter, callback, userdata) used from at least two languages","Response parser fuzzed for an hour with no crashes","ABI check: add a function to the library and the old bindings keep working without a rebuild"]}
   ],
   stretch:["Generate bindings from the header automatically (cffi API mode, Zig translate-c)","Add a Rust binding and compare it with a native Rust client","Node.js binding with N-API"],
   done:"The same example program works in all five languages against the live daemon, and you can explain who owns every byte the header hands out." },
 
 { id:"stash-ql", phase:"p5", title:"Query language in Zig, linked into the Rust daemon", langs:["Zig","Rust"], time:"2 to 3 weekends",
-  summary:"A small filter language for search (tag:docker -tag:old after:2026-01 \"exact phrase\" OR kind:bookmark). Write the lexer and parser in Zig, export them through a C ABI, and call them from the Rust daemon over FFI. You learn to write a real parser and to make two modern systems languages share memory safely.",
+  summary:"A small filter language for finding things you shared (kind:photo from:iphone larger:10mb after:2026-01 \"trip\" OR kind:video). Write the lexer and parser in Zig, export them through a C ABI, and call them from the Rust daemon over FFI. You learn to write a real parser and to make two modern systems languages share memory safely.",
   learn:["Lexing and recursive-descent parsing, operator precedence","An AST stored in a flat array, which is easy to pass across FFI","Zig export fn, extern struct, and building a static library for another toolchain","Rust FFI: extern \"C\", unsafe blocks, a safe wrapper over raw pointers, linking from build.rs","Good error messages with spans (column number and a caret)"],
-  scope:["Terms, phrases, tag:, kind:, before:/after:, AND/OR/NOT, parentheses","Parser returns a flat AST or an error with its position","Daemon uses it for STASH.FIND; plain words keep working as before","The browser's WASM search can use the same parser"],
+  scope:["Words, phrases, kind:, from:, to:, tag:, larger:/smaller:, before:/after:, AND/OR/NOT, parentheses","Parser returns a flat AST or an error with its position","The hub's search uses it; plain words match file names and shared text","The web app can use the same parser through WASM"],
   deliverables:[
     {h:"M1: Parser in Zig", items:["Grammar written in EBNF in the README","Lexer and recursive-descent parser with zig test coverage for every rule","Errors report the column and what was expected"]},
     {h:"M2: Across the boundary", items:["C ABI: parse(text, len) returns a handle, accessors read nodes, free releases it","Safe Rust wrapper with all unsafe code in one module","cargo build runs the Zig build and links the library"]},
-    {h:"M3: Wired in", items:["Query evaluator in Rust over the inverted index","STASH.FIND accepts the language; old plain queries behave the same","Random-query fuzzing through the Rust wrapper finds no crash or leak"]}
+    {h:"M3: Wired in", items:["Query evaluator in Rust over item metadata, names and text","stash ls accepts the language; plain words keep working","Random-query fuzzing through the Rust wrapper finds no crash or leak"]}
   ],
-  stretch:["Compile the same Zig parser to WASM for the browser","Autocomplete in the web UI driven by parser errors","Rewrite the parser in Rust and compare size and speed"],
-  done:"stash find 'tag:law -tag:old after:2026-06' returns the right items, and fuzzing the parser through Rust finds nothing." },
+  stretch:["Compile the same Zig parser to WASM for the browser","Autocomplete in the web app driven by parser errors","Rewrite the parser in Rust and compare size and speed"],
+  done:"stash ls 'kind:photo from:iphone after:2026-06' returns the right items, and fuzzing the parser through Rust finds nothing." },
 
 { id:"wasm-plugins", phase:"p5", title:"WASM plugins for the daemon", langs:["Rust","WASM","Zig","C","Go"], time:"3 to 4 weekends",
-  summary:"Let the daemon run small plugins compiled to WebAssembly: auto-tag a note when it is added, redact secrets before saving, fetch a page title for a bookmark. The host is Rust with wasmtime, and you write one plugin each in Zig, C and Go (TinyGo). It is the cleanest way to compare how each language compiles to the same sandboxed target.",
-  learn:["Embedding a WASM runtime (wasmtime) with fuel and memory limits","WIT interfaces and the component model, or a hand-made ABI over linear memory","Compiling Zig, C (clang --target=wasm32-wasi) and TinyGo to WASM","Sandboxing: what a plugin can and cannot reach","Versioning a plugin interface"],
-  scope:["Hooks: on_add(item) -> item, on_find(query) -> query","Plugins listed in the config, loaded at startup, reloaded when the file changes","Per-call fuel and memory limits; a misbehaving plugin is disabled, never fatal","Three plugins: auto-tagger (Zig), secret redactor (C), title fetcher using a host function (Go)"],
+  summary:"Let the hub run small plugins compiled to WebAssembly when something arrives: strip the location from photos, tag and sort items, fetch the title of a shared link. The host is Rust with wasmtime, and you write one plugin each in Zig, C and Go (TinyGo). It is the cleanest way to compare how each language compiles to the same sandboxed target.",
+  learn:["Embedding a WASM runtime (wasmtime) with fuel and memory limits","WIT interfaces and the component model, or a hand-made ABI over linear memory","Compiling Zig, C (clang --target=wasm32-wasi) and TinyGo to WASM","Sandboxing: what a plugin can and cannot reach","Passing large file content to a plugin in pieces"],
+  scope:["Hooks: on_receive(item) -> item, with read and replace access to content","Plugins listed in the config, loaded at startup, reloaded when the file changes","Per-call fuel and memory limits; a misbehaving plugin is disabled, never fatal","Three plugins: auto-tagger (Zig), JPEG location stripper (C), link title fetcher using a host function (Go)"],
   deliverables:[
     {h:"M1: Host", items:["wasmtime embedded; loads a .wasm and calls an exported function","Interface written in WIT (or a documented memory ABI)","An infinite-loop plugin is stopped by the fuel limit and logged"]},
-    {h:"M2: Three guests", items:["Zig auto-tagger","C secret redactor (API keys, passwords)","TinyGo plugin that calls a host function","Each guest has tests in its own language"]},
-    {h:"M3: Operations", items:["Hot reload when a .wasm file changes","STASH.PLUGINS lists loaded plugins with call counts and errors","Benchmark: cost per add with 0, 1 and 3 plugins"]}
+    {h:"M2: Three guests", items:["Zig auto-tagger","C location stripper, tested on photos from both phones' camera settings","TinyGo plugin that calls a host function","Each guest has tests in its own language"]},
+    {h:"M3: Operations", items:["Hot reload when a .wasm file changes","A /plugins endpoint lists loaded plugins with call counts and errors","Benchmark: cost per item with 0, 1 and 3 plugins"]}
   ],
-  stretch:["Rust and AssemblyScript guests for comparison","Run the same plugins client-side in the web UI","Signed plugins"],
-  done:"A note containing an API key is saved redacted and auto-tagged by plugins written in three languages, and a deliberately broken plugin cannot crash the daemon." },
+  stretch:["Rust and AssemblyScript guests for comparison","Strip the location in the web app before upload with the same plugin","Signed plugins"],
+  done:"A photo from your phone arrives without its location and already tagged, by plugins written in different languages, and a deliberately broken plugin cannot crash the hub." },
 
-{ id:"live-updates", phase:"p5", title:"Live updates everywhere", langs:["Rust","Go","TypeScript","C++"], time:"2 to 3 weekends",
-  summary:"Add a note from the CLI and the web UI and terminal UI update instantly. The daemon publishes a change stream (STASH.WATCH over RESP), the Go gateway turns it into Server-Sent Events, the web UI subscribes, and the C++ TUI listens on a second socket. One feature, four languages, four concurrency models.",
-  learn:["Rust: tokio broadcast channels and handling slow consumers","Go: fan-out to many HTTP clients, flushing, cancelling on disconnect","TypeScript: EventSource, reconnection and resuming from the last event id","C++: a second socket in the event loop, merging pushed events into UI state","Backpressure: what happens when a subscriber cannot keep up"],
-  scope:["STASH.WATCH [cursor] pushes add/update/delete events (RESP3 push)","Gateway /events endpoint (SSE) with auth","Web UI and TUI update lists live and show when they are offline","Resume from the last seen event after a reconnect: no gaps, no duplicates"],
+{ id:"live-updates", phase:"p5", title:"Live transfers everywhere", langs:["Rust","Go","TypeScript","C++"], time:"2 to 3 weekends",
+  summary:"Send from one device and every other screen shows it arriving, with progress. Grow the hub's simple event stream into one with cursors and resume, serve it to many listeners from a small Go fan-out service beside the hub, and consume it in the web app and the terminal UI. One feature, four languages, four concurrency models.",
+  learn:["Rust: tokio broadcast channels and handling slow consumers","Go: fan-out to many HTTP clients, flushing, cancelling on disconnect","TypeScript: EventSource, reconnection and resuming from the last event id","C++: a long-lived stream inside the event loop, merging pushed events into UI state","Backpressure: what happens when a subscriber cannot keep up"],
+  scope:["Events: added, updated, deleted and transfer progress, each with a cursor","Fan-out /events endpoint with the same device tokens, following the hub once","Web app and TUI update live and show when they are offline","Resume from the last seen event after a reconnect: no gaps, no duplicates"],
   deliverables:[
-    {h:"M1: Daemon stream", items:["Broadcast channel fed by the write path","STASH.WATCH with a cursor; a lagging subscriber gets a resync event instead of unbounded memory","Integration test with redis-cli in subscribe mode"]},
-    {h:"M2: Gateway and web", items:["Go SSE endpoint; a client disconnect cancels the upstream watch","Web UI applies events to its list; reconnects with Last-Event-ID","Kill the gateway mid-stream: the UI recovers with no missing items"]},
-    {h:"M3: Terminal UI", items:["TUI subscribes on a second connection inside its event loop","Results refresh without losing selection or scroll position","Load test: 1,000 adds per second with three subscribers stays under 50 MB in total"]}
+    {h:"M1: Hub stream", items:["Broadcast channel fed by the write path","Resume from a cursor; a lagging subscriber gets a resync event instead of unbounded memory","Integration test that follows the stream with curl"]},
+    {h:"M2: Fan-out and web", items:["Go fan-out service; a client disconnect frees its stream","Web app shows progress of incoming items and reconnects with Last-Event-ID","Kill the fan-out service mid-stream: the app recovers with no missing items"]},
+    {h:"M3: Terminal UI", items:["TUI follows the stream inside its event loop","List refreshes without losing selection or scroll position","Load test: 1,000 events per second with three subscribers stays under 50 MB in total"]}
   ],
-  stretch:["WebSocket instead of SSE, and compare","Phone notifications through the uptime monitor's notifier","Live collaborative editing (pair with the CRDT stretch goal in stash-sync)"],
-  done:"A note added from the CLI appears in the open web UI and TUI within 100 ms, and restarting any piece never loses or duplicates an event." },
+  stretch:["WebSocket instead of SSE, and compare","Phone notifications with Web Push","Live collaborative text (pair with the CRDT stretch goal in stash-sync)"],
+  done:"A file sent from the phone shows its progress in the open web app and TUI, and restarting any piece never loses or duplicates an event." },
 
 { id:"conformance", phase:"p5", title:"Polyglot conformance kit", langs:["Python","C","C++","Rust","Zig","Go","TypeScript","Perl","PHP"], time:"2 weekends",
-  summary:"One folder of language-neutral test vectors (JSON) for the RESP codec, BM25 ranking and the query language, plus a runner that checks every implementation against them. Writing a small adapter in each language makes you learn its test framework, JSON library and process I/O, and it catches your clients drifting apart.",
+  summary:"One folder of language-neutral test vectors (JSON) for the upload protocol, chunk hashing and the query language, plus a runner that checks every implementation against them. Writing a small adapter in each language makes you learn its test framework, JSON library and process I/O, and it catches your clients drifting apart.",
   learn:["Language-neutral test vectors with a versioned format","Each language's test runner: cargo test, zig test, go test, pytest, Test::More, PHPUnit, Catch2, node:test","Orchestrating subprocesses and parsing their output in Python","Golden files and approving changes on purpose","A CI matrix across languages (GitHub Actions)"],
-  scope:["vectors/resp, vectors/bm25 and vectors/query directories","One small adapter per implementation: reads a vector on stdin, prints its result","Python runner that runs every adapter and prints a pass/fail matrix","CI job that fails on any mismatch"],
+  scope:["vectors/upload, vectors/hash and vectors/query directories","One small adapter per implementation: reads a vector on stdin, prints its result","Python runner that runs every adapter and prints a pass/fail matrix","CI job that fails on any mismatch"],
   deliverables:[
-    {h:"M1: Vectors", items:["At least 40 RESP cases, including split and malformed input","Ranking cases with a hand-checked expected order","README that describes the format and how to add a case"]},
+    {h:"M1: Vectors", items:["At least 40 upload protocol cases, including interrupted and malformed requests","Chunking and hashing cases with known digests","README that describes the format and how to add a case"]},
     {h:"M2: Adapters", items:["Adapters for Rust, C++, Zig and C","Adapters for Go, TypeScript, Python, Perl and PHP","Each adapter also runs inside its language's own test runner"]},
     {h:"M3: Runner and CI", items:["Python runner prints a language by suite matrix","GitHub Actions matrix builds and runs everything","Found and fixed at least one real disagreement between implementations"]}
   ],
@@ -392,6 +439,7 @@ const PROJECTS = [
   done:"One command shows a green matrix across nine languages, and CI blocks any change that breaks one of them."},
 
 /* ---------------- PHASE 6 ---------------- */
+
 { id:"maelstrom", phase:"p6", title:"Distributed systems warm-up with Maelstrom", langs:["Go"], time:"2 to 3 weekends",
   summary:"Maelstrom is a workbench from the Jepsen project. It runs your program as a cluster of nodes, injects network partitions and checks the results. Work through the classic challenges: unique IDs, broadcast with gossip, a grow-only counter, a replicated log and transactions. You see how distributed systems fail before you build your own.",
   learn:["Message passing as the only shared state","Gossip and anti-entropy; batching to cut message count","CRDTs: a grow-only counter, and why merges must be commutative and idempotent","Consistency models: what linearizable, sequential and eventual really mean","Reading Maelstrom and Elle output to find your own bugs"],
@@ -408,7 +456,7 @@ const PROJECTS = [
 { id:"stash-raft", phase:"p6", title:"Raft consensus from scratch", langs:["Rust"], time:"5 to 7 weekends",
   summary:"Implement Raft as a Rust library: leader election, log replication, persistence, snapshots and membership changes. Test it in a deterministic simulator where you control time, message delivery, drops and crashes. Then check it with Maelstrom's linearizable key-value workload. This is the core of every replicated database.",
   learn:["The Raft paper in detail: terms, votes, log matching, commit rules","Why each rule exists, learned by breaking it in the simulator","Deterministic simulation testing: seeded randomness, simulated clock and network","Durability: what must be fsynced before replying","Snapshots with InstallSnapshot, and single-server membership changes","Linearizable reads with ReadIndex and leader leases"],
-  scope:["A library crate with no I/O: feed it messages and ticks, get back messages and committed entries","Simulator that runs thousands of seeded, randomized scenarios","Adapter that runs it under Maelstrom's lin-kv workload","Durable storage on top of the stash append-only log"],
+  scope:["A library crate with no I/O: feed it messages and ticks, get back messages and committed entries","Simulator that runs thousands of seeded, randomized scenarios","Adapter that runs it under Maelstrom's lin-kv workload","Durable storage on top of the hub's append-only metadata log"],
   deliverables:[
     {h:"M1: Election", items:["Followers, candidates, leaders, terms and RequestVote","Randomized election timeouts; never two leaders in one term across 10,000 simulated runs","A leader is elected within a bounded time after a partition heals"]},
     {h:"M2: Replication", items:["AppendEntries with the consistency check and fast log backtracking","Commit rule: only entries from the current term commit by counting replicas","Simulator checks every invariant at every step: election safety, log matching, leader completeness, state machine safety"]},
@@ -418,23 +466,23 @@ const PROJECTS = [
   stretch:["Pre-vote and check-quorum to stop disruptive servers","Pipelining and batching; measure throughput","Leader leases with a clock-drift bound"],
   done:"Millions of simulated steps with random drops, partitions and crashes never break an invariant, and Maelstrom reports your store as linearizable." },
 
-{ id:"stash-cluster", phase:"p6", title:"stash cluster: replicated and sharded", langs:["Rust","Go"], time:"5 to 7 weekends",
-  summary:"Turn the single daemon into a cluster of 3 to 5 nodes. Each shard of items is its own Raft group (multi-Raft), nodes find each other with SWIM-style gossip, and the Go gateway routes each request to the right shard leader. This is how CockroachDB, TiKV and etcd put the pieces together.",
-  learn:["Sharding with consistent hashing or key ranges, and moving a shard while it is live","Multi-Raft: many Raft groups in one process, batched heartbeats","Membership and failure detection with SWIM gossip","Request routing, leader hints and retries","Scatter-gather search across shards and merging ranked results","Rolling upgrades and versioned wire messages"],
-  scope:["3 to 5 nodes; each item belongs to one shard; each shard has 3 replicas","Writes go through the shard's Raft leader; reads are linearizable by default","Search fans out to every shard and merges the top results","Adding or removing a node rebalances shards automatically"],
+{ id:"stash-cluster", phase:"p6", title:"stash cluster: files that survive a dead machine", langs:["Rust","Go"], time:"5 to 7 weekends",
+  summary:"Turn the single hub into a cluster of 3 to 5 nodes. Metadata goes through Raft, file chunks are copied to several nodes chosen by consistent hashing, nodes find each other with SWIM-style gossip, and a small Go router sends each request to the right node. Large file systems such as GFS and Ceph split metadata from data in a similar way.",
+  learn:["Why metadata and file data are replicated differently","Consistent hashing, replica placement and moving data while it is live","Quorum writes, and repairing replicas by comparing Merkle trees","Membership and failure detection with SWIM gossip","Request routing, leader hints and retries","Rolling upgrades and versioned wire messages"],
+  scope:["3 to 5 nodes; each chunk lives on 3 of them","Metadata writes go through the Raft leader; reads are linearizable by default","An upload is acknowledged only after enough copies are on disk","Adding or removing a node rebalances chunks automatically"],
   deliverables:[
-    {h:"M1: Replicated daemon", items:["Daemon writes go through stash-raft before they are acknowledged","Three-node cluster in Docker Compose; kill the leader and writes continue","Followers redirect clients to the leader"]},
+    {h:"M1: Replicated metadata", items:["Hub metadata writes go through stash-raft before they are acknowledged","Three-node cluster in Docker Compose; kill the leader and sends continue","Followers redirect clients to the leader"]},
     {h:"M2: Membership", items:["SWIM gossip: join, suspect, dead, with incarnation numbers","Cluster view endpoint and a CLI command to show it","Five nodes, partition one: it is marked dead, then rejoins cleanly"]},
-    {h:"M3: Sharding", items:["Shard map stored in its own Raft group","Gateway (Go) routes by shard and caches leader hints","Scatter-gather search whose merged ranking matches a single-node build"]},
-    {h:"M4: Rebalancing", items:["Add a node: a shard moves by snapshot transfer with no lost writes","Remove a node gracefully","Rolling restart of every node under load with zero failed requests"]}
+    {h:"M3: Replicated chunks", items:["Consistent hashing picks three nodes per chunk","Quorum write; reads fall back to another copy when a node is down","Background repair restores missing and damaged copies"]},
+    {h:"M4: Rebalancing", items:["Add a node: chunks move with no lost data","Remove a node gracefully","Rolling restart of every node under load with zero failed requests"]}
   ],
-  stretch:["Follower reads with bounded staleness","Cross-shard transactions with two-phase commit on top of Raft","Placement rules: always keep one replica on the laptop"],
-  done:"A five-node cluster keeps accepting writes while you kill, partition and add nodes, and merged search results always match a single-node rebuild." },
+  stretch:["Erasure coding and compare the space used","Shard metadata into several Raft groups (multi-Raft)","Placement rules: always keep one copy on the laptop"],
+  done:"A five-node cluster keeps accepting files while you kill, partition and add nodes, and every file you were told was saved can still be downloaded with a matching hash." },
 
 { id:"cluster-lab", phase:"p6", title:"Cluster lab: deploy, trace and break it", langs:["Python","Go"], time:"3 to 4 weekends",
   summary:"The operations side of distributed systems. Deploy the cluster to several machines or VMs, trace one request across every service with OpenTelemetry, then attack it with partitions, packet loss, clock skew and paused processes. A Python harness records every client operation, and a linearizability checker you write yourself decides whether the cluster told the truth.",
   learn:["Provisioning several hosts (VMs, Raspberry Pis or cloud) with Ansible or plain SSH scripts","Distributed tracing across Rust, Go and TypeScript with OpenTelemetry","Prometheus and Grafana for Raft health (term changes, commit lag, elections)","Fault injection with tc netem, iptables, toxiproxy and libfaketime","Linearizability checking with the WGL algorithm (as used by Porcupine and Knossos)"],
-  scope:["One command deploys the cluster to 3 to 5 hosts","One trace of a search shows the gateway, router, shards and Raft","A nemesis script runs a random fault schedule while clients run","Checker reads the history and reports linearizable, or the smallest failing window"],
+  scope:["One command deploys the cluster to 3 to 5 hosts","One trace of an upload shows the router, metadata leader, chunk nodes and Raft","A nemesis script runs a random fault schedule while clients run","Checker reads the history and reports linearizable, or the smallest failing window"],
   deliverables:[
     {h:"M1: Deploy", items:["Idempotent deploy to at least three real or virtual hosts","Certificates, config and systemd units generated per node"]},
     {h:"M2: Observe", items:["OpenTelemetry tracing with one trace ID across every service","Grafana dashboard for Raft health and request latency","Alert on repeated elections or growing commit lag"]},
@@ -445,6 +493,7 @@ const PROJECTS = [
   done:"Twenty random fault schedules pass your checker, and you can open one trace and explain every hop of a slow request." },
 
 /* ---------------- PHASE 7 ---------------- */
+
 { id:"reliable-udp", phase:"p7", title:"Reliable transport over UDP", langs:["Zig"], time:"3 to 4 weekends",
   summary:"Build your own small TCP on top of UDP: handshake, sequence numbers, sliding window, retransmission timers, selective acknowledgements and congestion control. Then run stash-sync over it on a lossy link and compare with real TCP. Rebuilding TCP is the best way to learn what it does for you.",
   learn:["Packet formats, sequence-number wraparound, checksums","Sliding windows, flow control and selective ACK","RTT estimation (Jacobson/Karels) and retransmission timeout backoff","Congestion control: slow start and AIMD (Reno), then a look at CUBIC and BBR","Simulating bad networks with tc netem; reading packets in Wireshark","Zig packed structs, std.posix sockets and an event loop"],
@@ -459,7 +508,7 @@ const PROJECTS = [
   done:"Files and sync traffic arrive intact over a link you made deliberately terrible, and you can explain your cwnd graph." },
 
 { id:"net-discovery", phase:"p7", title:"LAN discovery and NAT traversal", langs:["C","Go"], time:"3 weekends",
-  summary:"Let stash nodes find each other with no configuration and connect across home routers. Write an mDNS / DNS-SD responder in C, building the DNS wire format by hand. Then write a small Go rendezvous server for public-address discovery (STUN-style), UDP hole punching, and a relay fallback when punching fails.",
+  summary:"Let stash on your computers and hubs find each other with no configuration, AirDrop style, and connect across home routers. Phone browsers cannot search the network, so phones keep using the hub name or a QR code. A direct connection over the internet also saves sending every byte through your relay. Write an mDNS / DNS-SD responder in C, building the DNS wire format by hand. Then write a small Go rendezvous server for public-address discovery (STUN-style), UDP hole punching, and a relay fallback when punching fails.",
   learn:["DNS message format, name compression, record types (A, AAAA, SRV, TXT, PTR)","Multicast sockets on IPv4 and IPv6","How NAT types behave, and why hole punching works (and when it does not)","Reflexive address discovery (STUN-style) and relaying (TURN-style)","Writing and fuzzing a safe parser for hostile packets in C"],
   scope:["stash nodes advertise _stash._tcp on the LAN and discover peers automatically","Rendezvous server tells each peer the other's public address","UDP hole punching between the laptop and home PC on different networks","Relay fallback with a bandwidth cap"],
   deliverables:[
@@ -470,41 +519,42 @@ const PROJECTS = [
   stretch:["IPv6-first path selection","ICE-style candidate gathering and prioritization","WebRTC data channels so the web UI can reach a peer directly"],
   done:"A new laptop finds your stash on the LAN with zero config, and syncs from a café through your rendezvous server." },
 
-{ id:"load-balancer", phase:"p7", title:"Event-driven load balancer with io_uring", langs:["C++"], time:"3 to 4 weekends",
-  summary:"A layer 4 and layer 7 load balancer in front of the stash cluster. It health-checks nodes, routes RESP and HTTP requests to the right shard leader, drains connections during deploys, and is built on io_uring with C++20 coroutines. The Redis clone was the warm-up for this long-running, high-throughput C++ program.",
-  learn:["io_uring submission and completion queues (liburing)","C++20 coroutines as an async model on top of io_uring","Zero-copy proxying (splice), connection pooling, keepalive","Balancing algorithms: round robin, least connections, power of two choices, consistent hashing","Health checks, outlier ejection, graceful drain","Benchmarking with wrk and redis-benchmark; flame graphs with perf"],
-  scope:["L4 TCP proxy, plus an L7 mode that understands RESP and HTTP/1.1","Routes STASH commands to shard leaders using the cluster's shard map","Active and passive health checks","Hot config reload and zero-downtime restart (socket handoff)"],
+{ id:"load-balancer", phase:"p7", title:"Edge proxy and load balancer with io_uring", langs:["C++"], time:"3 to 4 weekends",
+  summary:"A layer 4 and layer 7 proxy in front of the stash cluster, built to move big files fast. It health-checks nodes, routes requests to the metadata leader or a node holding the chunk, drains connections during deploys, and is built on io_uring with C++20 coroutines. stash zero was the warm-up for this long-running, high-throughput C++ program.",
+  learn:["io_uring submission and completion queues (liburing)","C++20 coroutines as an async model on top of io_uring","Zero-copy proxying (splice), connection pooling, keepalive","Balancing algorithms: round robin, least connections, power of two choices, consistent hashing","Health checks, outlier ejection, graceful drain","Benchmarking with wrk and iperf3; flame graphs with perf"],
+  scope:["L4 TCP proxy, plus an L7 mode that understands HTTP/1.1","Routes uploads and downloads using the cluster's placement map","Active and passive health checks","Hot config reload and zero-downtime restart (socket handoff)"],
   deliverables:[
     {h:"M1: L4 proxy", items:["io_uring accept, read and write loop with coroutines","Round robin and least connections","Benchmark against HAProxy in TCP mode; record the gap"]},
-    {h:"M2: L7 routing", items:["RESP and HTTP/1.1 parsing in the proxy","Shard-aware routing with leader hints from the cluster","Connection pooling to backends"]},
-    {h:"M3: Resilience", items:["Health checks and outlier ejection","Graceful drain and hot reload without dropping a connection","Socket-handoff restart during a load test with zero errors"]},
-    {h:"M4: Profile", items:["perf flame graph; fix the top hotspot","Clean under ASan, UBSan and TSan","Write-up: epoll (Redis clone) vs io_uring, measured"]}
+    {h:"M2: L7 routing", items:["HTTP/1.1 parsing in the proxy, including Range requests","Routing to the leader or a chunk holder using hints from the cluster","Connection pooling to backends"]},
+    {h:"M3: Resilience", items:["Health checks and outlier ejection","Graceful drain and hot reload without dropping a transfer","Socket-handoff restart during a load test with zero errors"]},
+    {h:"M4: Profile", items:["perf flame graph; fix the top hotspot","Clean under ASan, UBSan and TSan","Write-up: epoll (stash zero) vs io_uring, measured"]}
   ],
   stretch:["TLS termination with kTLS","HTTP/2","Per-client token-bucket rate limiting"],
-  done:"The cluster stays behind your balancer through a rolling restart under load with zero failed requests, and you can show the flame graph that made it faster." },
+  done:"The cluster stays behind your proxy through a rolling restart during large transfers with zero failures, and you can show the flame graph that made it faster." },
 
 { id:"ebpf-observe", phase:"p7", title:"eBPF network observer and firewall", langs:["C","Rust"], time:"2 to 3 weekends",
-  summary:"Write eBPF programs in C that run inside the Linux kernel, and a Rust user-space tool (aya) that loads them. Measure per-connection latency and RESP commands per client without changing the daemon, then add an XDP filter that drops abusive traffic before it reaches the network stack.",
+  summary:"Write eBPF programs in C that run inside the Linux kernel, and a Rust user-space tool (aya) that loads them. Measure per-connection latency and bytes moved per device without changing the daemon, then add an XDP filter that drops abusive traffic before it reaches the network stack.",
   learn:["eBPF programs, the verifier, maps and ring buffers","kprobes, tracepoints and socket filters","XDP packet processing and why it is fast","CO-RE and BTF for portable programs","Rust user space with aya, streaming events to a terminal view"],
-  scope:["Per-connection TCP RTT and retransmits for the stash ports","RESP command counts per client IP, parsed in the kernel","XDP per-IP rate limiter whose limits the tool updates live","Live top-style terminal view"],
+  scope:["Per-connection TCP RTT and retransmits for the stash ports","Bytes and connections per client IP, counted in the kernel","XDP per-IP rate limiter whose limits the tool updates live","Live top-style terminal view"],
   deliverables:[
     {h:"M1: First probes", items:["aya project builds and loads a tracepoint program","TCP connect and close events streamed to user space through a ring buffer"]},
-    {h:"M2: Measure", items:["RTT and retransmit histograms per connection","RESP command counts per client from a socket filter","Terminal view of top clients and slowest connections"]},
+    {h:"M2: Measure", items:["RTT and retransmit histograms per connection","Bytes per client counted by a socket filter","Terminal view of top clients and slowest connections"]},
     {h:"M3: Protect", items:["XDP per-IP rate limiter with limits updated from user space","Benchmark: packets per second dropped at XDP vs iptables","Programs pass the verifier on two kernel versions (CO-RE)"]}
   ],
   stretch:["Trace Raft message latency between cluster nodes","Export to Prometheus","Rewrite the kernel side in Rust with aya-ebpf and compare"],
   done:"You can watch every slow connection to the cluster live without touching its code, and a flood from one IP is dropped at XDP while other clients are unaffected." },
 
 /* ---------------- PHASE 8 ---------------- */
+
 { id:"tack-interp", phase:"p8", title:"Tack: design the language and a tree-walking interpreter", langs:["Go"], time:"4 to 6 weekends",
-  summary:"Tack is a small scripting language for automating stash, with rules like 'when a note tagged law is added, tag it review and make a flashcard'. Write the spec first, then a tree-walking interpreter in Go with a REPL. The interpreter is the reference implementation: what it does defines what the language means.",
+  summary:"Tack is a small scripting language for automating stash, with rules like 'when a photo arrives from the iPhone, tag it, move it to Photos and tell the PC'. Write the spec first, then a tree-walking interpreter in Go with a REPL. The interpreter is the reference implementation: what it does defines what the language means.",
   learn:["Language design: syntax, scoping, values, errors, a written spec","Lexing and Pratt (precedence-climbing) parsing","AST design and a tree-walking evaluator","Closures, environments and first-class functions","A static resolver pass, and good runtime error messages","Exposing host functions (stash queries) to scripts safely"],
-  scope:["Values: numbers, strings, bools, nil, lists, maps, functions","let, if/else, while, for-in, functions, closures, return","Built-ins and a stash module: find, add, tag, now","Event hooks: on add(item) { ... }","REPL and script runner, with step and memory limits"],
+  scope:["Values: numbers, strings, bools, nil, lists, maps, functions","let, if/else, while, for-in, functions, closures, return","Built-ins and a stash module: find, send, tag, move, now","Event hooks: on receive(item) { ... }","REPL and script runner, with step and memory limits"],
   deliverables:[
     {h:"M1: Spec and lexer", items:["Short spec: grammar in EBNF, values, scoping rules, error behaviour","Lexer with line and column positions","Golden tests: source in, tokens out"]},
     {h:"M2: Parser", items:["Pratt parser with correct precedence and associativity","Statements, blocks and functions","Parse errors with a caret under the problem; recovers to report several errors at once"]},
     {h:"M3: Evaluator", items:["Tree-walking evaluator for every expression and statement","Closures that capture correctly (the classic counter test)","Resolver pass that catches undefined variables before running","Runtime errors with a stack trace of Tack functions"]},
-    {h:"M4: Make it useful", items:["REPL with history and multi-line input","stash module wired to the daemon (through libstash or RESP)","Daemon runs Tack hooks on add, with step and time limits","20 example scripts that double as the shared test suite"]}
+    {h:"M4: Make it useful", items:["REPL with history and multi-line input","stash module wired to the daemon (through libstash or HTTP)","Daemon runs Tack hooks on receive, with step and time limits","20 example scripts that double as the shared test suite"]}
   ],
   stretch:["Records with methods","Pattern matching on maps and lists","A bytecode VM in Go and a comparison with tree walking"],
   done:"Rules you wrote in Tack run in the daemon every day, and every broken example script produces a readable error." },
@@ -533,21 +583,18 @@ const PROJECTS = [
   ],
   stretch:["Rename symbol","Debugger for the interpreter through the Debug Adapter Protocol","Neovim setup for the same server"],
   done:"You write Tack in VS Code with errors and types as you type, and anyone can try it in the playground without installing anything." }
-
-
 ];
 
 /* ---------- references: books, official docs, specs and papers only ---------- */
 const B = "Book", D = "Docs", S = "Spec", P = "Paper";
 const REFS = {
-  "redis-clone": [
+  "lan-share": [
     [B, "The Linux Programming Interface", "Michael Kerrisk", "https://man7.org/tlpi/"],
-    [B, "Unix Network Programming, Volume 1", "W. Richard Stevens, Bill Fenner, Andrew M. Rudoff"],
     [B, "Beej's Guide to Network Programming", "Brian Hall", "https://beej.us/guide/bgnet/"],
     [B, "Effective Modern C++", "Scott Meyers"],
-    [S, "RESP protocol specification", "Redis", "https://redis.io/docs/latest/develop/reference/protocol-spec/"],
-    [D, "Redis command reference", "Redis", "https://redis.io/docs/latest/commands/"],
-    [D, "Redis persistence (AOF and RDB)", "Redis", "https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"],
+    [S, "RFC 9112: HTTP/1.1", "IETF", "https://www.rfc-editor.org/rfc/rfc9112"],
+    [S, "RFC 9110: HTTP Semantics (including Range requests)", "IETF", "https://www.rfc-editor.org/rfc/rfc9110"],
+    [S, "RFC 7578: multipart/form-data", "IETF", "https://www.rfc-editor.org/rfc/rfc7578"],
     [D, "epoll(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/epoll.7.html"],
     [D, "cppreference.com", "", "https://en.cppreference.com/"]
   ],
@@ -564,14 +611,14 @@ const REFS = {
   "stash-core": [
     [B, "The Rust Programming Language", "Steve Klabnik, Carol Nichols", "https://doc.rust-lang.org/book/"],
     [B, "Rust for Rustaceans", "Jon Gjengset"],
-    [B, "Database Internals", "Alex Petrov"],
     [B, "Designing Data-Intensive Applications (ch. 3: storage and retrieval)", "Martin Kleppmann"],
-    [B, "Introduction to Information Retrieval", "Manning, Raghavan, Schütze", "https://nlp.stanford.edu/IR-book/"],
-    [P, "The Probabilistic Relevance Framework: BM25 and Beyond", "Robertson, Zaragoza (2009)"],
+    [B, "Database Internals", "Alex Petrov"],
     [P, "Bitcask: A Log-Structured Hash Table for Fast Key/Value Data", "Sheehy, Smith (2010)"],
+    [P, "Finding a Needle in Haystack: Facebook's Photo Storage", "Beaver et al. (OSDI 2010)"],
+    [S, "BLAKE3 specification", "BLAKE3 team", "https://github.com/BLAKE3-team/BLAKE3-specs"],
+    [S, "tus resumable upload protocol", "tus", "https://tus.io/protocols/resumable-upload"],
     [D, "Tokio API documentation", "Tokio", "https://docs.rs/tokio/latest/tokio/"],
-    [D, "tracing crate documentation", "Tokio", "https://docs.rs/tracing/latest/tracing/"],
-    [D, "Rust API Guidelines", "Rust project", "https://rust-lang.github.io/api-guidelines/"]
+    [D, "axum documentation", "Tokio", "https://docs.rs/axum/latest/axum/"]
   ],
   "stash-fsck": [
     [B, "Effective C, 2nd ed.", "Robert C. Seacord"],
@@ -582,54 +629,27 @@ const REFS = {
     [D, "AFL++ documentation", "AFL++", "https://github.com/AFLplusplus/AFLplusplus/tree/stable/docs"],
     [D, "UndefinedBehaviorSanitizer", "Clang", "https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"]
   ],
+  "web-ui": [
+    [D, "MDN Web Docs", "Mozilla", "https://developer.mozilla.org/"],
+    [D, "TypeScript Handbook", "Microsoft", "https://www.typescriptlang.org/docs/handbook/intro.html"],
+    [D, "File API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/File_API"],
+    [D, "Service Worker API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"],
+    [S, "Server-sent events (HTML Living Standard)", "WHATWG", "https://html.spec.whatwg.org/multipage/server-sent-events.html"],
+    [S, "Web Content Accessibility Guidelines (WCAG) 2.2", "W3C", "https://www.w3.org/TR/WCAG22/"],
+    [D, "Playwright documentation", "Microsoft", "https://playwright.dev/docs/intro"]
+  ],
+  "phone-share": [
+    [D, "Web Share Target API", "Google", "https://developer.chrome.com/docs/capabilities/web-apis/web-share-target"],
+    [D, "Shortcuts User Guide", "Apple", "https://support.apple.com/guide/shortcuts/welcome/ios"],
+    [D, "Secure contexts", "MDN", "https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts"],
+    [D, "Challenge types (DNS-01)", "Let's Encrypt", "https://letsencrypt.org/docs/challenge-types/"],
+    [D, "Web application manifest", "MDN", "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest"]
+  ],
   "zig-cli": [
     [D, "Zig language reference", "Zig", "https://ziglang.org/documentation/master/"],
     [D, "Zig standard library reference", "Zig", "https://ziglang.org/documentation/master/std/"],
     [D, "Zig build system", "Zig", "https://ziglang.org/learn/build-system/"],
-    [S, "RESP protocol specification", "Redis", "https://redis.io/docs/latest/develop/reference/protocol-spec/"]
-  ],
-  "web-ui": [
-    [D, "MDN Web Docs", "Mozilla", "https://developer.mozilla.org/"],
-    [D, "TypeScript Handbook", "Microsoft", "https://www.typescriptlang.org/docs/handbook/intro.html"],
-    [D, "Chrome extensions (Manifest V3)", "Google", "https://developer.chrome.com/docs/extensions/"],
-    [D, "Service Worker API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"],
-    [S, "Web Content Accessibility Guidelines (WCAG) 2.2", "W3C", "https://www.w3.org/TR/WCAG22/"],
-    [D, "ARIA Authoring Practices Guide", "W3C WAI", "https://www.w3.org/WAI/ARIA/apg/"],
-    [D, "Playwright documentation", "Microsoft", "https://playwright.dev/docs/intro"]
-  ],
-  "wasm-search": [
-    [S, "WebAssembly core specification", "W3C", "https://webassembly.github.io/spec/core/"],
-    [D, "WebAssembly on MDN", "Mozilla", "https://developer.mozilla.org/en-US/docs/WebAssembly"],
-    [D, "wasm-bindgen guide", "Rust and WebAssembly WG", "https://rustwasm.github.io/docs/wasm-bindgen/"],
-    [D, "Emscripten documentation", "Emscripten", "https://emscripten.org/docs/"],
-    [D, "Binaryen (wasm-opt)", "WebAssembly", "https://github.com/WebAssembly/binaryen"],
-    [D, "Web Workers API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"]
-  ],
-  "php-import": [
-    [D, "PHP manual", "PHP", "https://www.php.net/manual/en/"],
-    [D, "PDO", "PHP manual", "https://www.php.net/manual/en/book.pdo.php"],
-    [D, "PHP: The Right Way", "", "https://phptherightway.com/"],
-    [S, "PHP Standards Recommendations (PSR)", "PHP-FIG", "https://www.php-fig.org/psr/"],
-    [D, "OWASP Top 10", "OWASP", "https://owasp.org/www-project-top-ten/"],
-    [D, "OWASP Cheat Sheet Series", "OWASP", "https://cheatsheetseries.owasp.org/"],
-    [S, "RFC 2104: HMAC", "IETF", "https://www.rfc-editor.org/rfc/rfc2104"],
-    [D, "PHPStan user guide", "PHPStan", "https://phpstan.org/user-guide/getting-started"]
-  ],
-  "py-tools": [
-    [B, "Fluent Python, 2nd ed.", "Luciano Ramalho"],
-    [D, "Python documentation", "Python", "https://docs.python.org/3/"],
-    [D, "Python Packaging User Guide", "PyPA", "https://packaging.python.org/"],
-    [D, "pytest documentation", "pytest", "https://docs.pytest.org/"],
-    [S, "SuperMemo SM-2 algorithm", "Piotr Woźniak", "https://super-memory.com/english/ol/sm2.htm"],
-    [D, "systemd.timer(5)", "systemd", "https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html"]
-  ],
-  "perl-text": [
-    [B, "Programming Perl, 4th ed.", "Tom Christiansen, brian d foy, Larry Wall, Jon Orwant"],
-    [B, "Mastering Regular Expressions, 3rd ed.", "Jeffrey E. F. Friedl"],
-    [B, "Modern Perl", "chromatic", "https://modernperlbooks.com/"],
-    [D, "perlre", "perldoc", "https://perldoc.perl.org/perlre"],
-    [D, "perlrun (command-line switches)", "perldoc", "https://perldoc.perl.org/perlrun"],
-    [D, "Test::More", "MetaCPAN", "https://metacpan.org/pod/Test::More"]
+    [S, "RFC 9110: HTTP Semantics", "IETF", "https://www.rfc-editor.org/rfc/rfc9110"]
   ],
   "stash-sync": [
     [B, "The Go Programming Language", "Alan Donovan, Brian Kernighan"],
@@ -639,7 +659,45 @@ const REFS = {
     [D, "Effective Go", "Go", "https://go.dev/doc/effective_go"],
     [D, "crypto/tls package", "Go", "https://pkg.go.dev/crypto/tls"],
     [P, "Time, Clocks, and the Ordering of Events in a Distributed System", "Leslie Lamport (1978)"],
-    [P, "Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases", "Kulkarni et al. (2014)"]
+    [P, "Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases", "Kulkarni et al. (2014)"],
+    [S, "RFC 6066: TLS extensions (server name indication)", "IETF", "https://www.rfc-editor.org/rfc/rfc6066"]
+  ],
+  "wasm-chunker": [
+    [S, "WebAssembly core specification", "W3C", "https://webassembly.github.io/spec/core/"],
+    [D, "WebAssembly on MDN", "Mozilla", "https://developer.mozilla.org/en-US/docs/WebAssembly"],
+    [D, "wasm-bindgen guide", "Rust and WebAssembly WG", "https://rustwasm.github.io/docs/wasm-bindgen/"],
+    [D, "Emscripten documentation", "Emscripten", "https://emscripten.org/docs/"],
+    [D, "Binaryen (wasm-opt)", "WebAssembly", "https://github.com/WebAssembly/binaryen"],
+    [D, "Web Workers API", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"],
+    [S, "BLAKE3 specification", "BLAKE3 team", "https://github.com/BLAKE3-team/BLAKE3-specs"],
+    [P, "FastCDC: A Fast and Efficient Content-Defined Chunking Approach for Data Deduplication", "Xia et al. (USENIX ATC 2016)"]
+  ],
+  "php-share": [
+    [D, "PHP manual", "PHP", "https://www.php.net/manual/en/"],
+    [D, "PDO", "PHP manual", "https://www.php.net/manual/en/book.pdo.php"],
+    [D, "PHP: The Right Way", "", "https://phptherightway.com/"],
+    [S, "PHP Standards Recommendations (PSR)", "PHP-FIG", "https://www.php-fig.org/psr/"],
+    [D, "OWASP Top 10", "OWASP", "https://owasp.org/www-project-top-ten/"],
+    [D, "OWASP Cheat Sheet Series (including file upload)", "OWASP", "https://cheatsheetseries.owasp.org/"],
+    [D, "PHPStan user guide", "PHPStan", "https://phpstan.org/user-guide/getting-started"]
+  ],
+  "py-tools": [
+    [B, "Fluent Python, 2nd ed.", "Luciano Ramalho"],
+    [D, "Python documentation", "Python", "https://docs.python.org/3/"],
+    [D, "Python Packaging User Guide", "PyPA", "https://packaging.python.org/"],
+    [D, "Pillow documentation", "Pillow", "https://pillow.readthedocs.io/"],
+    [D, "FFmpeg documentation", "FFmpeg", "https://ffmpeg.org/documentation.html"],
+    [D, "pytest documentation", "pytest", "https://docs.pytest.org/"],
+    [D, "systemd.timer(5)", "systemd", "https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html"]
+  ],
+  "perl-text": [
+    [B, "Programming Perl, 4th ed.", "Tom Christiansen, brian d foy, Larry Wall, Jon Orwant"],
+    [B, "Mastering Regular Expressions, 3rd ed.", "Jeffrey E. F. Friedl"],
+    [B, "Modern Perl", "chromatic", "https://modernperlbooks.com/"],
+    [D, "perlre", "perldoc", "https://perldoc.perl.org/perlre"],
+    [D, "perlrun (command-line switches)", "perldoc", "https://perldoc.perl.org/perlrun"],
+    [D, "Test::More", "MetaCPAN", "https://metacpan.org/pod/Test::More"],
+    [D, "ExifTool", "Phil Harvey", "https://exiftool.org/"]
   ],
   "stash-tui": [
     [B, "A Tour of C++, 3rd ed.", "Bjarne Stroustrup"],
@@ -647,21 +705,21 @@ const REFS = {
     [D, "termios(3) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man3/termios.3.html"],
     [S, "XTerm control sequences", "Thomas Dickey", "https://invisible-island.net/xterm/ctlseqs/ctlseqs.html"],
     [S, "UAX #11: East Asian Width", "Unicode", "https://www.unicode.org/reports/tr11/"],
+    [D, "libcurl multi interface", "curl", "https://curl.se/libcurl/c/libcurl-multi.html"],
     [D, "CMake reference documentation", "Kitware", "https://cmake.org/cmake/help/latest/"],
     [D, "clang-tidy", "LLVM", "https://clang.llvm.org/extra/clang-tidy/"]
   ],
-  "uptime-monitor": [
+  "clipboard-bridge": [
     [B, "Asynchronous Programming in Rust", "Rust project", "https://rust-lang.github.io/async-book/"],
-    [B, "Site Reliability Engineering: Monitoring Distributed Systems", "Google", "https://sre.google/sre-book/monitoring-distributed-systems/"],
-    [D, "reqwest documentation", "", "https://docs.rs/reqwest/latest/reqwest/"],
-    [D, "Serde", "", "https://serde.rs/"],
-    [S, "Prometheus exposition formats", "Prometheus", "https://prometheus.io/docs/instrumenting/exposition_formats/"]
+    [D, "arboard documentation", "", "https://docs.rs/arboard/latest/arboard/"],
+    [S, "ext-data-control protocol", "Wayland protocols", "https://wayland.app/protocols/ext-data-control-v1"],
+    [D, "Clipboard (Win32)", "Microsoft", "https://learn.microsoft.com/en-us/windows/win32/dataxchg/clipboard"]
   ],
-  "zig-timer": [
+  "drop-folder": [
     [D, "Zig language reference", "Zig", "https://ziglang.org/documentation/master/"],
-    [D, "Zig standard library reference", "Zig", "https://ziglang.org/documentation/master/std/"],
-    [D, "signal(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/signal.7.html"],
-    [D, "clock_gettime(2) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man2/clock_gettime.2.html"]
+    [D, "inotify(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/inotify.7.html"],
+    [D, "ReadDirectoryChangesW", "Microsoft", "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-readdirectorychangesw"],
+    [D, "signal(7) man page", "Linux man-pages", "https://man7.org/linux/man-pages/man7/signal.7.html"]
   ],
   "libstash": [
     [B, "C Interfaces and Implementations", "David R. Hanson"],
@@ -690,7 +748,6 @@ const REFS = {
   ],
   "live-updates": [
     [S, "Server-sent events (HTML Living Standard)", "WHATWG", "https://html.spec.whatwg.org/multipage/server-sent-events.html"],
-    [S, "RESP3 specification", "Redis", "https://github.com/redis/redis-specifications/blob/master/protocol/RESP3.md"],
     [D, "tokio::sync::broadcast", "Tokio", "https://docs.rs/tokio/latest/tokio/sync/broadcast/"],
     [D, "EventSource", "MDN", "https://developer.mozilla.org/en-US/docs/Web/API/EventSource"],
     [D, "net/http package", "Go", "https://pkg.go.dev/net/http"]
@@ -720,12 +777,12 @@ const REFS = {
     [P, "FoundationDB: A Distributed Unbundled Transactional Key Value Store", "Zhou et al. (SIGMOD 2021)"]
   ],
   "stash-cluster": [
-    [B, "Designing Data-Intensive Applications (ch. 6: partitioning)", "Martin Kleppmann"],
+    [B, "Designing Data-Intensive Applications (ch. 5 and 6: replication, partitioning)", "Martin Kleppmann"],
+    [P, "The Google File System", "Ghemawat, Gobioff, Leung (SOSP 2003)"],
+    [P, "Ceph: A Scalable, High-Performance Distributed File System", "Weil et al. (OSDI 2006)"],
     [P, "SWIM: Scalable Weakly-consistent Infection-style Process Group Membership Protocol", "Das, Gupta, Motivala (2002)"],
     [P, "Consistent Hashing and Random Trees", "Karger et al. (1997)"],
-    [P, "Dynamo: Amazon's Highly Available Key-value Store", "DeCandia et al. (2007)"],
-    [P, "Spanner: Google's Globally-Distributed Database", "Corbett et al. (2012)"],
-    [P, "CockroachDB: The Resilient Geo-Distributed SQL Database", "Taft et al. (SIGMOD 2020)"]
+    [P, "Dynamo: Amazon's Highly Available Key-value Store", "DeCandia et al. (2007)"]
   ],
   "cluster-lab": [
     [B, "Site Reliability Engineering", "Google", "https://sre.google/sre-book/table-of-contents/"],
@@ -811,7 +868,7 @@ const REFS = {
 };
 
 /* ---------- rendering ---------- */
-const KEY = "systems-roadmap-v4";
+const KEY = "systems-roadmap-v5";
 let state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ state = {}; }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
@@ -918,67 +975,72 @@ document.getElementById("reset").onclick = () => {
 /* ---------- system diagram (canvas) ---------- */
 const ARCH = {
   groups: {
-    browser: {title:"Browser", nodes:[
-      {id:"web-ui", label:"Web UI + extension", sub:"TS/HTML/CSS · search page and page clipper", project:"web-ui"},
-      {id:"wasm-search", label:"WASM offline search", sub:"C++ or Rust · runs in a Web Worker", project:"wasm-search"}]},
-    gateway: {title:"Sync + gateway", nodes:[
-      {id:"stash-sync", label:"stash-sync agent", sub:"Go · TLS gateway and replication", project:"stash-sync"},
-      {id:"peer", label:"Peer stash", sub:"the daemon on your other device", ghost:true}]},
-    foundation: {title:"Foundation", nodes:[
-      {id:"redis-clone", label:"Redis clone", sub:"C++ · RESP and epoll groundwork", project:"redis-clone"}]},
-    daemon: {title:"stash daemon · Rust", core:true, project:"stash-core", cols:3, gap:22, nodes:[
-      {id:"net", label:"Network layer", sub:"tokio TCP + HTTP", at:[0,0], at2:[0,0]},
-      {id:"resp", label:"RESP parser", sub:"stash-proto", at:[0,1], at2:[0,1]},
-      {id:"router", label:"Command router", sub:"STASH.* commands", at:[0,2], at2:[1,1]},
+    devices: {title:"Your devices", cols:4, nodes:[
+      {id:"iphone", label:"iPhone", sub:"web app and a Shortcut in the share sheet", project:"phone-share"},
+      {id:"android", label:"Android", sub:"installed web app in the share sheet", project:"phone-share"},
+      {id:"linux", label:"Linux", sub:"CLI, terminal UI, clipboard, drop folder", project:"zig-cli"},
+      {id:"windows", label:"Windows", sub:"Send to menu, CLI, clipboard, drop folder", project:"zig-cli"}]},
+    browser: {title:"Web app", nodes:[
+      {id:"web-ui", label:"Web app", sub:"TS/HTML/CSS · send and receive", project:"web-ui"},
+      {id:"wasm-chunker", label:"WASM hashing", sub:"C++ or Rust · runs in a Web Worker", project:"wasm-chunker"}]},
+    gateway: {title:"Network and internet", nodes:[
+      {id:"php-share", label:"Public links", sub:"PHP · share and request files", project:"php-share"},
+      {id:"stash-sync", label:"stash-sync", sub:"Go · internet relay and hub sync", project:"stash-sync"},
+      {id:"peer", label:"Second hub", sub:"the daemon on another machine", ghost:true}]},
+    foundation: {title:"First share", nodes:[
+      {id:"lan-share", label:"stash zero", sub:"C++ · web page on your network", project:"lan-share"},
+      {id:"c-warm", label:"Dupe finder", sub:"C · hashing groundwork", project:"c-warm"}], cols:1},
+    daemon: {title:"stash hub · Rust", core:true, project:"stash-core", cols:3, gap:22, nodes:[
+      {id:"net", label:"HTTPS API", sub:"uploads, downloads, inbox", at:[0,0], at2:[0,0]},
+      {id:"auth", label:"Pairing", sub:"a token per device", at:[0,1], at2:[0,1]},
+      {id:"router", label:"Transfers", sub:"resumable, Range", at:[0,2], at2:[1,1]},
       {id:"query", label:"Query parser", sub:"Zig via C ABI · filter syntax", project:"stash-ql", at:[1,1], at2:[1,0]},
-      {id:"idx", label:"Inverted index", sub:"BM25 ranking, prefix search", at:[1,0], at2:[2,0]},
-      {id:"log", label:"Append-only log", sub:"+ snapshots, compaction", at:[1,2], at2:[2,1]},
+      {id:"idx", label:"Item metadata", sub:"who sent what to whom", at:[1,0], at2:[2,0]},
+      {id:"log", label:"Chunk store + log", sub:"each file kept once, crash safe", at:[1,2], at2:[2,1]},
       {id:"plugins", label:"Plugin host", sub:"wasmtime · guests in Zig, C, Go", project:"wasm-plugins", at:[2,0,2], at2:[3,0]},
-      {id:"watch", label:"Change stream", sub:"STASH.WATCH pub/sub", project:"live-updates", at:[2,2], at2:[3,1]}]},
-    integrity: {title:"Integrity + testing", nodes:[
-      {id:"stash-fsck", label:"stash-fsck", sub:"C · verifies the log on disk", project:"stash-fsck"},
+      {id:"watch", label:"Event stream", sub:"live to every device", project:"live-updates", at:[2,2], at2:[3,1]}]},
+    integrity: {title:"Integrity + testing", cols:1, nodes:[
+      {id:"stash-fsck", label:"stash-fsck", sub:"C · verifies what is on disk", project:"stash-fsck"},
       {id:"conformance", label:"Conformance kit", sub:"Python runner · tests every language", project:"conformance"}]},
-    clients: {title:"Clients and scripts", cols:6, nodes:[
+    clients: {title:"Desktop tools and scripts", cols:4, nodes:[
+      {id:"zig-cli", label:"stash CLI", sub:"Zig · stash send / get", project:"zig-cli"},
+      {id:"stash-tui", label:"Terminal UI", sub:"C++ · keyboard-driven inbox", project:"stash-tui"},
+      {id:"clipboard-bridge", label:"Shared clipboard", sub:"Rust · copy here, paste there", project:"clipboard-bridge"},
+      {id:"drop-folder", label:"Drop folder", sub:"Zig · save a file to send it", project:"drop-folder"},
       {id:"libstash", label:"libstash", sub:"C ABI · bindings in 5 languages", project:"libstash"},
-      {id:"zig-cli", label:"stash CLI", sub:"Zig · stash add / find", project:"zig-cli"},
-      {id:"stash-tui", label:"Terminal UI", sub:"C++ · keyboard-driven browser", project:"stash-tui"},
-      {id:"php-import", label:"Import + share", sub:"PHP · bookmarks, share links", project:"php-import"},
-      {id:"py-tools", label:"Backup + flashcards", sub:"Python · export, SM-2 cards", project:"py-tools"},
-      {id:"perl-text", label:"Cleanup scripts", sub:"Perl · migrate old notes", project:"perl-text"}]},
-    cluster: {title:"Distributed stash", cols:2, nodes:[
+      {id:"py-tools", label:"Media + backup", sub:"Python · previews, cleanup", project:"py-tools"},
+      {id:"perl-text", label:"Inbox sorter", sub:"Perl · sort and rename", project:"perl-text"}]},
+    cluster: {title:"Distributed file store", cols:2, nodes:[
       {id:"maelstrom", label:"Maelstrom lab", sub:"Go · gossip, CRDTs, partitions", project:"maelstrom"},
       {id:"stash-raft", label:"Raft core", sub:"Rust · election, replication, snapshots", project:"stash-raft"},
       {id:"cluster-lab", label:"Cluster lab", sub:"Python + Go · deploy, trace, break", project:"cluster-lab"},
-      {id:"stash-cluster", label:"Sharded cluster", sub:"Rust + Go · multi-Raft, SWIM gossip", project:"stash-cluster"}]},
+      {id:"stash-cluster", label:"Cluster", sub:"Rust + Go · replicated chunks, gossip", project:"stash-cluster"}]},
     network: {title:"Networking deep dive", cols:2, nodes:[
-      {id:"load-balancer", label:"Load balancer", sub:"C++ · io_uring, shard-aware", project:"load-balancer"},
+      {id:"load-balancer", label:"Edge proxy", sub:"C++ · io_uring, big transfers", project:"load-balancer"},
       {id:"ebpf-observe", label:"eBPF observer", sub:"C + Rust · XDP rate limiting", project:"ebpf-observe"},
       {id:"reliable-udp", label:"Reliable UDP", sub:"Zig · your own TCP", project:"reliable-udp"},
       {id:"net-discovery", label:"Discovery + NAT", sub:"C + Go · mDNS, hole punching", project:"net-discovery"}]},
     language: {title:"Tack · your own language", cols:3, nodes:[
       {id:"tack-interp", label:"Interpreter", sub:"Go · tree-walking, REPL", project:"tack-interp"},
       {id:"tack-compiler", label:"Compiler", sub:"Rust · type checker, emits WASM", project:"tack-compiler"},
-      {id:"tack-tooling", label:"Tooling", sub:"TS · LSP, formatter, playground", project:"tack-tooling"}]},
-    standalone: {title:"Standalone daily tools", cols:3, nodes:[
-      {id:"c-warm", label:"Dupe finder", sub:"C · cleans up Downloads", project:"c-warm"},
-      {id:"uptime-monitor", label:"Uptime monitor", sub:"Rust · checks and phone alerts", project:"uptime-monitor"},
-      {id:"zig-timer", label:"Focus timer", sub:"Zig · pomodoro and time log", project:"zig-timer"}]}
+      {id:"tack-tooling", label:"Tooling", sub:"TS · LSP, formatter, playground", project:"tack-tooling"}]}
   },
-  wide: [[["browser",.5],["gateway",.5]], [["foundation",.21],["daemon",.55],["integrity",.24]], [["cluster",.485],["network",.515]], [["clients",1]], [["language",.5],["standalone",.5]]],
-  narrow: [[["browser",1]], [["gateway",1]], [["daemon",1]], [["foundation",.5],["integrity",.5]], [["clients",1]], [["cluster",1]], [["network",1]], [["language",1]], [["standalone",1]]],
+  wide: [[["devices",1]], [["browser",.4],["gateway",.6]], [["foundation",.21],["daemon",.55],["integrity",.24]], [["cluster",.485],["network",.515]], [["clients",1]], [["language",1]]],
+  narrow: [[["devices",1]], [["browser",1]], [["gateway",1]], [["daemon",1]], [["foundation",.5],["integrity",.5]], [["clients",1]], [["cluster",1]], [["network",1]], [["language",1]]],
   edges: [
-    {a:"web-ui", b:"daemon", label:"HTTP JSON"},
-    {a:"wasm-search", b:"idx", label:"same BM25 core", dash:true, wideOnly:true},
-    {a:"stash-sync", b:"daemon", label:"proxy + change feed"},
+    {a:"devices", b:"browser", label:"phones and any browser"},
+    {a:"web-ui", b:"daemon", label:"HTTPS"},
+    {a:"php-share", b:"daemon", wideOnly:true},
+    {a:"stash-sync", b:"daemon", label:"tunnel + sync"},
     {a:"stash-sync", b:"peer", both:true},
-    {a:"redis-clone", b:"daemon", dash:true},
+    {a:"lan-share", b:"daemon", dash:true, wideOnly:true},
     {a:"stash-fsck", b:"log", wideOnly:true},
-    {a:"clients", b:"daemon", label:"RESP / HTTP", gap:["cluster","network"]},
-    {a:"daemon", b:"stash-raft", label:"replicates the log", wideOnly:true},
+    {a:"clients", b:"daemon", label:"HTTPS API", gap:["cluster","network"]},
+    {a:"daemon", b:"stash-raft", label:"replicates metadata", wideOnly:true},
     {a:"load-balancer", b:"daemon", label:"fronts the cluster", wideOnly:true},
     {a:"maelstrom", b:"stash-raft", dash:true}, {a:"stash-raft", b:"stash-cluster"}, {a:"cluster-lab", b:"stash-cluster", dash:true},
     {a:"tack-interp", b:"tack-compiler", dash:true}, {a:"tack-compiler", b:"tack-tooling"},
-    {a:"net", b:"resp"}, {a:"resp", b:"router"}, {a:"router", b:"query", dir:"v"}, {a:"query", b:"idx"},
+    {a:"net", b:"auth"}, {a:"auth", b:"router"}, {a:"router", b:"query", dir:"v"}, {a:"query", b:"idx"},
     {a:"router", b:"log"}, {a:"log", b:"watch"}
   ]
 };
@@ -1250,7 +1312,7 @@ function initArch(){
   // accessible fallback: one button per project in the diagram
   const fb = document.getElementById("archFallback");
   Object.values(ARCH.groups).forEach(g => {
-    const pids = [g.project, ...g.nodes.map(n => n.project)].filter(Boolean);
+    const pids = [...new Set([g.project, ...g.nodes.map(n => n.project)].filter(Boolean))];
     pids.forEach(pid => { const li = document.createElement("li"), b = document.createElement("button");
       b.textContent = g.title + ": " + PROJECTS.find(p => p.id === pid).title; b.onclick = () => openProject(pid);
       li.appendChild(b); fb.appendChild(li); });
@@ -1265,7 +1327,7 @@ function initArch(){
       arch.canvas.style.cursor = h && h.project ? "pointer" : "default";
       const st = h && h.project && projStat(h.project);
       cap.textContent = st ? `${st.p.title} · ${st.p.langs.join(", ")} · ${st.p.time} · ${st.done} / ${st.total} done. Click to open.`
-        : h && h.n && h.n.ghost ? "Another copy of the stash daemon, kept in step by stash-sync." : ARCH_HINT;
+        : h && h.n && h.n.ghost ? "A second hub on another machine, kept in step by stash-sync." : ARCH_HINT;
     }
   });
   arch.canvas.addEventListener("mouseleave", () => { arch.hover = null; cap.textContent = ARCH_HINT; drawArch(); });
